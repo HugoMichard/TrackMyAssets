@@ -1,0 +1,11 @@
+#full_width_main_panel {
+    width: 100%
+}
+
+.center-row {
+    justify-content: center;
+}
+
+.center-text {
+    text-align: center;
+}
