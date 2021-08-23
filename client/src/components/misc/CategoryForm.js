@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import APIService from "routers/apiservice";
-import { Link } from "react-router-dom";
+import { SketchPicker } from 'react-color';
 
 // reactstrap components
 import {
-  Card,
   Input,
   FormGroup,
   Form,
@@ -18,7 +17,7 @@ class CategoryForm extends Component {
         super(props);
         const form = {
             name: "",
-            type: ""
+            color: "000000"
         }
         this.state = { form: form }
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -37,6 +36,14 @@ class CategoryForm extends Component {
         form[property] = event.target.value;
         this.setState({form: form});
     }
+
+    handleChangeColor = (color) => {
+        console.log(color);
+        var form = this.state.form
+        form.color = color.hex
+        console.log(form)
+        this.setState({ form: form });
+      };
     
     handleSubmit(e){
         if(this.state.form.cat_id) {
@@ -69,12 +76,9 @@ class CategoryForm extends Component {
                     <Col md="6">
                         <FormGroup>
                             <label>Color</label>
-                            <Input
-                                placeholder="Color"
-                                type="text"
-                                value={this.state.form.color}
-                                onChange={(evt) => this.handleChange("color", evt)}
-                            />
+                                <SketchPicker 
+                                color={this.state.form.color}
+                                onChange={ this.handleChangeColor }></SketchPicker>
                         </FormGroup>
                     </Col>
                 </Row>

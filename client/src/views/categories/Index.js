@@ -34,7 +34,12 @@ class IndexCategories extends Component {
             return (
                 <tr key={index} onClick={() => window.location = "/categories/" + cat_id}>
                     <td>{name}</td>
-                    <td>{color}</td>
+                    <td style={{
+                        color: color,
+                        backgroundColor: color
+                        }}>
+                            {color}
+                    </td>
                 </tr>
             )
         })
