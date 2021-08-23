@@ -9,13 +9,13 @@ import logo from "logo.svg";
 var ps;
 
 // verifies if routeName is the one active (in browser input)
-function checkActiveRoute(pathname, toCheck) {
-  return "/admin/" + toCheck === pathname;
-}
+function checkActiveRoute(pathname, toCheck) { return pathname.includes(toCheck);}
 
 function Sidebar(props) {
   const sidebar = React.useRef();
   const pathname = props.location.pathname;
+  // TO DO : use if on const dict to generate the list of links
+  const routes = "coucou";
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(sidebar.current, {
@@ -37,7 +37,7 @@ function Sidebar(props) {
     >
       <div className="logo">
         <a
-          href="https://www.creative-tim.com"
+          href="/dashboard"
           className="simple-text logo-mini"
         >
           <div className="logo-img">
@@ -45,17 +45,17 @@ function Sidebar(props) {
           </div>
         </a>
         <a
-          href="https://www.creative-tim.com"
+          href="/dashboard"
           className="simple-text logo-normal"
         >
-          Creative Tim
+          Track My Assets
         </a>
       </div>
       <div className="sidebar-wrapper" ref={sidebar}>
         <Nav>
             <li className={checkActiveRoute(pathname, "dashboard") ? "active" : ""}>
                 <NavLink
-                    to={"/admin/dashboard"}
+                    to={"/dashboard"}
                     className="nav-link"
                     activeClassName={checkActiveRoute(pathname, "dashboard") ? "active" : ""}
                     >
@@ -65,12 +65,32 @@ function Sidebar(props) {
             </li>
             <li className={checkActiveRoute(pathname, "tables") ? "active" : ""}>
                 <NavLink
-                    to={"/admin/tables"}
+                    to={"/tables"}
                     className="nav-link"
                     activeClassName={checkActiveRoute(pathname, "tables") ? "active" : ""}
                     >
                     <i className="nc-icon nc-bank" />
+                    <p>Tables</p>
+                </NavLink>
+            </li>
+            <li className={checkActiveRoute(pathname, "assets") ? "active" : ""}>
+                <NavLink
+                    to={"/assets"}
+                    className="nav-link"
+                    activeClassName={checkActiveRoute(pathname, "assets") ? "active" : ""}
+                    >
+                    <i className="nc-icon nc-bank" />
                     <p>Assets</p>
+                </NavLink>
+            </li>
+            <li className={checkActiveRoute(pathname, "categories") ? "active" : ""}>
+                <NavLink
+                    to={"/categories"}
+                    className="nav-link"
+                    activeClassName={checkActiveRoute(pathname, "categories") ? "active" : ""}
+                    >
+                    <i className="nc-icon nc-bullet-list-67" />
+                    <p>Categories</p>
                 </NavLink>
             </li>
         </Nav>

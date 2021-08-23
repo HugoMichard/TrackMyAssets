@@ -1,24 +1,37 @@
-import Dashboard from "assets/paper/views/Dashboard.js";
+import Dashboard from "views/dashboard/Dashboard.js";
+
 import Login from "views/users/Login.js";
 import Register from "views/users/Register.js";
-import Notifications from "assets/paper/views/Notifications.js";
-import Icons from "assets/paper/views/Icons.js";
-import Typography from "assets/paper/views/Typography.js";
+
 import Tables from "assets/paper/views/Tables.js";
-import Maps from "assets/paper/views/Map.js";
-import UserPage from "assets/paper/views/User.js";
-import UpgradeToPro from "assets/paper/views/Upgrade.js";
+
+import IndexAsset from "views/assets/Index.js";
+import CreateAsset from "views/assets/Create.js";
+
+import IndexCategories from "views/categories/Index.js";
+import CreateCategory from "views/categories/Create.js";
+import DetailCategory from "views/categories/Detail.js";
+
 
 var routes = {
-  "/admin": {
-    "/dashboard": Dashboard,
-    "/tables": Tables
+  "/users": {
+    "/login": Login,
+    "/register": Register
   },
-  "/login": {
-    "/": Login
+  "/dashboard": {
+    "/": Dashboard
   },
-  "/register": {
-    "/": Register
+  "/tables": {
+    "/": Tables
+  },
+  "/assets": {
+    "/create": CreateAsset,
+    "/": IndexAsset
+  },
+  "/categories": {
+    "/create": CreateCategory,
+    "/:cat_id": DetailCategory,
+    "/": IndexCategories
   }
 }
 export default routes;

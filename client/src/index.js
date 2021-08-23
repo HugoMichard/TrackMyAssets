@@ -16,7 +16,7 @@ ReactDOM.render(
     <Switch>
       <Route path="/login" render={(props) => <ConnectionLayout {...props} />} />
       <Route path="/register" render={(props) => <ConnectionLayout {...props} />} />
-      <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
+      <Route path="/" render={(props) => <AdminLayout {...props} />} />
     </Switch>
   </BrowserRouter>,
   document.getElementById("root")

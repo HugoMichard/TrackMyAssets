@@ -21,40 +21,11 @@ import {
 
 
 function Header(props) {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [dropdownOpen, setDropdownOpen] = React.useState(false);
-  const [color, setColor] = React.useState("transparent");
   const sidebarToggle = React.useRef();
   const location = useLocation();
-  const toggle = () => {
-    if (isOpen) {
-      setColor("transparent");
-    } else {
-      setColor("dark");
-    }
-    setIsOpen(!isOpen);
-  };
-  const dropdownToggle = (e) => {
-    setDropdownOpen(!dropdownOpen);
-  };
   const getBrand = () => {
     return "TrackMyAssets";
   };
-  const openSidebar = () => {
-    document.documentElement.classList.toggle("nav-open");
-    sidebarToggle.current.classList.toggle("toggled");
-  };
-  // function that adds color dark/transparent to the navbar on resize (this is for the collapse)
-  const updateColor = () => {
-    if (window.innerWidth < 993 && isOpen) {
-      setColor("dark");
-    } else {
-      setColor("transparent");
-    }
-  };
-  React.useEffect(() => {
-    window.addEventListener("resize", updateColor.bind(this));
-  });
   React.useEffect(() => {
     if (
       window.innerWidth < 993 &&
@@ -76,16 +47,20 @@ function Header(props) {
           <NavbarBrand href="/login">{getBrand()}</NavbarBrand>
         </div>
         <div>
-        <Button
-          className="btn-round justify-content-end"
-          color="primary">
-              Login
+        <Link to="/login">
+          <Button
+            className="btn-round justify-content-end"
+            color="primary">
+                Login
           </Button>
+        </Link>
+        <Link to="register">
           <Button
           className="btn-round justify-content-end"
           color="primary">
               Register
           </Button>
+        </Link>
         </div>
       </Container>
     </Navbar>

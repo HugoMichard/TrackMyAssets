@@ -5,12 +5,17 @@ import { Route, Switch, useLocation } from "react-router-dom";
 
 import ConnectedNavbar from "components/navbars/ConnectedNavbar.js";
 import Sidebar from "components/sidebars/Sidebar.js";
+import AuthService from 'services/auth'
 
 import routes from "routers/routes.js";
 
 var ps;
 
 function Dashboard(props) {
+  const user = AuthService.getCurrentUser();
+  if(!user) {
+    window.location = "/login"
+  }
   const mainPanel = React.useRef();
   const location = useLocation();
   var allRoutes = [];

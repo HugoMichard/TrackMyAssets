@@ -1,5 +1,6 @@
 var User = require('../models/User')
-
+var jwt = require("jsonwebtoken");
+const config = require("../config/auth.config");
 
 exports.register = function (req, res) {
   var newUser = new User(req.body)
@@ -17,15 +18,14 @@ exports.login = function (req, res) {
   User.login(req.body, function (err, users) {
     console.log(req.session);
     if (err) {
-      res.send("Error");
-    } else { 
+        res.status(500).send({ message: err.message});
+    } else {
       if(users.length === 1) {
-        session = req.session;
-        session.email = req.body.email;
-        console.log(req.session);
-        res.send({authentification: "Success"})
+        user = users[0];
+        var token = jwt.sign({ id: user.usr_id }, config.secret, { expiresIn: 86400 });
+        res.status(200).send({authentification: "Success", accessToken: token});
       } else {
-        res.send("Error");
+        res.status(500).send({ message: "No user found with this email/password"});
       }
     }
   })
@@ -42,23 +42,3 @@ exports.checkAuth = function (req, res) {
     res.send("Disconnected");
   };
 }
-
-/*
-exports.search = function (req, res) {
-  User.search(req.query, function (err, userList) {
-    if (err) {
-      res.send(err)
-    }
-    res.json(userList)
-  })
-}
-
-exports.getDetail = function (req, res) {
-  User.getDetail(req.params, function (err, userDetail) {
-    if (err) {
-      res.send(err)
-    }
-    res.json(userDetail)
-  })
-}
-*/

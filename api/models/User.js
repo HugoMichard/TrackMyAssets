@@ -10,13 +10,26 @@ var User = function (user) {
 
 User.register = function (newUser, result) {
   sql.query(
-    'INSERT INTO user set ?', newUser, function (err, res) {
+    'INSERT INTO users set ?', newUser, function (err, res) {
       if (err) {
-        console.log('error in register user model: ', err)
-        result(null, res.insertId)
+        result(null, err)
       } else {
-        console.log(res.insertId)
-        result(null, res.insertId)
+        result(null, res)
+      }
+    }
+  )
+}
+
+User.login = function (params, result) {
+  sql.query(
+    "SELECT * FROM users WHERE email = ? AND password = ?", [
+      params.email,
+      params.password
+    ], (err, res) => {
+      if (err) {
+        result(null, err)
+      } else {
+        result(null, res)
       }
     }
   )
@@ -24,7 +37,7 @@ User.register = function (newUser, result) {
 
 User.search = function (query, result) {
   sql.query(
-    'SELECT * FROM user', function (err, res) {
+    'SELECT * FROM users', function (err, res) {
       if (err) {
         console.log('error in search user model: ', err)
         result(null, res)
@@ -38,7 +51,7 @@ User.search = function (query, result) {
 
 User.getDetail = function (params, result) {
   sql.query(
-    `SELECT * FROM user WHERE usr_id = ${params.usrId}`, function (err, res) {
+    `SELECT * FROM users WHERE usr_id = ${params.usrId}`, function (err, res) {
       if (err) {
         console.log('error in getting details of usr model: ', err)
         result(null, res)

@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {APIService} from 'routers/apiservice'
+import APIService from 'routers/apiservice'
 
 // reactstrap components
 import {
@@ -15,7 +15,6 @@ import {
   Col,
 } from "reactstrap";
 
-const apiService = new APIService()
 
 class Register extends Component {
   constructor(props) {
@@ -28,16 +27,22 @@ class Register extends Component {
       "password_confirmation": ""
     }
     this.state = { form: form };
-  }
-
-  createUser() {
-    apiService.createUser(this.state.form)
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange(property, event) {
     var form = this.state.form;
     form[property] = event.target.value;
     this.setState({form: form});
+  }
+
+  handleSubmit(e){
+    APIService.register(this.state.form).then(result => { 
+      console.log(result);
+      if(result === "Success") { window.location = "/login" }
+      else { window.location = "/register" }
+     });
   }
 
   render() {
@@ -69,6 +74,7 @@ class Register extends Component {
                           <Input
                             placeholder="Last Name"
                             type="text"
+                            onChange={(evt) => this.handleChange("lastname", evt)}
                           />
                         </FormGroup>
                       </Col>
@@ -79,7 +85,11 @@ class Register extends Component {
                           <label htmlFor="exampleInputEmail1">
                             Email address
                           </label>
-                          <Input placeholder="Email" type="email" />
+                          <Input 
+                            placeholder="Email" 
+                            type="email" 
+                            onChange={(evt) => this.handleChange("email", evt)}
+                          />
                         </FormGroup>
                       </Col>
                     </Row>
@@ -90,6 +100,7 @@ class Register extends Component {
                           <Input
                             placeholder="Password"
                             type="password"
+                            onChange={(evt) => this.handleChange("password", evt)}
                           />
                         </FormGroup>
                       </Col>
@@ -99,6 +110,7 @@ class Register extends Component {
                           <Input
                             placeholder="Confirmation"
                             type="password"
+                            onChange={(evt) => this.handleChange("password_confirmation", evt)}
                           />
                         </FormGroup>
                       </Col>
@@ -108,7 +120,7 @@ class Register extends Component {
                         <Button
                           className="btn-round"
                           color="primary"
-                          type="submit"
+                          onClick={this.handleSubmit}
                         >
                           Register
                         </Button>

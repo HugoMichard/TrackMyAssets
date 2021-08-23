@@ -1,24 +1,10 @@
-/*!
-IN DASHBOARD PAPER
-=========================================================
-* Paper Dashboard React - v1.3.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/paper-dashboard-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com)
-
-* Licensed under MIT (https://github.com/creativetimofficial/paper-dashboard-react/blob/main/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React, { Component } from "react";
 // react plugin used to create charts
 import { Line, Pie } from "react-chartjs-2";
+
+import AuthService from "services/auth";
+import APIService from "routers/apiservice";
+
 // reactstrap components
 import {
   Card,
@@ -39,8 +25,20 @@ import {
 class Dashboard extends Component {
   constructor(props) {
     super(props);
-    this.state = { apiResponse: "" };
+    console.log("initializing dashboard");
 }
+
+  componentDidMount() {
+    const user = AuthService.getCurrentUser();
+    console.log(user)
+
+    if (user) {
+      this.setState({
+        currentUser: user
+      });
+    }
+  }
+
   render() {
     return (
       <>
@@ -57,7 +55,7 @@ class Dashboard extends Component {
                     </Col>
                     <Col md="8" xs="7">
                       <div className="numbers">
-                        <p className="card-category">Capacity {this.state.apiResponse}</p>
+                        <p className="card-category">Capacity</p>
                         <CardTitle tag="p">150GB</CardTitle>
                         <p />
                       </div>

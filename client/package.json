@@ -1,6 +1,6 @@
 {
-  "name": "paper-dashboard-react",
-  "version": "1.3.0",
+  "name": "track-my-assets",
+  "version": "1.0.0",
   "private": true,
   "homepage": "https://demos.creative-tim.com/paper-dashboard-react/#/dashboard",
   "dependencies": {

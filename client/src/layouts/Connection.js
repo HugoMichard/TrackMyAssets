@@ -1,12 +1,9 @@
 import React, { Component } from "react";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
-import { Route, Switch, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-import DemoNavbar from "assets/paper/components/Navbars/DemoNavbar.js";
 import DisconnectedNavbar from "components/navbars/DisconnectedNavbar.js";
-import Footer from "assets/paper/components/Footer/Footer.js";
-import Sidebar from "assets/paper/components/Sidebar/Sidebar.js";
 
 import Login from "views/users/Login.js"
 import Register from "views/users/Register.js"
@@ -18,7 +15,6 @@ function getRequestedViewComponent(pathname) {
   if(pathname === "/login") {return Login}
   else{return Register;}
 }
-
 
 function Connection(props) {
     const ViewComponent = getRequestedViewComponent(props.location.pathname);
@@ -44,7 +40,7 @@ function Connection(props) {
       <div className="wrapper">
         <div className="main-panel" id="full_width_main_panel" ref={mainPanel}>
           <DisconnectedNavbar {...props} />
-          <ViewComponent></ViewComponent>
+          <ViewComponent/>
         </div>
       </div>
     );
