@@ -26,7 +26,26 @@ class IndexAssets extends Component {
         }
     }
     componentDidMount() {
-        APIService.searchAsset(this.state.searchForm).then(res => { console.log("j'ai bien cherché"); console.log(res); });
+        APIService.searchAsset(this.state.searchForm).then(res => { this.setState({ assets: res.data.assets }); console.log(this.state.assets)});
+    }
+    renderTableData() {
+        return this.state.assets.map((cat, index) => {
+            const { ast_id, name, cat_name, cat_color, isin, coin, type } = cat
+            const code = type === "stock" ? isin : coin;
+            return (
+                <tr key={index} onClick={() => window.location = "/assets/" + ast_id}>
+                    <td>{name}</td>
+                    <td>{type}</td>
+                    <td>{code}</td>
+                    <td style={{
+                        color: cat_color
+                        }}>{cat_name}</td>
+                    <td>
+                        <i className="nc-icon nc-simple-remove" onClick={(e) => { e.stopPropagation(); console.log("coucou"); }} />
+                    </td>
+                </tr>
+            )
+        })
     }
     render() {
         return (
@@ -51,111 +70,13 @@ class IndexAssets extends Component {
                         <tr>
                             <th>Name</th>
                             <th>Type</th>
-                            <th className="text-right">Added on The</th>
+                            <th>ISIN / Coin</th>
+                            <th>Category</th>
+                            <th>Delete</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>Dakota Rice</td>
-                            <td>Niger</td>
-                            <td>Oud-Turnhout</td>
-                        </tr>
-                        <tr>
-                            <td>Minerva Hooper</td>
-                            <td>Curaçao</td>
-                            <td>Sinaai-Waas</td>
-                        </tr>
-                        <tr>
-                            <td>Sage Rodriguez</td>
-                            <td>Netherlands</td>
-                            <td>Baileux</td>
-                        </tr>
-                        <tr>
-                            <td>Philip Chaney</td>
-                            <td>Korea, South</td>
-                            <td>Overland Park</td>
-                        </tr>
-                        <tr>
-                            <td>Doris Greene</td>
-                            <td>Malawi</td>
-                            <td>Feldkirchen in Kärnten</td>
-                        </tr>
-                        <tr>
-                            <td>Mason Porter</td>
-                            <td>Chile</td>
-                            <td>Gloucester</td>
-                        </tr>
-                        <tr>
-                            <td>Jon Porter</td>
-                            <td>Portugal</td>
-                            <td>Gloucester</td>
-                        </tr>
-                        </tbody>
-                    </Table>
-                    </CardBody>
-                </Card>
-                </Col>
-                <Col md="12">
-                <Card className="card-plain">
-                    <CardHeader>
-                    <CardTitle tag="h4">Table on Plain Background</CardTitle>
-                    <p className="card-category">
-                        Here is a subtitle for this table
-                    </p>
-                    </CardHeader>
-                    <CardBody>
-                    <Table responsive>
-                        <thead className="text-primary">
-                        <tr>
-                            <th>Name</th>
-                            <th>Country</th>
-                            <th>City</th>
-                            <th className="text-right">Salary</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>Dakota Rice</td>
-                            <td>Niger</td>
-                            <td>Oud-Turnhout</td>
-                            <td className="text-right">$36,738</td>
-                        </tr>
-                        <tr>
-                            <td>Minerva Hooper</td>
-                            <td>Curaçao</td>
-                            <td>Sinaai-Waas</td>
-                            <td className="text-right">$23,789</td>
-                        </tr>
-                        <tr>
-                            <td>Sage Rodriguez</td>
-                            <td>Netherlands</td>
-                            <td>Baileux</td>
-                            <td className="text-right">$56,142</td>
-                        </tr>
-                        <tr>
-                            <td>Philip Chaney</td>
-                            <td>Korea, South</td>
-                            <td>Overland Park</td>
-                            <td className="text-right">$38,735</td>
-                        </tr>
-                        <tr>
-                            <td>Doris Greene</td>
-                            <td>Malawi</td>
-                            <td>Feldkirchen in Kärnten</td>
-                            <td className="text-right">$63,542</td>
-                        </tr>
-                        <tr>
-                            <td>Mason Porter</td>
-                            <td>Chile</td>
-                            <td>Gloucester</td>
-                            <td className="text-right">$78,615</td>
-                        </tr>
-                        <tr>
-                            <td>Jon Porter</td>
-                            <td>Portugal</td>
-                            <td>Gloucester</td>
-                            <td className="text-right">$98,615</td>
-                        </tr>
+                            {this.renderTableData()}
                         </tbody>
                     </Table>
                     </CardBody>

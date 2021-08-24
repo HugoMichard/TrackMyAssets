@@ -45,6 +45,11 @@ class APIService {
     return axios.post(url, data, this.getUserHeader()).then(res => { return res })
   }
 
+  updateAsset (data) {
+    const url = `${API_URL}/assets/${data.ast_id}`
+    return axios.post(url, data, this.getUserHeader()).then(res => { return res })
+  }
+
   searchAsset (data) {
     const url = `${API_URL}/assets`
     var search = this.formatSearch(data)
@@ -66,6 +71,7 @@ class APIService {
     const url = `${API_URL}/categories/${data.cat_id}`
     return axios.post(url, data, this.getUserHeader()).then(res => { return res })
   }
+
   searchCategory (data) {
     const url = `${API_URL}/categories`
     var search = this.formatSearch(data)

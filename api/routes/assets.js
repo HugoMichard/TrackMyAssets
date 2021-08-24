@@ -3,11 +3,12 @@ var router = express.Router();
 var asset = require('../controllers/AssetController')
 const { authJwt } = require("../middlewares");
 
-router.get('/', asset.search);
+router.get('/', authJwt.verifyToken, asset.search);
 
 router.post("/", authJwt.verifyToken, asset.create);
 
-router.get("/:astId", asset.getDetail);
+router.get("/:ast_id", authJwt.verifyToken, asset.getDetail);
+router.post("/:ast_id", authJwt.verifyToken, asset.update);
 
 
 module.exports = router;

@@ -30,7 +30,7 @@ class DetailCategory extends Component {
                 <Col md="12">
                 <Card>
                     <CardHeader>
-                        <CardTitle tag="h4" className="no-margin-bottom">Category Details{this.state.category.color}</CardTitle>
+                        <CardTitle tag="h4" className="no-margin-bottom">Category Details</CardTitle>
                     </CardHeader>
                     <CardBody>
                         <CategoryForm

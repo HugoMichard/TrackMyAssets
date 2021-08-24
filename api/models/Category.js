@@ -20,7 +20,7 @@ Category.create = function (newCat, result) {
 
 Category.search = function (params, result) {
   sql.query(
-    "SELECT * FROM categories WHERE name LIKE ? AND usr_id = ?", [
+    `SELECT * FROM categories WHERE name LIKE ? AND usr_id = ?`, [
       params.name,
       params.usr_id
     ], (err, res) => {

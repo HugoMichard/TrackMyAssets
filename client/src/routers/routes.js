@@ -7,6 +7,7 @@ import Tables from "assets/paper/views/Tables.js";
 
 import IndexAsset from "views/assets/Index.js";
 import CreateAsset from "views/assets/Create.js";
+import DetailAsset from "views/assets/Detail.js";
 
 import IndexCategories from "views/categories/Index.js";
 import CreateCategory from "views/categories/Create.js";
@@ -26,6 +27,7 @@ var routes = {
   },
   "/assets": {
     "/create": CreateAsset,
+    "/:ast_id": DetailAsset,
     "/": IndexAsset
   },
   "/categories": {

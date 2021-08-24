@@ -24,7 +24,9 @@ Asset.create = function (newAsset, result) {
 
 Asset.search = function (params, result) {
   sql.query(
-    "SELECT * FROM assets WHERE name LIKE ? AND usr_id = ?", [
+    `SELECT a.*, c.color as cat_color, c.name as cat_name FROM assets a
+      INNER JOIN categories c ON c.cat_id = a.cat_id
+      WHERE a.name LIKE ? AND a.usr_id = ?`, [
       params.name,
       params.usr_id
     ], (err, res) => {
@@ -39,12 +41,37 @@ Asset.search = function (params, result) {
 
 Asset.getDetail = function (params, result) {
   sql.query(
-    `SELECT * FROM assets WHERE ast_id = ${params.astId}`, function (err, res) {
+    `SELECT a.*, c.color as cat_color, c.name as cat_name FROM assets a
+      INNER JOIN categories c on a.cat_id = c.cat_id
+      WHERE a.ast_id = ? AND a.usr_id = ?`, [
+        params.ast_id,
+        params.usr_id
+    ], (err, res) => {
       if (err) {
-        console.log('error in getting details of ast model: ', err)
         result(null, res)
       } else {
-        console.log(res)
+        result(null, res)
+      }
+    }
+  )
+}
+
+Asset.update = function (params, result) {
+  sql.query(
+    `UPDATE assets 
+      SET name = ?, isin = ?, coin = ?, cat_id = ?, type = ?
+      WHERE ast_id = ? AND usr_id = ?`, [
+        params.name,
+        params.isin,
+        params.coin,
+        params.cat_id,
+        params.type,
+        params.ast_id,
+        params.usr_id
+    ], (err, res) => {
+      if (err) {
+        result(null, res)
+      } else {
         result(null, res)
       }
     }
