@@ -4,7 +4,7 @@ var Asset = function (asset) {
   this.name = asset.name
   this.type = asset.type
   this.usr_id = asset.usr_id
-  this.isin = asset.isin
+  this.ticker = asset.ticker
   this.coin = asset.coin
   this.cat_id = asset.cat_id
   this.created_at = new Date()
@@ -59,10 +59,10 @@ Asset.getDetail = function (params, result) {
 Asset.update = function (params, result) {
   sql.query(
     `UPDATE assets 
-      SET name = ?, isin = ?, coin = ?, cat_id = ?, type = ?
+      SET name = ?, ticker = ?, coin = ?, cat_id = ?, type = ?
       WHERE ast_id = ? AND usr_id = ?`, [
         params.name,
-        params.isin,
+        params.ticker,
         params.coin,
         params.cat_id,
         params.type,

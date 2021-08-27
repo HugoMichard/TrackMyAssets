@@ -39,7 +39,6 @@ class Register extends Component {
 
   handleSubmit(e){
     APIService.register(this.state.form).then(result => { 
-      console.log(result);
       if(result === "Success") { window.location = "/login" }
       else { window.location = "/register" }
      });

@@ -5,10 +5,13 @@
   "homepage": "https://demos.creative-tim.com/paper-dashboard-react/#/dashboard",
   "dependencies": {
     "@babel/core": "7.14.2",
+    "@nivo/core": "^0.73.0",
+    "@nivo/line": "^0.73.0",
     "axios": "^0.21.1",
     "bootstrap": "4.6.0",
     "chart.js": "3.2.1",
     "jquery": "3.6.0",
+    "nivo": "^0.31.0",
     "node-sass": "6.0.0",
     "perfect-scrollbar": "1.5.1",
     "react": "17.0.2",

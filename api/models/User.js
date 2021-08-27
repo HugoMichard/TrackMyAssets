@@ -39,10 +39,8 @@ User.search = function (query, result) {
   sql.query(
     'SELECT * FROM users', function (err, res) {
       if (err) {
-        console.log('error in search user model: ', err)
         result(null, res)
       } else {
-        console.log(res)
         result(null, res)
       }
     }
@@ -53,10 +51,8 @@ User.getDetail = function (params, result) {
   sql.query(
     `SELECT * FROM users WHERE usr_id = ${params.usrId}`, function (err, res) {
       if (err) {
-        console.log('error in getting details of usr model: ', err)
         result(null, res)
       } else {
-        console.log(res)
         result(null, res)
       }
     }

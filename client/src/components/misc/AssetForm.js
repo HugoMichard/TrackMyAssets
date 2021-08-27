@@ -17,8 +17,8 @@ class AssetForm extends Component {
         super(props);
         const form = {
             name: "",
-            type: "crypto",
-            isin: "",
+            type: "stock",
+            ticker: "",
             coin: "",
             cat_id: ""
         }
@@ -37,7 +37,7 @@ class AssetForm extends Component {
             name: nextProps.name,
             type: nextProps.type,
             cat_id: nextProps.cat_id,
-            isin: nextProps.isin,
+            ticker: nextProps.ticker,
             coin: nextProps.coin,
             ast_id: nextProps.ast_id
         }
@@ -92,12 +92,12 @@ class AssetForm extends Component {
         if(this.state.form.type !== "crypto") {
             return (
                 <div>                            
-                    <label>ISIN Code</label>
+                    <label>Ticker Code</label>
                     <Input
-                        placeholder="ISIN"
+                        placeholder="Ticker"
                         type="text"
-                        onChange={(evt) => this.handleChange("isin", evt)}
-                        value={this.state.form.isin}
+                        onChange={(evt) => this.handleChange("ticker", evt)}
+                        value={this.state.form.ticker}
                     />
                 </div>
             );
@@ -117,7 +117,7 @@ class AssetForm extends Component {
     }
     render() {
         let { typeOptions, selectedType, selectedCat, categories } = this.state
-        let submitText = this.state.form.cat_id === undefined ? "Create" : "Update"; 
+        let submitText = this.state.form.ast_id === undefined ? "Create" : "Update"; 
         return (
         <>
             <Form>

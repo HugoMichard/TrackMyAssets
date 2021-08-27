@@ -23,14 +23,9 @@ import {
 } from "assets/paper/variables/charts.js";
 
 class Dashboard extends Component {
-  constructor(props) {
-    super(props);
-    console.log("initializing dashboard");
-}
 
   componentDidMount() {
     const user = AuthService.getCurrentUser();
-    console.log(user)
 
     if (user) {
       this.setState({

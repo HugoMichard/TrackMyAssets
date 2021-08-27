@@ -19,7 +19,6 @@ exports.search = function (req, res) {
     if (err) {
         res.status(500).send({ message: err.message});
     } else {
-        console.log(categories);
         res.status(200).send({categories: categories});
     }
   })

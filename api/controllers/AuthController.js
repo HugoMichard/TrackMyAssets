@@ -30,15 +30,3 @@ exports.login = function (req, res) {
     }
   })
 }
-
-exports.checkAuth = function (req, res) {
-  console.log("coucou")
-  session = req.session;
-  console.log(session.email);
-  console.log(req.headers.cookie);
-  if(req.signedCookies.name === "user") {
-    res.send("Connected");
-  } else {
-    res.send("Disconnected");
-  };
-}

@@ -14,8 +14,6 @@ class APIService {
   }
 
   formatSearch (data) {
-    console.log("je format");
-    console.log(data)
     data = JSON.parse(JSON.stringify(data))
     var search = '?'
     Object.entries(data).forEach(([key, value]) => {
@@ -58,7 +56,12 @@ class APIService {
 
   getAsset (astId) {
     const url = `${API_URL}/assets/` + astId
-    return axios.get(url, this.getUserHeader())
+    return axios.get(url, this.getUserHeader()).then(res => { return res })
+  }
+
+  getAssetHistory (astId) {
+    const url = `${API_URL}/histories/asset/` + astId
+    return axios.get(url, this.getUserHeader()).then(res => { return res })
   }
 
   // category methods

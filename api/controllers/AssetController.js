@@ -1,4 +1,6 @@
 var Asset = require('../models/Asset')
+var history = require('../controllers/HistoryController')
+
 
 exports.create = function (req, res) {
   var newAsset = new Asset(req.body)
@@ -8,14 +10,15 @@ exports.create = function (req, res) {
     if (err) {
       res.status(500).send(err)
     }
-    res.status(200).send({state: "Success", asset: asset});
+    res.status(200).send({state: "Success", ast_id: asset.insertId});
+    newAsset.ast_id = asset.insertId
+    history.initializeAssetHistory(newAsset);
   })
 }
 
 exports.search = function (req, res) {
   req.query.name = req.query.name === undefined ? "%" : "%" + req.query.name + "%"
   req.query.usr_id = req.usr_id
-  console.log(req.query)
   Asset.search(req.query, function (err, assets) {
     if (err) {
         res.status(500).send({ message: err.message});

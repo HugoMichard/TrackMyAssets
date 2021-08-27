@@ -32,7 +32,7 @@ CREATE TABLE assets
   cat_id          INT unsigned NOT NULL,
   name            VARCHAR(150) NOT NULL,
   type            VARCHAR(150) NOT NULL,
-  isin            VARCHAR(30),
+  ticker          VARCHAR(30),
   coin            VARCHAR(10),
   created_at      DATE,
   PRIMARY KEY     (ast_id),
@@ -54,12 +54,12 @@ CREATE TABLE orders
   FOREIGN KEY     (ast_id) REFERENCES assets(ast_id)                                            
 );
 
-CREATE TABLE history
+CREATE TABLE histories
 (
   hst_id          INT unsigned NOT NULL AUTO_INCREMENT,
-  ast_id          INT unsigned NOT NULL,
   hst_date        DATE NOT NULL,
   vl              FLOAT NOT NULL,
-  PRIMARY KEY     (hst_id),
-  FOREIGN KEY     (ast_id) REFERENCES assets(ast_id)
+  ticker          VARCHAR(30),
+  coin            VARCHAR(10),
+  PRIMARY KEY     (hst_id)
 );

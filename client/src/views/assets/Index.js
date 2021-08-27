@@ -17,25 +17,30 @@ import {
 class IndexAssets extends Component {
     constructor(props) {
         super(props);
+        const typeValueToLabel = {
+            stock: "Stock Asset",
+            crypto: "Cryptocurrency"
+        }
         const searchForm = {
             name: ""
         }
         this.state = { 
             assets: [],
-            searchForm: searchForm
+            searchForm: searchForm,
+            typeValueToLabel: typeValueToLabel
         }
     }
     componentDidMount() {
-        APIService.searchAsset(this.state.searchForm).then(res => { this.setState({ assets: res.data.assets }); console.log(this.state.assets)});
+        APIService.searchAsset(this.state.searchForm).then(res => { this.setState({ assets: res.data.assets });});
     }
     renderTableData() {
         return this.state.assets.map((cat, index) => {
-            const { ast_id, name, cat_name, cat_color, isin, coin, type } = cat
-            const code = type === "stock" ? isin : coin;
+            const { ast_id, name, cat_name, cat_color, ticker, coin, type } = cat
+            const code = type === "stock" ? ticker : coin;
             return (
                 <tr key={index} onClick={() => window.location = "/assets/" + ast_id}>
                     <td>{name}</td>
-                    <td>{type}</td>
+                    <td>{this.state.typeValueToLabel[type]}</td>
                     <td>{code}</td>
                     <td style={{
                         color: cat_color
@@ -70,7 +75,7 @@ class IndexAssets extends Component {
                         <tr>
                             <th>Name</th>
                             <th>Type</th>
-                            <th>ISIN / Coin</th>
+                            <th>Ticker / Coin</th>
                             <th>Category</th>
                             <th>Delete</th>
                         </tr>
