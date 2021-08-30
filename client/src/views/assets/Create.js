@@ -23,7 +23,8 @@ class CreateAsset extends Component {
                         <CardTitle tag="h4" className="no-margin-bottom">Create an Asset</CardTitle>
                     </CardHeader>
                     <CardBody>
-                        <AssetForm></AssetForm>
+                        <AssetForm>
+                        </AssetForm>
                     </CardBody>
                 </Card>
                 </Col>

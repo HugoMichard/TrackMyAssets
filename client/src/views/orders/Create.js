@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import OrderForm from "components/misc/OrderForm";
+import AssetForm from "components/misc/AssetForm";
 
 // reactstrap components
 import {

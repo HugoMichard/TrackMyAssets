@@ -32,6 +32,9 @@ class Dashboard extends Component {
         currentUser: user
       });
     }
+    APIService.getDashboardSummary().then(res => {
+      console.log(res);
+    })
   }
 
   render() {

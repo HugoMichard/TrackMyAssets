@@ -112,20 +112,10 @@ class APIService {
     return axios.get(url, this.getUserHeader()).then(res => { return res })
   }
 
-  // book methods
-  createBook (data) {
-    const url = `${API_URL}/book`
-    axios.post(url, data).then(function (res) { window.location = '/' })
-  }
-  searchBook (data) {
-    const url = `${API_URL}/book`
-    var search = this.formatSearch(data)
-    const request = axios.get(url + search)
-    return request.then(result => { return result.data })
-  }
-  getBook (bokId) {
-    const url = `${API_URL}/book/` + bokId
-    return axios.get(url)
+  // dashboard methods
+  getDashboardSummary () {
+    const url = `${API_URL}/dashboard/summary`
+    return axios.get(url, this.getUserHeader()).then(res => { return res })
   }
 
 }
