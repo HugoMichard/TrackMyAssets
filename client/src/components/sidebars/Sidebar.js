@@ -63,14 +63,14 @@ function Sidebar(props) {
                     <p>Dashboard</p>
                 </NavLink>
             </li>
-            <li className={checkActiveRoute(pathname, "tables") ? "active" : ""}>
+            <li className={checkActiveRoute(pathname, "orders") ? "active" : ""}>
                 <NavLink
-                    to={"/tables"}
+                    to={"/orders"}
                     className="nav-link"
-                    activeClassName={checkActiveRoute(pathname, "tables") ? "active" : ""}
+                    activeClassName={checkActiveRoute(pathname, "orders") ? "active" : ""}
                     >
-                    <i className="nc-icon nc-bank" />
-                    <p>Tables</p>
+                    <i className="nc-icon nc-paper" />
+                    <p>Orders</p>
                 </NavLink>
             </li>
             <li className={checkActiveRoute(pathname, "assets") ? "active" : ""}>

@@ -32,7 +32,6 @@ class AssetForm extends Component {
     }
     componentWillReceiveProps(nextProps) {
         const categories = this.state.categories;
-        console.log(categories);
         const form = {
             name: nextProps.name,
             type: nextProps.type,
@@ -41,7 +40,6 @@ class AssetForm extends Component {
             coin: nextProps.coin,
             ast_id: nextProps.ast_id
         }
-        console.log(form);
         const selectedType = form.type === "stock" ? this.state.typeOptions[0] : this.state.typeOptions[1];
         var selectedCat = {}
         for(var i in categories){
@@ -131,7 +129,7 @@ class AssetForm extends Component {
                     </Col>
                     <Col md="6">
                         <FormGroup>
-                            <label>Catégorie</label>
+                            <label>Category</label>
                             <Select options={categories} onChange={(evt) => this.handleChange("cat_id", evt)} value={selectedCat}></Select>
                         </FormGroup>
                     </Col>

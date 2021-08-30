@@ -38,10 +38,8 @@ class CategoryForm extends Component {
     }
 
     handleChangeColor = (color) => {
-        console.log(color);
         var form = this.state.form
         form.color = color.hex
-        console.log(form)
         this.setState({ form: form });
       };
     

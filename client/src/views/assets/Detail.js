@@ -35,7 +35,6 @@ class DetailAsset extends Component {
     componentDidMount() {
         APIService.getAsset(this.state.ast_id).then(res => { this.setState({asset: res.data.asset });});
         APIService.getAssetHistory(this.state.ast_id).then(res => { 
-            console.log(res.data.histories);
             const data = res.data.histories.map(h => {
                 return {
                     "x": new Date(h.hst_date).toLocaleDateString(),
@@ -44,11 +43,7 @@ class DetailAsset extends Component {
             });
             var chart_data = this.state.chart_data
             chart_data[0].data = data
-            //chart_data.data.labels = dates.slice(0,10);
-            //chart_data.data.datasets[0].data = vls.slice(0,10)
             this.setState({histories: res.data.histories, chart_data: chart_data });
-            console.log("donzo");
-            console.log(chart_data);
         });
     }
     render() {

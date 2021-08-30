@@ -25,28 +25,39 @@ class IndexAssets extends Component {
             name: ""
         }
         this.state = { 
-            assets: [],
+            orders: [],
             searchForm: searchForm,
             typeValueToLabel: typeValueToLabel
         }
     }
+    searchForOrders() {
+        APIService.searchOrders(this.state.searchForm).then(res => { this.setState({ orders: res.data.orders }); });
+    }
     componentDidMount() {
-        APIService.searchAssets(this.state.searchForm).then(res => { this.setState({ assets: res.data.assets });});
+        this.searchForOrders()
     }
     renderTableData() {
-        return this.state.assets.map((ast, index) => {
-            const { ast_id, name, cat_name, cat_color, ticker, coin, type } = ast
-            const code = type === "stock" ? ticker : coin;
+        return this.state.orders.map((ord, index) => {
+            const { ord_id, ast_name, cat_name, cat_color, ast_ticker, ast_coin, ast_type, quantity, fees, price, execution_date } = ord
+            const code = ast_type === "stock" ? ast_ticker : ast_coin;
             return (
-                <tr key={index} onClick={() => window.location = "/assets/" + ast_id}>
-                    <td>{name}</td>
-                    <td>{this.state.typeValueToLabel[type]}</td>
+                <tr key={index} onClick={() => window.location = "/orders/" + ord_id}>
+                    <td>{execution_date}</td>
+                    <td>{ast_name}</td>
                     <td>{code}</td>
+                    <td>{this.state.typeValueToLabel[ast_type]}</td>
                     <td style={{
                         color: cat_color
-                        }}>{cat_name}</td>
+                        }}>{cat_name}
+                    </td>
+                    <td>{quantity}</td>
+                    <td>{price}</td>
+                    <td>{fees}</td>
+                    <td>{quantity * price + fees}</td>
                     <td>
-                        <i className="nc-icon nc-simple-remove" onClick={(e) => { e.stopPropagation(); console.log("coucou"); }} />
+                        <i 
+                            className="nc-icon nc-simple-remove" 
+                            onClick={(e) => { e.stopPropagation(); APIService.deleteOrder(ord_id).then(() => this.searchForOrders()); }} />
                     </td>
                 </tr>
             )
@@ -60,10 +71,10 @@ class IndexAssets extends Component {
                 <Col md="12">
                 <Card>
                     <CardHeader>
-                        <CardTitle tag="h4" className="no-margin-bottom">Assets</CardTitle>
+                        <CardTitle tag="h4" className="no-margin-bottom">Orders</CardTitle>
                     </CardHeader>
                     <CardBody>
-                    <Link to="/assets/create">
+                    <Link to="/orders/create">
                         <Button
                             className="btn-round justify-content-end no-margin-top"
                             color="primary">
@@ -73,10 +84,15 @@ class IndexAssets extends Component {
                     <Table>
                         <thead className="text-primary">
                         <tr>
-                            <th>Name</th>
-                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Asset</th>
                             <th>Ticker / Coin</th>
+                            <th>Type</th>
                             <th>Category</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Fees</th>
+                            <th>Total</th>
                             <th>Delete</th>
                         </tr>
                         </thead>

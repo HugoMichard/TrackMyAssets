@@ -45,6 +45,27 @@ function initializeStockHistory(asset) {
     });
 }
 
+function initializeCoinHistory(asset) {
+    checkCoinHistoryExists(asset.coin).then(coinHistoryExists => {
+        if(!coinHistoryExists) {
+            var ytd = new Date();
+            ytd.setFullYear(ytd.getFullYear() - 1);
+        
+            stockScraper.getDataOfCoin(asset.coin, ytd).then(ytd_data => {
+                formatted_data = ytd_data.map(item => {
+                    item.date = new Date(item.date * 1000).toISOString().slice(0, 10).replace('T', ' ');
+                    return item;
+                });
+        
+                sql_histories = ytd_data.map(item => (`('${asset.ticker}', '${item.date}', ${item.close})`))
+                History.addHistories(sql_histories, function (err, histories) {
+                    console.log("added "+ histories.affectedRows + " histories");
+                });
+            });
+        }
+    });
+}
+
 function checkTickerHistoryExists(ticker) {
     return new Promise((resolve, reject) => {
         History.getTickerHistory(ticker, function(err, res) {
@@ -53,6 +74,10 @@ function checkTickerHistoryExists(ticker) {
     });
 }
 
-function initializeCoinHistory(asset) {
-    console.log("TODO: initialize coin history");
+function checkCoinHistoryExists(ticker) {
+    return new Promise((resolve, reject) => {
+        History.getTickerHistory(ticker, function(err, res) {
+            resolve(res.length > 0);
+        });
+    });
 }

@@ -46,9 +46,9 @@ CREATE TABLE orders
   usr_id          INT unsigned NOT NULL,
   ast_id          INT unsigned NOT NULL,
   execution_date  DATE NOT NULL,
-  vl              FLOAT NOT NULL,
-  nbr_ast         FLOAT NOT NULL,
-  fee             FLOAT,
+  price           FLOAT NOT NULL,
+  quantity        FLOAT NOT NULL,
+  fees            FLOAT,
   PRIMARY KEY     (ord_id),
   FOREIGN KEY     (usr_id) REFERENCES users(usr_id),
   FOREIGN KEY     (ast_id) REFERENCES assets(ast_id)                                            

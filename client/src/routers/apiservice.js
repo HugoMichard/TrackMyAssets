@@ -22,7 +22,6 @@ class APIService {
       }
     })
     search = search.slice(0, -1)
-    console.log(search)
     return search
   }
 
@@ -48,7 +47,7 @@ class APIService {
     return axios.post(url, data, this.getUserHeader()).then(res => { return res })
   }
 
-  searchAsset (data) {
+  searchAssets (data) {
     const url = `${API_URL}/assets`
     var search = this.formatSearch(data)
     return axios.get(url + search, this.getUserHeader()).then(res => { return res })
@@ -62,6 +61,33 @@ class APIService {
   getAssetHistory (astId) {
     const url = `${API_URL}/histories/asset/` + astId
     return axios.get(url, this.getUserHeader()).then(res => { return res })
+  }
+
+  // order methods
+  createOrder (data) {
+    const url = `${API_URL}/orders`
+    return axios.post(url, data, this.getUserHeader()).then(res => { return res })
+  }
+
+  updateOrder (data) {
+    const url = `${API_URL}/orders/${data.ord_id}`
+    return axios.post(url, data, this.getUserHeader()).then(res => { return res })
+  }
+
+  searchOrders (data) {
+    const url = `${API_URL}/orders`
+    var search = this.formatSearch(data)
+    return axios.get(url + search, this.getUserHeader()).then(res => { return res })
+  }
+
+  getOrder (ordId) {
+    const url = `${API_URL}/orders/` + ordId
+    return axios.get(url, this.getUserHeader()).then(res => { return res })
+  }
+
+  deleteOrder (ordId) {
+    const url = `${API_URL}/orders/` + ordId
+    return axios.delete(url, this.getUserHeader(), ordId).then(res => { return res })
   }
 
   // category methods
