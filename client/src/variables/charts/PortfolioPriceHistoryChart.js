@@ -63,6 +63,7 @@ export function PortfolioPriceHistoryChart(data) {
             legendPosition: 'middle'
         }}
         enableGridX={false}
+        enableArea={true}
         colors={{ scheme: 'category10' }}
         lineWidth={1}
         pointSize={4}

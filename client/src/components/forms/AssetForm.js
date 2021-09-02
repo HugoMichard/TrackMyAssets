@@ -17,7 +17,7 @@ class AssetForm extends Component {
         super(props);
         const form = {
             name: "",
-            type: "stock",
+            ast_type: "stock",
             ticker: "",
             coin: "",
             cat_id: ""
@@ -34,13 +34,13 @@ class AssetForm extends Component {
         const categories = this.state.categories;
         const form = {
             name: nextProps.name,
-            type: nextProps.type,
+            ast_type: nextProps.ast_type,
             cat_id: nextProps.cat_id,
             ticker: nextProps.ticker,
             coin: nextProps.coin,
             ast_id: nextProps.ast_id
         }
-        const selectedType = form.type === "stock" ? this.state.typeOptions[0] : this.state.typeOptions[1];
+        const selectedType = form.ast_type === "stock" ? this.state.typeOptions[0] : this.state.typeOptions[1];
         var selectedCat = {}
         for(var i in categories){
             if(categories[i].value === form.cat_id){
@@ -65,8 +65,8 @@ class AssetForm extends Component {
     }
     handleChange(property, event) {
         var { form, selectedType, selectedCat } = this.state;
-        form[property] = property === "type" || property === "cat_id" ? event.value : event.target.value;
-        if(property === "type") {
+        form[property] = property === "ast_type" || property === "cat_id" ? event.value : event.target.value;
+        if(property === "ast_type") {
             selectedType = event
         }
         if(property === "cat_id") {
@@ -87,7 +87,7 @@ class AssetForm extends Component {
         }
     }
     assetIdentifier() {
-        if(this.state.form.type !== "crypto") {
+        if(this.state.form.ast_type !== "crypto") {
             return (
                 <div>                            
                     <label>Ticker Code</label>
@@ -123,7 +123,7 @@ class AssetForm extends Component {
                     <Col md="6">
                         <FormGroup>
                             <label>Type</label>
-                            <Select options={typeOptions} onChange={(evt) => this.handleChange("type", evt)} value={selectedType}>
+                            <Select options={typeOptions} onChange={(evt) => this.handleChange("ast_type", evt)} value={selectedType}>
                             </Select>
                         </FormGroup>
                     </Col>

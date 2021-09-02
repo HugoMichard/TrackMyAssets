@@ -2,10 +2,9 @@ var sql = require('./db.js')
 
 var Asset = function (asset) {
   this.name = asset.name
-  this.type = asset.type
+  this.ast_type = asset.ast_type
   this.usr_id = asset.usr_id
-  this.ticker = asset.ticker
-  this.coin = asset.coin
+  this.code = asset.code
   this.cat_id = asset.cat_id
   this.created_at = new Date()
 }
@@ -59,13 +58,12 @@ Asset.getDetail = function (params, result) {
 Asset.update = function (params, result) {
   sql.query(
     `UPDATE assets 
-      SET name = ?, ticker = ?, coin = ?, cat_id = ?, type = ?
+      SET name = ?, code = ?, cat_id = ?, ast_type = ?
       WHERE ast_id = ? AND usr_id = ?`, [
         params.name,
-        params.ticker,
-        params.coin,
+        params.code,
         params.cat_id,
-        params.type,
+        params.ast_type,
         params.ast_id,
         params.usr_id
     ], (err, res) => {

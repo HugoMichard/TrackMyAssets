@@ -4,7 +4,8 @@ var history = require('../controllers/HistoryController')
 
 exports.create = function (req, res) {
   var newAsset = new Asset(req.body)
-  newAsset.usr_id = req.usr_id
+  newAsset.usr_id = req.usr_id;
+  newAsset.code = req.body.coin || req.body.ticker;
 
   Asset.create(newAsset, function (err, asset) {
     if (err) {

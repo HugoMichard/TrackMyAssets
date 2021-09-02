@@ -6,6 +6,7 @@ CREATE TABLE users
   email               VARCHAR(150) NOT NULL,               # Email of the user
   password            VARCHAR(150) NOT NULL,               # Password of the user
   created_at          DATE,
+  refresh_date        DATE,
   PRIMARY KEY     (usr_id)                                  
 );
 
@@ -31,9 +32,8 @@ CREATE TABLE assets
   usr_id          INT unsigned NOT NULL,
   cat_id          INT unsigned NOT NULL,
   name            VARCHAR(150) NOT NULL,
-  type            VARCHAR(150) NOT NULL,
-  ticker          VARCHAR(30),
-  coin            VARCHAR(10),
+  ast_type        VARCHAR(150) NOT NULL,
+  code            VARCHAR(30),
   created_at      DATE,
   PRIMARY KEY     (ast_id),
   FOREIGN KEY     (usr_id) REFERENCES users(usr_id),
@@ -59,8 +59,7 @@ CREATE TABLE histories
   hst_id          INT unsigned NOT NULL AUTO_INCREMENT,
   hst_date        DATE NOT NULL,
   vl              FLOAT NOT NULL,
-  ticker          VARCHAR(30),
-  coin            VARCHAR(10),
+  code            VARCHAR(30),
   PRIMARY KEY     (hst_id)
 );
 

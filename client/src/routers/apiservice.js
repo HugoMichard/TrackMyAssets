@@ -119,6 +119,11 @@ class APIService {
   }
 
   // portfolio methods
+  refreshPortfolio() {
+    const url = `${API_URL}/portfolio/refresh`
+    return axios.get(url, this.getUserHeader()).then(res => { return res })
+  }
+
   getPortfolioValueHistory(data) {
     var search = this.formatSearch(data)
     const url = `${API_URL}/portfolio/getPortfolioValueHistory`

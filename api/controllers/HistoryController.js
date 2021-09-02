@@ -1,15 +1,5 @@
 var History = require('../models/History')
-var Asset = require('../models/Asset')
 var stockScraper = require('../webscrapers/StockScraper');
-
-
-exports.initializeAssetHistory = function (asset) {
-    if(asset.type === "stock") {
-        initializeStockHistory(asset);
-    } else {
-        initializeCoinHistory(asset);
-    }
-}
 
 exports.getAssetHistory = function (req, res) {
     req.query.ast_id = parseInt(req.params.ast_id);
@@ -23,20 +13,20 @@ exports.getAssetHistory = function (req, res) {
     })
 }
 
-
-function initializeStockHistory(asset) {
-    checkTickerHistoryExists(asset.ticker).then(tickerHistoryExists => {
-        if(!tickerHistoryExists) {
+exports.initializeAssetHistory = function (asset) {
+    checkHistoryWithCodeExists(asset.code).then(historyExists => {
+        if(!historyExists) {
             var ytd = new Date();
             ytd.setFullYear(ytd.getFullYear() - 1);
+
+            getDataOfAsset = asset.ast_type === "stock" ? stockScraper.getDataOfTicker : stockScraper.getDataOfCoin 
         
-            stockScraper.getDataOfTicker(asset.ticker, ytd).then(ytd_data => {
-                formatted_data = ytd_data.map(item => {
+            getDataOfAsset(asset.code, ytd).then(ytd_data => {
+                ytd_data.map(item => {
                     item.date = new Date(item.date * 1000).toISOString().slice(0, 10).replace('T', ' ');
                     return item;
                 });
-        
-                sql_histories = ytd_data.map(item => (`('${asset.ticker}', '${item.date}', ${item.close})`))
+                sql_histories = ytd_data.map(item => (`('${asset.code}', '${item.date}', ${item.close})`))
                 History.addHistories(sql_histories, function (err, histories) {
                     console.log("added "+ histories.affectedRows + " histories");
                 });
@@ -45,38 +35,24 @@ function initializeStockHistory(asset) {
     });
 }
 
-function initializeCoinHistory(asset) {
-    checkCoinHistoryExists(asset.coin).then(coinHistoryExists => {
-        if(!coinHistoryExists) {
-            var ytd = new Date();
-            ytd.setFullYear(ytd.getFullYear() - 1);
-        
-            stockScraper.getDataOfCoin(asset.coin, ytd).then(ytd_data => {
-                formatted_data = ytd_data.map(item => {
-                    item.date = new Date(item.date * 1000).toISOString().slice(0, 10).replace('T', ' ');
-                    return item;
-                });
-        
-                sql_histories = ytd_data.map(item => (`('${asset.ticker}', '${item.date}', ${item.close})`))
-                History.addHistories(sql_histories, function (err, histories) {
-                    console.log("added "+ histories.affectedRows + " histories");
-                });
-            });
-        }
-    });
-}
-
-function checkTickerHistoryExists(ticker) {
-    return new Promise((resolve, reject) => {
-        History.getTickerHistory(ticker, function(err, res) {
-            resolve(res.length > 0);
+exports.updateAssetHistory = function (asset) {
+    console.log("updating asset history");
+    getDataOfAsset = asset.ast_type === "stock" ? stockScraper.getDataOfTicker : stockScraper.getDataOfCoin;
+    getDataOfAsset(asset.code, asset.last_date).then(data => {
+        data.map(item => {
+            item.date = new Date(item.date * 1000).toISOString().slice(0, 10).replace('T', ' ');
+            return item;
+        });
+        sql_histories = data.map(item => (`('${asset.code}', '${item.date}', ${item.close})`))
+        History.addHistories(sql_histories, function (err, histories) {
+            console.log("added "+ histories.affectedRows + " histories");
         });
     });
 }
 
-function checkCoinHistoryExists(ticker) {
+function checkHistoryWithCodeExists(code) {
     return new Promise((resolve, reject) => {
-        History.getTickerHistory(ticker, function(err, res) {
+        History.getHistoryByCode(code, function(err, res) {
             resolve(res.length > 0);
         });
     });

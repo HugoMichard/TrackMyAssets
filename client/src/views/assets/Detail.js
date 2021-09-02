@@ -57,9 +57,8 @@ class DetailAsset extends Component {
                     <CardBody>
                         <AssetForm
                             name={this.state.asset.name}
-                            coin={this.state.asset.coin}
-                            ticker={this.state.asset.ticker}
-                            type={this.state.asset.type}
+                            code={this.state.asset.code}
+                            ast_type={this.state.asset.ast_type}
                             ast_id={this.state.asset.ast_id}
                             cat_id={this.state.asset.cat_id}>
                         </AssetForm>

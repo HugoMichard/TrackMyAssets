@@ -1,4 +1,6 @@
 var Portfolio = require('../models/Portfolio')
+var History = require('../models/History')
+var history = require('./HistoryController')
 
 
 function getPortfolioStartDate(usr_id) {
@@ -32,4 +34,17 @@ exports.getPortfolioValueHistory = async function(req, res) {
         }
         res.status(200).send({state: "Success", values: values});
     });
+}
+
+exports.refresh = async function(req, res) {
+  const assets = await new Promise(function(resolve, reject) {
+    History.getLastHistoryOfUserAssets({usr_id: req.usr_id}, function (err, assets) {
+      if (err) { reject(err) }
+      resolve(assets)
+    })
+  });
+  assets.forEach(a => {
+    history.updateAssetHistory(a);
+  });
+  res.status(200).send({state: "Success"});
 }

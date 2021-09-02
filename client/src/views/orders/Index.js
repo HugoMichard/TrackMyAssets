@@ -38,13 +38,12 @@ class IndexAssets extends Component {
     }
     renderTableData() {
         return this.state.orders.map((ord, index) => {
-            const { ord_id, ast_name, cat_name, cat_color, ast_ticker, ast_coin, ast_type, quantity, fees, price, execution_date } = ord
-            const code = ast_type === "stock" ? ast_ticker : ast_coin;
+            const { ord_id, ast_name, cat_name, cat_color, ast_code, ast_type, quantity, fees, price, execution_date } = ord
             return (
                 <tr key={index} onClick={() => window.location = "/orders/" + ord_id}>
                     <td>{execution_date}</td>
                     <td>{ast_name}</td>
-                    <td>{code}</td>
+                    <td>{ast_code}</td>
                     <td>{this.state.typeValueToLabel[ast_type]}</td>
                     <td style={{
                         color: cat_color

@@ -25,11 +25,10 @@ class OrderForm extends Component {
             execution_date: new Date().toISOString().slice(0, 10).replace('T', ' ')
         };
         const selectedAstData = {
-            type: "",
+            ast_type: "",
             cat_name: "",
             cat_color: "",
-            ticker: "",
-            coin: ""
+            code: ""
         } 
         this.state = { form: form, selectedAst: null, selectedAstData: selectedAstData }
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -94,23 +93,6 @@ class OrderForm extends Component {
             });
         }
     }
-    displayCode() {
-        if(this.state.selectedAstData.type !== "crypto") {
-            return (
-                <div>
-                    <label>Ticker</label>
-                    <p>{this.state.selectedAstData.ticker}</p>
-                </div>
-            );
-        } else {
-            return (
-                <div>
-                    <label>Coin</label>
-                    <p>{this.state.selectedAstData.coin}</p>
-                </div>
-            );
-        }
-    }
     render() {
         let { selectedAst, assets, selectedAstData } = this.state
         let submitText = this.state.form.ord_id === undefined ? "Create" : "Update";
@@ -125,11 +107,14 @@ class OrderForm extends Component {
                         </FormGroup>
                     </Col>
                     <Col md="2">
-                            {this.displayCode()}
+                        <div>
+                            <label>{this.state.selectedAstData.ast_type !== "crypto" ? "Ticker" : "Coin"}</label>
+                            <p>{this.state.selectedAstData.code}</p>
+                        </div>
                     </Col>
                     <Col md="2">
                             <label>Type</label>
-                            <p>{selectedAstData.type ? selectedAstData.type === "stock" ? "Stock Asset" : "Cryptocurrency" : ""}</p>
+                            <p>{selectedAstData.ast_type ? selectedAstData.ast_type === "stock" ? "Stock Asset" : "Cryptocurrency" : ""}</p>
                     </Col>
                     <Col md="2">
                             <label>Category</label>

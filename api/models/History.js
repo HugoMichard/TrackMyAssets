@@ -8,7 +8,7 @@ var History = function (history) {
 
 History.addHistories = function (newHistories, result) {
   sql.query(
-    `INSERT INTO histories (ticker, hst_date, vl) values ${newHistories}`, function (err, res) {
+    `INSERT INTO histories (code, hst_date, vl) values ${newHistories}`, function (err, res) {
       if (err) {
         result(null, err)
       } else {
@@ -18,10 +18,11 @@ History.addHistories = function (newHistories, result) {
   )
 }
 
-History.getTickerHistory = function (ticker, result) {
+History.getHistoryByCode = function (code, result) {
   sql.query(
-    `SELECT * FROM histories WHERE ticker = ?`, [
-        ticker
+    `SELECT * FROM histories WHERE code = ?`, [
+        code,
+        code
       ], function (err, res) {
       if (err) {
         result(null, err)
@@ -34,8 +35,26 @@ History.getTickerHistory = function (ticker, result) {
 
 History.getAssetHistory = function (params, result) {
   sql.query(
-    `SELECT * FROM histories h INNER JOIN assets a ON a.ticker = h.ticker WHERE a.ast_id = ? AND a.usr_id = ?`, [
+    `SELECT * FROM histories h INNER JOIN assets a ON a.code = h.code WHERE a.ast_id = ? AND a.usr_id = ?`, [
         params.ast_id,
+        params.usr_id
+      ], function (err, res) {
+      if (err) {
+        result(null, err)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
+
+History.getLastHistoryOfUserAssets = function (params, result) {
+  sql.query(
+    `SELECT a.ast_type, a.code, DATE_FORMAT(MAX(h.hst_date), '%Y-%m-%d') as last_date
+      FROM histories h
+      INNER JOIN assets a ON a.code = h.code
+      WHERE a.usr_id = ?
+      GROUP BY a.ast_type, a.code`, [
         params.usr_id
       ], function (err, res) {
       if (err) {

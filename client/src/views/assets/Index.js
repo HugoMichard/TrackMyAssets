@@ -35,12 +35,11 @@ class IndexAssets extends Component {
     }
     renderTableData() {
         return this.state.assets.map((ast, index) => {
-            const { ast_id, name, cat_name, cat_color, ticker, coin, type } = ast
-            const code = type === "stock" ? ticker : coin;
+            const { ast_id, name, cat_name, cat_color, code, ast_type } = ast
             return (
                 <tr key={index} onClick={() => window.location = "/assets/" + ast_id}>
                     <td>{name}</td>
-                    <td>{this.state.typeValueToLabel[type]}</td>
+                    <td>{this.state.typeValueToLabel[ast_type]}</td>
                     <td>{code}</td>
                     <td style={{
                         color: cat_color

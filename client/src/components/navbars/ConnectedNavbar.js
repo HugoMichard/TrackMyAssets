@@ -7,10 +7,6 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
   Container,
   InputGroup,
   InputGroupText,
@@ -18,9 +14,11 @@ import {
   Input,
 } from "reactstrap";
 
+import APIService from "routers/apiservice";
+
+
 function Header(props) {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const [color, setColor] = React.useState("transparent");
   const sidebarToggle = React.useRef();
   const location = useLocation();
@@ -31,9 +29,6 @@ function Header(props) {
       setColor("dark");
     }
     setIsOpen(!isOpen);
-  };
-  const dropdownToggle = (e) => {
-    setDropdownOpen(!dropdownOpen);
   };
   const getBrand = () => {
     return "TrackMyAssets";
@@ -50,6 +45,11 @@ function Header(props) {
       setColor("transparent");
     }
   };
+  const refresh = () => {
+    APIService.refreshPortfolio().then(res => {
+      console.log("cool");
+    })
+  }
   React.useEffect(() => {
     window.addEventListener("resize", updateColor.bind(this));
   });
@@ -112,33 +112,17 @@ function Header(props) {
           </form>
           <Nav navbar>
             <NavItem>
-              <Link to="#pablo" className="nav-link btn-magnify">
-                <i className="nc-icon nc-layout-11" />
+              <Link className="nav-link btn-magnify" 
+                onClick={refresh}>
+                <i className="nc-icon nc-refresh-69" />
                 <p>
                   <span className="d-lg-none d-md-block">Stats</span>
                 </p>
               </Link>
             </NavItem>
-            <Dropdown
-              nav
-              isOpen={dropdownOpen}
-              toggle={(e) => dropdownToggle(e)}
-            >
-              <DropdownToggle caret nav>
-                <i className="nc-icon nc-bell-55" />
-                <p>
-                  <span className="d-lg-none d-md-block">Some Actions</span>
-                </p>
-              </DropdownToggle>
-              <DropdownMenu right>
-                <DropdownItem tag="a">Action</DropdownItem>
-                <DropdownItem tag="a">Another Action</DropdownItem>
-                <DropdownItem tag="a">Something else here</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
             <NavItem>
-              <Link to="#pablo" className="nav-link btn-rotate">
-                <i className="nc-icon nc-settings-gear-65" />
+              <Link to="/login" className="nav-link btn-rotate">
+                <i className="nc-icon nc-button-power" />
                 <p>
                   <span className="d-lg-none d-md-block">Account</span>
                 </p>
