@@ -13,6 +13,7 @@ var historiesRouter = require('./routes/histories');
 var categoriesRouter = require('./routes/categories');
 var ordersRouter = require('./routes/orders');
 var dashboardRouter = require('./routes/dashboard');
+var portfolioRouter = require('./routes/portfolio');
 
 var app = express();
 
@@ -43,6 +44,7 @@ app.use('/api/histories', historiesRouter);
 app.use('/api/categories', categoriesRouter);
 app.use('/api/orders', ordersRouter);
 app.use('/api/dashboard', dashboardRouter);
+app.use('/api/portfolio', portfolioRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

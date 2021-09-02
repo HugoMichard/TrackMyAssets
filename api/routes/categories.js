@@ -3,12 +3,14 @@ var router = express.Router();
 var category = require('../controllers/CategoryController')
 const { authJwt } = require("../middlewares");
 
-router.get('/', authJwt.verifyToken, category.search);
+router.use(authJwt.verifyToken)
 
-router.post("/", authJwt.verifyToken, category.create);
+router.get('/', category.search);
 
-router.get("/:cat_id", authJwt.verifyToken, category.getDetail);
-router.post("/:cat_id", authJwt.verifyToken, category.update);
+router.post("/", category.create);
+
+router.get("/:cat_id", category.getDetail);
+router.post("/:cat_id", category.update);
 
 
 module.exports = router;

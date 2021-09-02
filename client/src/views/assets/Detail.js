@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import APIService from "routers/apiservice";
 import AssetForm from "components/misc/AssetForm";
-import { Line } from "react-chartjs-2";
 
 // reactstrap components
 import {
@@ -16,7 +15,7 @@ import {
 import {
     AssetHistoryChart,
     AssetHistoryChartData
-  } from "variables/charts.js";
+  } from "variables/charts/AssetHistoryChart";
 
 class DetailAsset extends Component {
     constructor(props) {
@@ -27,7 +26,6 @@ class DetailAsset extends Component {
             histories: [],
             chart_data: [{
                 "id": AssetHistoryChartData[0].id,
-                "color": AssetHistoryChartData[0].color,
                 "data": AssetHistoryChartData[0].data
             }]
         }

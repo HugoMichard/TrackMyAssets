@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var dashboard = require('../controllers/DashboardController')
+var portfolio = require('../controllers/PortfolioController')
 const { authJwt } = require("../middlewares");
 
 router.use(authJwt.verifyToken)
 
-router.get('/summary', dashboard.summary);
+router.get('/getPortfolioValueHistory', portfolio.getPortfolioValueHistory);
 
 module.exports = router;

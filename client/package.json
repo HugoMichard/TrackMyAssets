@@ -2,7 +2,7 @@
   "name": "track-my-assets",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://demos.creative-tim.com/paper-dashboard-react/#/dashboard",
+  "homepage": "https://demos.creative-tim.com/login",
   "dependencies": {
     "@babel/core": "7.14.2",
     "@material-ui/core": "^4.12.3",

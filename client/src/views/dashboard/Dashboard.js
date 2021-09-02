@@ -14,6 +14,7 @@ import {
   CardTitle,
   Row,
   Col,
+  Button
 } from "reactstrap";
 // core components
 import {
@@ -22,7 +23,36 @@ import {
   dashboardNASDAQChart,
 } from "assets/paper/variables/charts.js";
 
+import {
+  PortfolioPriceHistoryChart,
+  PortfolioPriceHistoryChartData
+} from "variables/charts/PortfolioPriceHistoryChart";
+
 class Dashboard extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      diffDay: 0,
+      pDiffDay: 0,
+      diffWeek: 0,
+      pDiffWeek: 0,
+      diffMonth: 0,
+      pDiffMonth: 0,
+      diffYear: 0,
+      pDiffYear: 0,
+      selectedPortfolioChartRange: "year",
+      portfolioChartData: [{
+        "id": PortfolioPriceHistoryChartData[0].id,
+        "data": PortfolioPriceHistoryChartData[0].data
+      }]
+    }
+  }
+  getDiffTodayWithDateColumn(dayValues, dateColumn) {
+    return dayValues[0] - dayValues[dateColumn];
+  }
+  getPourcentageDiffTodayWithDateColumn(dayValues, dateColumn) {
+    return 100 * (dayValues[0] - dayValues[dateColumn]) / dayValues[dateColumn];
+  }
 
   componentDidMount() {
     const user = AuthService.getCurrentUser();
@@ -33,134 +63,105 @@ class Dashboard extends Component {
       });
     }
     APIService.getDashboardSummary().then(res => {
-      console.log(res);
+      const dayValues = res.data.dayValues;
+      this.setState({
+        diffDay: this.getDiffTodayWithDateColumn(dayValues, 1),
+        pDiffDay: this.getPourcentageDiffTodayWithDateColumn(dayValues, 1),
+        diffWeek: this.getDiffTodayWithDateColumn(dayValues, 2),
+        pDiffWeek: this.getPourcentageDiffTodayWithDateColumn(dayValues, 2),
+        diffMonth: this.getDiffTodayWithDateColumn(dayValues, 3),
+        pDiffMonth: this.getPourcentageDiffTodayWithDateColumn(dayValues, 3),
+        diffYear: this.getDiffTodayWithDateColumn(dayValues, 4),
+        pDiffYear: this.getPourcentageDiffTodayWithDateColumn(dayValues, 4)
+      })
+    });
+    this.updatePortfolioChartDataWithRange(this.state.selectedPortfolioChartRange);
+  }
+  handleClickPortfolioRange(value) {
+    this.setState({selectedPortfolioChartRange: value});
+    this.updatePortfolioChartDataWithRange(value)
+  }
+  updatePortfolioChartDataWithRange(range) {
+    APIService.getPortfolioValueHistory({ portfolio_chart_start_date: range }).then(res => {
+      const data = res.data.values.map(v => {
+        return {
+            "x": new Date(v.random_date).toLocaleDateString(),
+            "y": v.value
+        }
+      });
+      var portfolioChartData = this.state.portfolioChartData
+      portfolioChartData[0].data = data
+      this.setState({portfolioChartData: portfolioChartData });
     })
   }
-
+  displayCardValue(percentage, value, periodName) {
+    return (
+      <Col lg="3" md="6" sm="6">
+        <Card className="card-stats">
+          <CardBody>
+            <Row className={`${value >= 0 ? "text-success" : "text-danger"}`}>
+              <Col md="7" xs="7">
+              <div className="text-center numbers">
+                <CardTitle tag="p">
+                  {value > 0 ? "+ " : value < 0 ? "- " : ""}
+                  {Math.round(Math.abs(percentage) * 10) / 10} %
+                </CardTitle>
+                <p />
+              </div>
+              </Col>
+              <Col md="5" xs="5">
+                <div className="numbers">
+                  <CardTitle tag="p">
+                    {value > 0 ? "+ " : value < 0 ? "- " : ""}
+                    {Math.round(Math.abs(value) * 10) / 10}
+                  </CardTitle>
+                  <p />
+                </div>
+              </Col>
+            </Row>
+          </CardBody>
+          <CardFooter>
+            <hr />
+            <div className="stats">
+              <i className="far fa-calendar" /> Last {periodName}
+            </div>
+          </CardFooter>
+        </Card>
+      </Col>
+    )
+  }
+  renderPortfolioRangeButton(text, range, color) {
+    return (
+      <Button
+        className={`justify-content-end no-margin-top ${this.state.selectedPortfolioChartRange === range ? "btn-square" : "btn-round"}`}
+        color={color}
+        onClick={() => this.handleClickPortfolioRange(range)}>
+        {text}
+      </Button>
+    );
+  }
   render() {
     return (
       <>
         <div className="content">
           <Row>
-            <Col lg="3" md="6" sm="6">
-              <Card className="card-stats">
-                <CardBody>
-                  <Row>
-                    <Col md="4" xs="5">
-                      <div className="icon-big text-center icon-warning">
-                        <i className="nc-icon nc-globe text-warning" />
-                      </div>
-                    </Col>
-                    <Col md="8" xs="7">
-                      <div className="numbers">
-                        <p className="card-category">Capacity</p>
-                        <CardTitle tag="p">150GB</CardTitle>
-                        <p />
-                      </div>
-                    </Col>
-                  </Row>
-                </CardBody>
-                <CardFooter>
-                  <hr />
-                  <div className="stats">
-                    <i className="fas fa-sync-alt" /> Update Now
-                  </div>
-                </CardFooter>
-              </Card>
-            </Col>
-            <Col lg="3" md="6" sm="6">
-              <Card className="card-stats">
-                <CardBody>
-                  <Row>
-                    <Col md="4" xs="5">
-                      <div className="icon-big text-center icon-warning">
-                        <i className="nc-icon nc-money-coins text-success" />
-                      </div>
-                    </Col>
-                    <Col md="8" xs="7">
-                      <div className="numbers">
-                        <p className="card-category">Revenue</p>
-                        <CardTitle tag="p">$ 1,345</CardTitle>
-                        <p />
-                      </div>
-                    </Col>
-                  </Row>
-                </CardBody>
-                <CardFooter>
-                  <hr />
-                  <div className="stats">
-                    <i className="far fa-calendar" /> Last day
-                  </div>
-                </CardFooter>
-              </Card>
-            </Col>
-            <Col lg="3" md="6" sm="6">
-              <Card className="card-stats">
-                <CardBody>
-                  <Row>
-                    <Col md="4" xs="5">
-                      <div className="icon-big text-center icon-warning">
-                        <i className="nc-icon nc-vector text-danger" />
-                      </div>
-                    </Col>
-                    <Col md="8" xs="7">
-                      <div className="numbers">
-                        <p className="card-category">Errors</p>
-                        <CardTitle tag="p">23</CardTitle>
-                        <p />
-                      </div>
-                    </Col>
-                  </Row>
-                </CardBody>
-                <CardFooter>
-                  <hr />
-                  <div className="stats">
-                    <i className="far fa-clock" /> In the last hour
-                  </div>
-                </CardFooter>
-              </Card>
-            </Col>
-            <Col lg="3" md="6" sm="6">
-              <Card className="card-stats">
-                <CardBody>
-                  <Row>
-                    <Col md="4" xs="5">
-                      <div className="icon-big text-center icon-warning">
-                        <i className="nc-icon nc-favourite-28 text-primary" />
-                      </div>
-                    </Col>
-                    <Col md="8" xs="7">
-                      <div className="numbers">
-                        <p className="card-category">Followers</p>
-                        <CardTitle tag="p">+45K</CardTitle>
-                        <p />
-                      </div>
-                    </Col>
-                  </Row>
-                </CardBody>
-                <CardFooter>
-                  <hr />
-                  <div className="stats">
-                    <i className="fas fa-sync-alt" /> Update now
-                  </div>
-                </CardFooter>
-              </Card>
-            </Col>
+            {this.displayCardValue(this.state.pDiffDay, this.state.diffDay, "day")}
+            {this.displayCardValue(this.state.pDiffWeek, this.state.diffWeek, "week")}
+            {this.displayCardValue(this.state.pDiffMonth, this.state.diffMonth, "month")}
+            {this.displayCardValue(this.state.pDiffYear, this.state.diffYear, "year")}
           </Row>
           <Row>
             <Col md="12">
               <Card>
                 <CardHeader>
-                  <CardTitle tag="h5">Users Behavior</CardTitle>
-                  <p className="card-category">24 Hours performance</p>
+                  <CardTitle tag="h5">Portfolio Value Evolution</CardTitle>
+                  {this.renderPortfolioRangeButton("Year", "year", "danger")}
+                  {this.renderPortfolioRangeButton("Month", "month", "warning")}
+                  {this.renderPortfolioRangeButton("Week", "week", "info")}
+                  {this.renderPortfolioRangeButton("All", "all", "success")}
                 </CardHeader>
-                <CardBody>
-                  <Line
-                    data={dashboard24HoursPerformanceChart.data}
-                    options={dashboard24HoursPerformanceChart.options}
-                    width={400}
-                    height={100}
-                  />
+                <CardBody style={ { height: 500 } }>
+                  {PortfolioPriceHistoryChart(this.state.portfolioChartData)}
                 </CardBody>
                 <CardFooter>
                   <hr />

@@ -5,19 +5,18 @@ import { ResponsiveLine } from '@nivo/line'
 // website examples showcase many properties,
 // you'll often use just a few of them.
 
-export const AssetHistoryChartData = [
+export const PortfolioPriceHistoryChartData = [
   {
-    "id": "asset_price",
-    "color": "hsl(229, 70%, 50%)",
+    "id": "portfolio_price",
     "data": [
       {
-        "x": "04/24/2020",
-        "y": 219
+        "x": "04/24/2000",
+        "y": 1
       }]
   }
 ];
 
-export function AssetHistoryChart(data) {
+export function PortfolioPriceHistoryChart(data) {
   const values = data[0].data;
   const ordered_values = values.map(v => v.y).sort((a, b) => a - b);
   const y_max = ordered_values[values.length - 1];
@@ -59,12 +58,12 @@ export function AssetHistoryChart(data) {
             tickPadding: 5,
             tickRotation: 0,
             format: '.2s',
-            legend: 'price',
+            legend: 'Price',
             legendOffset: -40,
             legendPosition: 'middle'
         }}
         enableGridX={false}
-        colors={{ scheme: 'spectral' }}
+        colors={{ scheme: 'category10' }}
         lineWidth={1}
         pointSize={4}
         pointColor={{ theme: 'background' }}

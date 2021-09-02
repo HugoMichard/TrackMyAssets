@@ -118,6 +118,13 @@ class APIService {
     return axios.get(url, this.getUserHeader()).then(res => { return res })
   }
 
+  // portfolio methods
+  getPortfolioValueHistory(data) {
+    var search = this.formatSearch(data)
+    const url = `${API_URL}/portfolio/getPortfolioValueHistory`
+    return axios.get(url + search, this.getUserHeader()).then(res => { return res })
+  }
+
 }
 
 export default new APIService();
