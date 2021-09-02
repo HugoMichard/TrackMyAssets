@@ -18,7 +18,6 @@ import {
 } from "reactstrap";
 // core components
 import {
-  dashboard24HoursPerformanceChart,
   dashboardEmailStatisticsChart,
   dashboardNASDAQChart,
 } from "assets/paper/variables/charts.js";
@@ -27,6 +26,8 @@ import {
   PortfolioPriceHistoryChart,
   PortfolioPriceHistoryChartData
 } from "variables/charts/PortfolioPriceHistoryChart";
+
+import PortfolioPriceHistory from "components/charts/PortfolioPriceHistory";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -39,12 +40,7 @@ class Dashboard extends Component {
       diffMonth: 0,
       pDiffMonth: 0,
       diffYear: 0,
-      pDiffYear: 0,
-      selectedPortfolioChartRange: "year",
-      portfolioChartData: [{
-        "id": PortfolioPriceHistoryChartData[0].id,
-        "data": PortfolioPriceHistoryChartData[0].data
-      }]
+      pDiffYear: 0
     }
   }
   getDiffTodayWithDateColumn(dayValues, dateColumn) {
@@ -75,24 +71,6 @@ class Dashboard extends Component {
         pDiffYear: this.getPourcentageDiffTodayWithDateColumn(dayValues, 4)
       })
     });
-    this.updatePortfolioChartDataWithRange(this.state.selectedPortfolioChartRange);
-  }
-  handleClickPortfolioRange(value) {
-    this.setState({selectedPortfolioChartRange: value});
-    this.updatePortfolioChartDataWithRange(value)
-  }
-  updatePortfolioChartDataWithRange(range) {
-    APIService.getPortfolioValueHistory({ portfolio_chart_start_date: range }).then(res => {
-      const data = res.data.values.map(v => {
-        return {
-            "x": new Date(v.random_date).toLocaleDateString(),
-            "y": v.value
-        }
-      });
-      var portfolioChartData = this.state.portfolioChartData
-      portfolioChartData[0].data = data
-      this.setState({portfolioChartData: portfolioChartData });
-    })
   }
   displayCardValue(percentage, value, periodName) {
     return (
@@ -130,16 +108,6 @@ class Dashboard extends Component {
       </Col>
     )
   }
-  renderPortfolioRangeButton(text, range, color) {
-    return (
-      <Button
-        className={`justify-content-end no-margin-top ${this.state.selectedPortfolioChartRange === range ? "btn-square" : "btn-round"}`}
-        color={color}
-        onClick={() => this.handleClickPortfolioRange(range)}>
-        {text}
-      </Button>
-    );
-  }
   render() {
     return (
       <>
@@ -152,24 +120,7 @@ class Dashboard extends Component {
           </Row>
           <Row>
             <Col md="12">
-              <Card>
-                <CardHeader>
-                  <CardTitle tag="h5">Portfolio Value Evolution</CardTitle>
-                  {this.renderPortfolioRangeButton("Year", "year", "danger")}
-                  {this.renderPortfolioRangeButton("Month", "month", "warning")}
-                  {this.renderPortfolioRangeButton("Week", "week", "info")}
-                  {this.renderPortfolioRangeButton("All", "all", "success")}
-                </CardHeader>
-                <CardBody style={ { height: 500 } }>
-                  {PortfolioPriceHistoryChart(this.state.portfolioChartData)}
-                </CardBody>
-                <CardFooter>
-                  <hr />
-                  <div className="stats">
-                    <i className="fa fa-history" /> Updated 3 minutes ago
-                  </div>
-                </CardFooter>
-              </Card>
+              <PortfolioPriceHistory></PortfolioPriceHistory>
             </Col>
           </Row>
           <Row>

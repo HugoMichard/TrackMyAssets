@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import CategoryForm from "components/misc/CategoryForm";
+import CategoryForm from "components/forms/CategoryForm";
 
 // reactstrap components
 import {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import APIService from "routers/apiservice";
-import AssetForm from "components/misc/AssetForm";
+import AssetForm from "components/forms/AssetForm";
 
 // reactstrap components
 import {
