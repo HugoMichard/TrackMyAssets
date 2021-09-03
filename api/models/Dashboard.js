@@ -6,20 +6,26 @@ var Dashboard = function (dashboard) {
 
 Dashboard.valuesKDaysAgo = function (params, result) {
   sql.query(
-    `SELECT SUM(o.quantity * h.vl) as value
-    FROM orders o
-    INNER JOIN assets a ON a.ast_id = o.ast_id 
-    INNER JOIN 
-        (SELECT last_h_vl.code, last_h_vl.hst_date, last_h_vl.vl
-            FROM histories last_h_vl 
-            INNER JOIN (
-                SELECT code, max(hst_date) as last_hst_date FROM histories WHERE hst_date <= CURDATE() - INTERVAL ? DAY GROUP BY code) last_hst
-            ON last_hst.code = last_h_vl.code AND last_hst.last_hst_date = last_h_vl.hst_date) h
-    ON h.code = a.code
-    WHERE o.usr_id = ?`,
+    `SELECT SUM(o.cum_quantity * h.vl) as value
+      FROM (
+      SELECT o.execution_date, SUM(o.quantity) 
+          OVER(PARTITION BY a.code ORDER BY execution_date ASC) as cum_quantity,
+          a.code
+            FROM orders o
+            INNER JOIN assets a ON a.ast_id = o.ast_id
+            WHERE o.usr_id = ? AND o.execution_date <= CURDATE() - INTERVAL ? DAY
+            ORDER BY execution_date ASC) o
+      INNER JOIN (
+        SELECT last_h_vl.code, last_h_vl.hst_date, last_h_vl.vl
+          FROM histories last_h_vl 
+          INNER JOIN (
+            SELECT code, max(hst_date) as last_hst_date FROM histories WHERE hst_date <= CURDATE() - INTERVAL ? DAY GROUP BY code) last_hst
+          ON last_hst.code = last_h_vl.code AND last_hst.last_hst_date = last_h_vl.hst_date) h
+      ON h.code = o.code`,
     [
+      params.usr_id,
       params.days_ago,
-      params.usr_id
+      params.days_ago
     ], 
     function (err, res) {
       if (err) {

@@ -52,7 +52,7 @@ History.getLastHistoryOfUserAssets = function (params, result) {
   sql.query(
     `SELECT a.ast_type, a.code, DATE_FORMAT(MAX(h.hst_date), '%Y-%m-%d') as last_date
       FROM histories h
-      INNER JOIN assets a ON a.code = h.code
+      RIGHT JOIN assets a ON a.code = h.code
       WHERE a.usr_id = ?
       GROUP BY a.ast_type, a.code`, [
         params.usr_id

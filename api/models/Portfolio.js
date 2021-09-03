@@ -41,7 +41,7 @@ Portfolio.getPorfolioValueHistory = function (params, result) {
             RIGHT JOIN 
               (SELECT DISTINCT a.code as code, d.random_date FROM dates d, assets a WHERE usr_id = ?) date_code_combis 
             ON h.hst_date = date_code_combis.random_date AND h.code = date_code_combis.code
-            WHERE random_date BETWEEN ? AND CURDATE()) as vl_with_nulls
+            WHERE random_date BETWEEN ? AND CURDATE() - INTERVAL 1 DAY) as vl_with_nulls
           ) ast_values
         INNER JOIN (
           SELECT code, 
@@ -56,7 +56,7 @@ Portfolio.getPorfolioValueHistory = function (params, result) {
               SELECT DISTINCT a.ast_id, a.code, d.random_date, a.usr_id from assets a, dates d
               WHERE a.ast_id IN (SELECT ast_id FROM orders WHERE usr_id = ?)) date_code_combis
             LEFT JOIN orders o ON date_code_combis.random_date = o.execution_date AND date_code_combis.ast_id = o.ast_id AND o.usr_id = date_code_combis.usr_id) quantity_evolution
-          WHERE random_date BETWEEN ? AND CURDATE()
+          WHERE random_date BETWEEN ? AND CURDATE() - INTERVAL 1 DAY
         ) ord_values
         ON ord_values.code = ast_values.code AND ord_values.random_date = ast_values.random_date
       ) detailed_portfolio

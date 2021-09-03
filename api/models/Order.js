@@ -25,7 +25,7 @@ Order.search = function (params, result) {
   sql.query(
     `SELECT o.ord_id, o.usr_id, o.ast_id, o.price, o.quantity, o.fees, 
       DATE_FORMAT(o.execution_date, '%m/%d/%Y') as execution_date, 
-      a.name as ast_name, a.code as ast_code, a.ast_type as ast_ast_type,
+      a.name as ast_name, a.code as ast_code, a.ast_type as ast_type,
       c.color as cat_color, c.name as cat_name 
       FROM orders o
       INNER JOIN assets a ON a.ast_id = o.ast_id

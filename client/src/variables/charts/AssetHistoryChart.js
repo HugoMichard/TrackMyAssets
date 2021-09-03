@@ -10,8 +10,8 @@ export const AssetHistoryChartData = [
     "id": "asset_price",
     "data": [
       {
-        "x": "04/24/2020",
-        "y": 219
+        "x": "04/24/2021",
+        "y": 1
       }]
   }
 ];
@@ -62,6 +62,8 @@ export function AssetHistoryChart(data) {
             legendOffset: -40,
             legendPosition: 'middle'
         }}
+        enableArea={true}
+        areaBaselineValue={y_min}
         enableGridX={false}
         colors={{ scheme: 'category10' }}
         lineWidth={1}

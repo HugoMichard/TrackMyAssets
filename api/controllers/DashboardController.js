@@ -19,7 +19,7 @@ const getValueKDaysAgo = function(usr_id, days_ago) {
 exports.summary = async function (req, res) {
   console.log("Getting summary")
 
-  Promise.all([getValueKDaysAgo(req.usr_id, 0), getValueKDaysAgo(req.usr_id, 1), getValueKDaysAgo(req.usr_id, 7), getValueKDaysAgo(req.usr_id, 30), getValueKDaysAgo(req.usr_id, 365)])
+  Promise.all([getValueKDaysAgo(req.usr_id, 1), getValueKDaysAgo(req.usr_id, 2), getValueKDaysAgo(req.usr_id, 8), getValueKDaysAgo(req.usr_id, 30), getValueKDaysAgo(req.usr_id, 365)])
     .catch(err => {
       res.status(500).send({message: err.message});
     })
