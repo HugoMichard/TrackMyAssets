@@ -14,16 +14,6 @@ import {
   Col,
   Button
 } from "reactstrap";
-// core components
-import {
-  dashboardEmailStatisticsChart,
-  dashboardNASDAQChart,
-} from "assets/paper/variables/charts.js";
-
-import {
-  PortfolioPriceHistoryChart,
-  PortfolioPriceHistoryChartData
-} from "variables/charts/PortfolioPriceHistoryChart";
 
 import PortfolioPriceHistory from "components/charts/PortfolioPriceHistory";
 

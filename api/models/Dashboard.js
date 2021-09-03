@@ -8,13 +8,11 @@ Dashboard.valuesKDaysAgo = function (params, result) {
   sql.query(
     `SELECT SUM(o.cum_quantity * h.vl) as value
       FROM (
-      SELECT o.execution_date, SUM(o.quantity) 
-          OVER(PARTITION BY a.code ORDER BY execution_date ASC) as cum_quantity,
-          a.code
+      SELECT SUM(o.quantity) as cum_quantity, a.code
             FROM orders o
             INNER JOIN assets a ON a.ast_id = o.ast_id
             WHERE o.usr_id = ? AND o.execution_date <= CURDATE() - INTERVAL ? DAY
-            ORDER BY execution_date ASC) o
+            GROUP BY a.code) o
       INNER JOIN (
         SELECT last_h_vl.code, last_h_vl.hst_date, last_h_vl.vl
           FROM histories last_h_vl 

@@ -64,6 +64,7 @@ export function PortfolioPriceHistoryChart(data) {
         }}
         enableGridX={false}
         enableArea={true}
+        areaBaselineValue={y_min}
         colors={{ scheme: 'category10' }}
         lineWidth={1}
         pointSize={4}
