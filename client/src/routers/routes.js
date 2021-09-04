@@ -15,6 +15,7 @@ import IndexCategories from "views/categories/Index.js";
 import CreateCategory from "views/categories/Create.js";
 import DetailCategory from "views/categories/Detail.js";
 
+import IndexPortfolio from "views/portfolio/Index.js";
 
 var routes = {
   "/users": {
@@ -38,6 +39,9 @@ var routes = {
     "/create": CreateCategory,
     "/:cat_id": DetailCategory,
     "/": IndexCategories
+  },
+  "/portfolio": {
+    "/": IndexPortfolio
   }
 }
 export default routes;

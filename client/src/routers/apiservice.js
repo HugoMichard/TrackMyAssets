@@ -118,16 +118,27 @@ class APIService {
     return axios.get(url, this.getUserHeader()).then(res => { return res })
   }
 
+  getPortfolioValueHistory(data) {
+    var search = this.formatSearch(data)
+    const url = `${API_URL}/dashboard/getPortfolioValueHistory`
+    return axios.get(url + search, this.getUserHeader()).then(res => { return res })
+  }
+
   // portfolio methods
   refreshPortfolio() {
     const url = `${API_URL}/portfolio/refresh`
     return axios.get(url, this.getUserHeader()).then(res => { return res })
   }
 
-  getPortfolioValueHistory(data) {
+  getPortfolioPlusValueHistory(data) {
     var search = this.formatSearch(data)
-    const url = `${API_URL}/portfolio/getPortfolioValueHistory`
+    const url = `${API_URL}/portfolio/getPlusValueHistory`
     return axios.get(url + search, this.getUserHeader()).then(res => { return res })
+  }
+
+  getPortfolioPlusValueSummary() {
+    const url = `${API_URL}/portfolio/getPlusValueSummary`
+    return axios.get(url, this.getUserHeader()).then(res => { return res })
   }
 
 }

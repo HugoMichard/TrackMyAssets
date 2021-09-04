@@ -5,7 +5,8 @@ const { authJwt } = require("../middlewares");
 
 router.use(authJwt.verifyToken)
 
-router.get('/getPortfolioValueHistory', portfolio.getPortfolioValueHistory);
 router.get('/refresh', portfolio.refresh);
+router.get('/getPlusValueHistory', portfolio.getPlusValueHistory);
+router.get('/getPlusValueSummary', portfolio.getPlusValueSummary);
 
 module.exports = router;
