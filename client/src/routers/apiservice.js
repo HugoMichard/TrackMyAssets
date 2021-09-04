@@ -141,6 +141,12 @@ class APIService {
     return axios.get(url, this.getUserHeader()).then(res => { return res })
   }
 
+  getInvestments(data) {
+    var search = this.formatSearch(data)
+    const url = `${API_URL}/portfolio/getInvestments`
+    return axios.get(url + search, this.getUserHeader()).then(res => { return res })
+  }
+
 }
 
 export default new APIService();

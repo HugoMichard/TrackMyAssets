@@ -27,6 +27,8 @@ class OverviewPortfolio extends Component {
             pDiffWeek: 0,
             diffMonth: 0,
             pDiffMonth: 0,
+            diff3Month: 0,
+            pDiff3Month: 0,
             diffYear: 0,
             pDiffYear: 0,
             diffTotal: 0,
@@ -44,10 +46,12 @@ class OverviewPortfolio extends Component {
             pDiffWeek: this.getPourcentageDiffTodayWithDateColumn(dayPlusValues, 2),
             diffMonth: this.getDiffTodayWithDateColumn(dayPlusValues, 3),
             pDiffMonth: this.getPourcentageDiffTodayWithDateColumn(dayPlusValues, 3),
-            diffYear: this.getDiffTodayWithDateColumn(dayPlusValues, 4),
-            pDiffYear: this.getPourcentageDiffTodayWithDateColumn(dayPlusValues, 4),
-            diffTotal: this.getDiffTodayWithDateColumn(dayPlusValues, 5),
-            pDiffTotal: this.getPourcentageDiffTodayWithDateColumn(dayPlusValues, 5)
+            diff3Month: this.getDiffTodayWithDateColumn(dayPlusValues, 4),
+            pDiff3Month: this.getPourcentageDiffTodayWithDateColumn(dayPlusValues, 4),
+            diffYear: this.getDiffTodayWithDateColumn(dayPlusValues, 5),
+            pDiffYear: this.getPourcentageDiffTodayWithDateColumn(dayPlusValues, 5),
+            diffTotal: this.getDiffTodayWithDateColumn(dayPlusValues, 6),
+            pDiffTotal: this.getPourcentageDiffTodayWithDateColumn(dayPlusValues, 6)
           })
         });
         APIService.searchCategory({}).then(res => { this.setState({categories: res.data.categories });});
@@ -119,6 +123,7 @@ class OverviewPortfolio extends Component {
             {this.displayCardPlusValue(this.state.pDiffDay, this.state.diffDay, "day")}
             {this.displayCardPlusValue(this.state.pDiffWeek, this.state.diffWeek, "week")}
             {this.displayCardPlusValue(this.state.pDiffMonth, this.state.diffMonth, "month")}
+            {this.displayCardPlusValue(this.state.pDiff3Month, this.state.diff3Month, "3 months")}
             {this.displayCardPlusValue(this.state.pDiffYear, this.state.diffYear, "year")}
             {this.displayCardPlusValue(this.state.pDiffTotal, this.state.diffTotal, "Total")}
           </Row>
@@ -131,14 +136,22 @@ class OverviewPortfolio extends Component {
             <Col md="12">
                 <Card>
                     <CardHeader>
-                        <CardTitle tag="h4" className="no-margin-bottom">Assets currently owned</CardTitle>
+                        <CardTitle tag="h4" className="no-margin-bottom">Assets owned</CardTitle>
                     </CardHeader>
                     <CardBody>
                         <Table>
                             <thead className="text-primary">
                             <tr>
-                                <th>Name</th>
-                                <th>Color</th>
+                              <th>Name</th>
+                              <th>Type</th>
+                              <th>Ticker / Coin</th>
+                              <th>Category</th>
+                              <th>Platform</th>
+                              <th>Current Quantity</th>
+                              <th>Average Buying Price</th>
+                              <th>Quantity Sold</th>
+                              <th>Average Selling Price</th>
+                              <th>Total</th>
                             </tr>
                             </thead>
                             <tbody>

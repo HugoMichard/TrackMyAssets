@@ -119,7 +119,34 @@ Portfolio.getPlusValueKDaysAgo = function (params, result) {
   )
 }
 
-
+Portfolio.getInvestments = function (params, result) {
+  sql.query(
+    `SELECT 
+        DATE_FORMAT(o.execution_date, ?) as execution_date, 
+        SUM(o.price * o.quantity + o.fees) as investment, 
+        c.name as cat_name, 
+        c.color as cat_color
+      FROM orders o
+      INNER JOIN assets a ON a.ast_id = o.ast_id
+      INNER JOIN categories c ON a.cat_id = c.cat_id 
+      WHERE o.usr_id = ?
+      GROUP by c.cat_id, DATE_FORMAT(o.execution_date, ?)
+      ORDER BY DATE_FORMAT(o.execution_date, ?)`,
+    [
+      params.group_date,
+      params.usr_id,
+      params.group_date,
+      params.group_date
+    ], 
+    function (err, res) {
+      if (err) {
+        result(null, err)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
 
 module.exports = Portfolio
 

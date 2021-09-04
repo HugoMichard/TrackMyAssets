@@ -35,25 +35,6 @@ Dashboard.valuesKDaysAgo = function (params, result) {
   )
 }
 
-Dashboard.getInvestments = function (params, result) {
-  sql.query(
-    `SELECT o.ord_id, o.execution_date, o.quantity, o.fees, o.price, a.name, o.price * o.quantity + o.fees as investment
-    FROM orders o
-    INNER JOIN assets a ON a.ast_id = o.ast_id
-    WHERE o.usr_id = ?`,
-    [
-      params.usr_id
-    ], 
-    function (err, res) {
-      if (err) {
-        result(null, err)
-      } else {
-        result(null, res)
-      }
-    }
-  )
-}
-
 Dashboard.getCumulativeInvestments = function (params, result) {
   sql.query(
     `SELECT o.execution_date, SUM(o.price * o.quantity + o.fees) 
