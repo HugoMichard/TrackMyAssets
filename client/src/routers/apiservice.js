@@ -147,6 +147,12 @@ class APIService {
     return axios.get(url + search, this.getUserHeader()).then(res => { return res })
   }
 
+  getCumulativeInvestmentsWithValue(data) {
+    var search = this.formatSearch(data)
+    const url = `${API_URL}/portfolio/getCumulativeInvestmentsWithValue`
+    return axios.get(url + search, this.getUserHeader()).then(res => { return res })
+  }
+
 }
 
 export default new APIService();

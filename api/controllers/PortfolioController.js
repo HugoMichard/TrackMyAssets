@@ -29,15 +29,23 @@ exports.refresh = async function(req, res) {
   res.status(200).send({state: "Success"});
 }
 
+function getPlusValueHistoryPromise(usr_id, start_date) {
+  return new Promise(function(resolve, reject) {
+    Portfolio.getPorfolioValueHistory({ usr_id: usr_id, start_date: start_date }, function (err, values) {
+      if (err) {
+        reject(err)
+      }
+      resolve(values)
+    });
+  });
+}
+
 exports.getPlusValueHistory = async function(req, res) {
   const start_date = await dateHelper.translateStartDateQueryToStringDate(req.usr_id, req.query.portfolio_chart_start_date);
 
-  Portfolio.getPorfolioValueHistory({ usr_id: req.usr_id, start_date: start_date }, function (err, values) {
-      if (err) {
-          res.status(500).send({message: err.message});
-      }
-      res.status(200).send({state: "Success", values: values});
-  });
+  getPlusValueHistoryPromise(req.usr_id, start_date).then(values => {
+    res.status(200).send({state: "Success", values: values});
+  })
 }
 
 const getPlusValueKDaysAgo = function(usr_id, days_ago) {
@@ -79,13 +87,40 @@ exports.getPlusValueSummary = async function (req, res) {
 exports.getInvestments = async function(req, res) {
   const group_date = 
     req.query.group_date === "yearly" ? "%Y" 
-    : req.query.group_date === "monthly" ? "%m-%Y"
-    : "%d-%m-%Y";
+    : req.query.group_date === "monthly" ? "%Y-%m"
+    : "%Y-%m-%d";
+  const start_date = await getPortfolioStartDate(req.usr_id)
   
-  Portfolio.getInvestments({ usr_id: req.usr_id, group_date: group_date }, function (err, values) {
+  Portfolio.getInvestments({ usr_id: req.usr_id, group_date: group_date, start_date: start_date }, function (err, values) {
       if (err) {
           res.status(500).send({message: err.message});
       }
       res.status(200).send({state: "Success", values: values});
+  });
+}
+
+function getCumulativeInvestments(usr_id, start_date) {
+  return new Promise(function(resolve, reject) {
+    Portfolio.getCumulativeInvestments({ usr_id: usr_id, start_date: start_date }, function (err, values) {
+      if (err) {
+        reject(err)
+      }
+      resolve(values)
+    })
+  });}
+
+exports.getCumulativeInvestmentsWithValue = async function(req, res) {
+  console.log("coucou")
+  const start_date = await dateHelper.translateStartDateQueryToStringDate(req.usr_id, req.query.portfolio_start_date);
+  console.log(start_date);
+  Promise.all([
+    getCumulativeInvestments(req.usr_id, start_date), 
+    getPlusValueHistoryPromise(req.usr_id, start_date)
+  ])
+  .catch(err => {
+    res.status(500).send({message: err.message});
+  })
+  .then(values => {
+    res.status(200).send({state: "Success", investments: values[0], value_history: values[1]});
   });
 }

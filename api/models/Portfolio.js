@@ -122,21 +122,55 @@ Portfolio.getPlusValueKDaysAgo = function (params, result) {
 Portfolio.getInvestments = function (params, result) {
   sql.query(
     `SELECT 
-        DATE_FORMAT(o.execution_date, ?) as execution_date, 
+        DATE_FORMAT(date_cat_combis.random_date, ?) as execution_date, 
         SUM(o.price * o.quantity + o.fees) as investment, 
         c.name as cat_name, 
         c.color as cat_color
       FROM orders o
       INNER JOIN assets a ON a.ast_id = o.ast_id
       INNER JOIN categories c ON a.cat_id = c.cat_id 
-      WHERE o.usr_id = ?
-      GROUP by c.cat_id, DATE_FORMAT(o.execution_date, ?)
-      ORDER BY DATE_FORMAT(o.execution_date, ?)`,
+      RIGHT JOIN (
+        SELECT DISTINCT c2.cat_id, d.random_date 
+        FROM dates d, categories c2 
+        WHERE usr_id = ? AND d.random_date BETWEEN ? AND CURDATE() - INTERVAL 1 DAY
+        ) date_cat_combis 
+      ON o.execution_date = date_cat_combis.random_date AND c.cat_id = date_cat_combis.cat_id     
+      GROUP by c.cat_id, DATE_FORMAT(date_cat_combis.random_date, ?)
+      ORDER BY DATE_FORMAT(date_cat_combis.random_date, ?)`,
     [
       params.group_date,
       params.usr_id,
+      params.start_date,
       params.group_date,
       params.group_date
+    ], 
+    function (err, res) {
+      if (err) {
+        result(null, err)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
+
+Portfolio.getCumulativeInvestments = function (params, result) {
+  sql.query(
+    `SELECT 
+        DATE_FORMAT(random_date, '%Y-%m-%d') as random_date, 
+        COALESCE(SUM(day_sum) OVER(ORDER BY random_date ASC), 0) as cum_sum
+        FROM (
+          SELECT SUM(price * quantity + fees) as day_sum, execution_date
+          FROM orders WHERE usr_id = ? AND execution_date BETWEEN ? AND CURDATE() - INTERVAL 1 DAY
+          GROUP BY execution_date
+        ) o
+      RIGHT JOIN dates d ON o.execution_date = d.random_date 
+      WHERE d.random_date BETWEEN ? AND CURDATE() - INTERVAL 1 DAY
+      ORDER BY random_date ASC`,
+    [
+      params.usr_id,
+      params.start_date,
+      params.start_date
     ], 
     function (err, res) {
       if (err) {

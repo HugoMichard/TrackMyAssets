@@ -38,7 +38,6 @@ class OverviewPortfolio extends Component {
     componentDidMount() {
         APIService.getPortfolioPlusValueSummary().then(res => {
           const dayPlusValues = res.data.dayPlusValues;
-          console.log(dayPlusValues);
           this.setState({
             diffDay: this.getDiffTodayWithDateColumn(dayPlusValues, 1),
             pDiffDay: this.getPourcentageDiffTodayWithDateColumn(dayPlusValues, 1),

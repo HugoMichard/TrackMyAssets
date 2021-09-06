@@ -19,8 +19,6 @@ const getValueKDaysAgo = function(usr_id, days_ago) {
 }
 
 exports.summary = async function (req, res) {
-  console.log("Getting summary")
-
   Promise.all([
     getValueKDaysAgo(req.usr_id, 1), 
     getValueKDaysAgo(req.usr_id, 2), 

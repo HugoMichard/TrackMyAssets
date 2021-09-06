@@ -51,7 +51,6 @@ class PortfolioInvestments extends Component {
               colors[item.cat_name] = item.cat_color;
             }
           });
-
           this.setState({ portfolioChartData: data, portfolioChartKeys: categories, portfolioChartColors: colors });
         })
     }
