@@ -23,12 +23,10 @@ class InvestmentsPortfolio extends Component {
       <>
         <div>
           <Row>
-            <Col md="12">
+            <Col md="6">
               <PortfolioCategoryDistribution></PortfolioCategoryDistribution>
             </Col>
-          </Row>
-          <Row>
-            <Col md="12">
+            <Col md="6">
               <PortfolioTypeDistribution></PortfolioTypeDistribution>
             </Col>
           </Row>

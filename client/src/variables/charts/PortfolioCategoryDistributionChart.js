@@ -1,4 +1,5 @@
 import { ResponsivePie } from '@nivo/pie'
+import { basicTooltip } from './tooltips/baseTooltip';
 // make sure parent container have a defined height when using
 // responsive component, otherwise height will be 0 and
 // no chart will be rendered.
@@ -23,6 +24,7 @@ export function PortfolioCategoryDistributionChart(data, keys, colors) {
         margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
         startAngle={-180}
         activeOuterRadiusOffset={8}
+        valueFormat=" >-p"
         colors={colors}
         keys={keys}
         borderWidth={1}
@@ -34,6 +36,8 @@ export function PortfolioCategoryDistributionChart(data, keys, colors) {
         arcLinkLabelsColor={{ from: 'color' }}
         arcLabelsSkipAngle={10}
         arcLabelsTextColor={{ from: 'color', modifiers: [ [ 'darker', 2 ] ] }}
+        tooltip={basicTooltip}
+        labelFormat={(input) => console.log(input)}
         legends={[
             {
                 anchor: 'bottom',

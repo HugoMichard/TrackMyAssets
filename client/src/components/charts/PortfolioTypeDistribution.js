@@ -31,6 +31,8 @@ class PortfolioCategoryDistribution extends Component {
     }
     componentDidMount() {
       APIService.getPortfolioValueForeachType().then(res => {
+        const totalValue = res.data.values.map(v => v.value).reduce((a, b) => a + b);
+
         var keys = []
         var data = []
         res.data.values.forEach(v => {
@@ -38,7 +40,8 @@ class PortfolioCategoryDistribution extends Component {
           data.push({
             id: this.state.typeValueToLabel[v.ast_type],
             label: this.state.typeValueToLabel[v.ast_type],
-            value: v.value
+            value: v.value / totalValue,
+            tooltipValue: v.value
           });
         });
         this.setState({ portfolioChartData: data, portfolioChartKeys: keys });
