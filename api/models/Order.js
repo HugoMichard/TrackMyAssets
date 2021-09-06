@@ -3,6 +3,7 @@ var sql = require('./db.js')
 var Order = function (order) {
   this.execution_date = order.execution_date
   this.ast_id = parseInt(order.ast_id)
+  this.plt_id = parseInt(order.plt_id)
   this.usr_id = order.usr_id
   this.fees = parseFloat(order.fees)
   this.quantity = parseFloat(order.quantity)
@@ -26,10 +27,12 @@ Order.search = function (params, result) {
     `SELECT o.ord_id, o.usr_id, o.ast_id, o.price, o.quantity, o.fees, 
       DATE_FORMAT(o.execution_date, '%m/%d/%Y') as execution_date, 
       a.name as ast_name, a.code as ast_code, a.ast_type as ast_type,
-      c.color as cat_color, c.name as cat_name 
+      c.color as cat_color, c.name as cat_name,
+      p.color as plt_color, p.name as plt_name
       FROM orders o
       INNER JOIN assets a ON a.ast_id = o.ast_id
       INNER JOIN categories c ON c.cat_id = a.cat_id
+      INNER JOIN platforms p ON p.plt_id = o.plt_id
       WHERE o.usr_id = ?
       ORDER BY o.execution_date DESC, a.name ASC`, [
       params.usr_id
@@ -48,10 +51,12 @@ Order.getDetail = function (params, result) {
     `SELECT o.ord_id, o.usr_id, o.ast_id, o.price, o.quantity, o.fees, 
       DATE_FORMAT(o.execution_date, '%Y-%m-%d') as execution_date,
       a.name as ast_name, a.code as ast_coin, a.ast_type as ast_type,
-      c.color as cat_color, c.name as cat_name, c.cat_id as cat_id
+      c.color as cat_color, c.name as cat_name, c.cat_id as cat_id,
+      p.color as plt_color, p.name as plt_name, p.plt_id as plt_id
       FROM orders o
       INNER JOIN assets a ON a.ast_id = o.ast_id
       INNER JOIN categories c ON c.cat_id = a.cat_id
+      INNER JOIN platforms p ON p.plt_id = o.plt_id
       WHERE o.ord_id = ? AND o.usr_id = ?`, [
         params.ord_id,
         params.usr_id

@@ -29,13 +29,14 @@ class OrderForm extends Component {
             cat_name: "",
             cat_color: "",
             code: ""
-        } 
-        this.state = { form: form, selectedAst: null, selectedAstData: selectedAstData }
+        }
+        this.state = { form: form, selectedAst: null, selectedAstData: selectedAstData, selectedPlt: null }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
     componentWillReceiveProps(nextProps) {
         const assets = this.state.assets;
+        const platforms = this.state.platforms;
         const form = {
             ord_id: nextProps.ord_id,
             cat_id: nextProps.cat_id,
@@ -43,6 +44,7 @@ class OrderForm extends Component {
             fees: nextProps.fees,
             quantity: nextProps.quantity,
             ast_id: nextProps.ast_id,
+            plt_id: nextProps.plt_id,
             execution_date: nextProps.execution_date
         }
 
@@ -55,7 +57,14 @@ class OrderForm extends Component {
                 break;
             }
         }
-        this.setState({form: form, selectedAst: selectedAst, selectedAstData: selectedAstData})
+        var selectedPlt = {}
+        for(var i in platforms){
+            if(platforms[i].value === form.plt_id){
+                selectedPlt = platforms[i];
+                break;
+            }
+        }
+        this.setState({form: form, selectedAst: selectedAst, selectedAstData: selectedAstData,  selectedPlt: selectedPlt})
     }
     componentDidMount() {
         APIService.searchAssets({}).then(res => { 
@@ -68,18 +77,34 @@ class OrderForm extends Component {
                 label,
                 ...rest
               }));
-            this.setState({assets: assets });
+            this.setState({ assets: assets });
+        });
+
+        APIService.searchPlatforms({}).then(res => { 
+            const platforms = res.data.platforms.map(({
+                plt_id: value,
+                name: label,
+                ...rest
+              }) => ({
+                value,
+                label,
+                ...rest
+              }));
+            this.setState({ platforms: platforms });
         });
 
     }
     handleChange(property, event) {
-        var { form, selectedAst, selectedAstData } = this.state;
-        form[property] = property === "ast_id" ? event.value : event.target.value;
+        var { form, selectedAst, selectedAstData, selectedPlt } = this.state;
+        form[property] = property === "ast_id" || property === "plt_id" ? event.value : event.target.value;
         if(property === "ast_id") {
             selectedAst = event;
             selectedAstData = event;
         }
-        this.setState({form: form, selectedAst: selectedAst, selectedAstData: selectedAstData});
+        if(property === "plt_id") {
+            selectedPlt = event;
+        }
+        this.setState({form: form, selectedAst: selectedAst, selectedAstData: selectedAstData, selectedPlt: selectedPlt});
     }
     
     handleSubmit(e){
@@ -94,14 +119,14 @@ class OrderForm extends Component {
         }
     }
     render() {
-        let { selectedAst, assets, selectedAstData } = this.state
+        let { selectedAst, assets, selectedAstData, selectedPlt, platforms } = this.state
         let submitText = this.state.form.ord_id === undefined ? "Create" : "Update";
         return (
         <>
             <Form>
                 <Row>
                     <Col md="6">
-                    <FormGroup>
+                        <FormGroup>
                             <label>Asset</label>
                             <Select options={assets} onChange={(evt) => this.handleChange("ast_id", evt)} value={selectedAst}></Select>
                         </FormGroup>
@@ -124,19 +149,27 @@ class OrderForm extends Component {
                     </Col>
                 </Row>
                 <Row>
+                    <Col md="6">
+                        <FormGroup>
+                            <label>Platform</label>
+                            <Select options={platforms} onChange={(evt) => this.handleChange("plt_id", evt)} value={selectedPlt}></Select>
+                        </FormGroup>
+                    </Col>
+                </Row>
+                <Row>
                     <Col md="4">
-                    <FormGroup key={this.state.form.execution_date}>
-                        <TextField
-                            id="date"
-                            label="Execution Date"
-                            type="date"
-                            defaultValue={this.state.form.execution_date}
-                            onChange={(evt) => this.handleChange("execution_date", evt)}
-                            InputLabelProps={{
-                                shrink: true
-                            }}
-                        />                    
-                    </FormGroup>
+                        <FormGroup key={this.state.form.execution_date}>
+                            <TextField
+                                id="date"
+                                label="Execution Date"
+                                type="date"
+                                defaultValue={this.state.form.execution_date}
+                                onChange={(evt) => this.handleChange("execution_date", evt)}
+                                InputLabelProps={{
+                                    shrink: true
+                                }}
+                            />                    
+                        </FormGroup>
                     </Col>
                 </Row>
                 <Row>

@@ -13,7 +13,6 @@ exports.create = function (req, res) {
 }
 
 exports.search = function (req, res) {
-  //req.query.name = req.query.name === undefined ? "%" : "%" + req.query.name + "%"
   req.query.usr_id = req.usr_id
   Order.search(req.query, function (err, orders) {
     if (err) {

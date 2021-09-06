@@ -25,6 +25,15 @@ CREATE TABLE categories
   FOREIGN KEY     (usr_id) REFERENCES users(usr_id)
 );
 
+CREATE TABLE platforms
+(
+  plt_id          INT unsigned NOT NULL AUTO_INCREMENT,
+  usr_id          INT unsigned NOT NULL,
+  name            VARCHAR(150) NOT NULL,
+  color           VARCHAR(10) NOT NULL,
+  PRIMARY KEY     (plt_id),
+  FOREIGN KEY     (usr_id) REFERENCES users(usr_id)
+);
 
 CREATE TABLE assets
 (
@@ -45,12 +54,14 @@ CREATE TABLE orders
   ord_id          INT unsigned NOT NULL AUTO_INCREMENT,
   usr_id          INT unsigned NOT NULL,
   ast_id          INT unsigned NOT NULL,
+  plt_id          INT unsigned NOT NULL,
   execution_date  DATE NOT NULL,
   price           FLOAT NOT NULL,
   quantity        FLOAT NOT NULL,
   fees            FLOAT,
   PRIMARY KEY     (ord_id),
   FOREIGN KEY     (usr_id) REFERENCES users(usr_id),
+  FOREIGN KEY     (plt_id) REFERENCES platforms(plt_id),
   FOREIGN KEY     (ast_id) REFERENCES assets(ast_id)                                            
 );
 

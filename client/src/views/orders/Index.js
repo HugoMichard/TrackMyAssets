@@ -31,14 +31,14 @@ class IndexAssets extends Component {
         }
     }
     searchForOrders() {
-        APIService.searchOrders(this.state.searchForm).then(res => { this.setState({ orders: res.data.orders }); });
+        APIService.searchOrders(this.state.searchForm).then(res => { console.log(res.data);this.setState({ orders: res.data.orders }); });
     }
     componentDidMount() {
         this.searchForOrders()
     }
     renderTableData() {
         return this.state.orders.map((ord, index) => {
-            const { ord_id, ast_name, cat_name, cat_color, ast_code, ast_type, quantity, fees, price, execution_date } = ord
+            const { ord_id, ast_name, cat_name, cat_color, ast_code, ast_type, quantity, fees, price, execution_date, plt_color, plt_name } = ord
             return (
                 <tr key={index} onClick={() => window.location = "/orders/" + ord_id}>
                     <td>{execution_date}</td>
@@ -48,6 +48,10 @@ class IndexAssets extends Component {
                     <td style={{
                         color: cat_color
                         }}>{cat_name}
+                    </td>
+                    <td style={{
+                        color: plt_color
+                        }}>{plt_name}
                     </td>
                     <td>{quantity}</td>
                     <td>{price}</td>
@@ -88,6 +92,7 @@ class IndexAssets extends Component {
                             <th>Ticker / Coin</th>
                             <th>Type</th>
                             <th>Category</th>
+                            <th>Platform</th>
                             <th>Quantity</th>
                             <th>Unit Price</th>
                             <th>Fees</th>

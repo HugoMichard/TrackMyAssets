@@ -40,6 +40,7 @@ class DetailOrder extends Component {
                             fees={this.state.order.fees}
                             quantity={this.state.order.quantity}
                             ast_id={this.state.order.ast_id}
+                            plt_id={this.state.order.plt_id}
                             execution_date={this.state.order.execution_date}>
                         </OrderForm>
                     </CardBody>

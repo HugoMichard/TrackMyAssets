@@ -69,7 +69,7 @@ function Sidebar(props) {
                     className="nav-link"
                     activeClassName={checkActiveRoute(pathname, "portfolio") ? "active" : ""}
                     >
-                    <i className="nc-icon nc-briefcase-24" />
+                    <i className="nc-icon nc-chart-pie-36" />
                     <p>Portfolio</p>
                 </NavLink>
             </li>
@@ -101,6 +101,16 @@ function Sidebar(props) {
                     >
                     <i className="nc-icon nc-bullet-list-67" />
                     <p>Categories</p>
+                </NavLink>
+            </li>
+            <li className={checkActiveRoute(pathname, "platforms") ? "active" : ""}>
+                <NavLink
+                    to={"/platforms"}
+                    className="nav-link"
+                    activeClassName={checkActiveRoute(pathname, "platforms") ? "active" : ""}
+                    >
+                    <i className="nc-icon nc-laptop" />
+                    <p>Platforms</p>
                 </NavLink>
             </li>
         </Nav>

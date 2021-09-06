@@ -15,6 +15,10 @@ import IndexCategories from "views/categories/Index.js";
 import CreateCategory from "views/categories/Create.js";
 import DetailCategory from "views/categories/Detail.js";
 
+import IndexPlatforms from "views/platforms/Index.js";
+import CreatePlatform from "views/platforms/Create.js";
+import DetailPlatform from "views/platforms/Detail.js";
+
 import IndexPortfolio from "views/portfolio/Index.js";
 
 var routes = {
@@ -42,6 +46,11 @@ var routes = {
   },
   "/portfolio": {
     "/": IndexPortfolio
-  }
+  },
+  "/platforms": {
+    "/create": CreatePlatform,
+    "/:plt_id": DetailPlatform,
+    "/": IndexPlatforms
+  },
 }
 export default routes;
