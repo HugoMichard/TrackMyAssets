@@ -185,6 +185,11 @@ class APIService {
       return axios.get(url, this.getUserHeader()).then(res => { return res })
     }
 
+    getPortfolioValueForeachPlt () {
+      const url = `${API_URL}/platforms/getPortfolioValueForeachPlt`
+      return axios.get(url, this.getUserHeader()).then(res => { return res })
+    }
+
 }
 
 export default new APIService();

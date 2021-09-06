@@ -17,7 +17,7 @@ import {
 import PortfolioCategoryDistribution from "components/charts/PortfolioCategoryDistribution";
 import PortfolioTypeDistribution from "components/charts/PortfolioTypeDistribution";
 
-class InvestmentsPortfolio extends Component {
+class CategoriesPortfolio extends Component {
   render() {
     return (
       <>
@@ -36,4 +36,4 @@ class InvestmentsPortfolio extends Component {
   }
 }
 
-export default InvestmentsPortfolio;
+export default CategoriesPortfolio;

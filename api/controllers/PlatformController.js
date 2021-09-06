@@ -49,3 +49,13 @@ exports.update = function (req, res) {
         }
     })
 }
+
+exports.getPortfolioValueForeachPlt = function (req, res) {
+    Platform.getPortfolioValueForeachPlt(req.usr_id, function (err, values) {
+        if (err) {
+            res.status(500).send({ message: err.message});
+        } else {
+            res.status(200).send({state: "Success", values: values})
+        }
+    })
+}

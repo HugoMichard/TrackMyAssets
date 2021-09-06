@@ -5,6 +5,7 @@ const { authJwt } = require("../middlewares");
 
 router.use(authJwt.verifyToken)
 
+router.get("/getPortfolioValueForeachPlt", platform.getPortfolioValueForeachPlt);
 router.get("/:plt_id", platform.getDetail);
 router.get('/', platform.search);
 
