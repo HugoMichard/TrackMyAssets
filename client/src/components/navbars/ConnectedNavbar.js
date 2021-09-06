@@ -116,7 +116,7 @@ function Header(props) {
                 onClick={refresh}>
                 <i className="nc-icon nc-refresh-69" />
                 <p>
-                  <span className="d-lg-none d-md-block">Stats</span>
+                  <span className="d-lg-none d-md-block">Refresh</span>
                 </p>
               </Link>
             </NavItem>
@@ -124,7 +124,7 @@ function Header(props) {
               <Link to="/login" className="nav-link btn-rotate">
                 <i className="nc-icon nc-button-power" />
                 <p>
-                  <span className="d-lg-none d-md-block">Account</span>
+                  <span className="d-lg-none d-md-block">Disconnect</span>
                 </p>
               </Link>
             </NavItem>

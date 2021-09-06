@@ -5,11 +5,12 @@ const { authJwt } = require("../middlewares");
 
 router.use(authJwt.verifyToken)
 
+router.get("/getPortfolioValueForeachCat", category.getPortfolioValueForeachCat);
+router.get("/getPortfolioValueForeachType", category.getPortfolioValueForeachType);
+router.get("/:cat_id", category.getDetail);
 router.get('/', category.search);
 
 router.post("/", category.create);
-
-router.get("/:cat_id", category.getDetail);
 router.post("/:cat_id", category.update);
 
 

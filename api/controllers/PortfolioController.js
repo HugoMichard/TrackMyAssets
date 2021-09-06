@@ -110,9 +110,8 @@ function getCumulativeInvestments(usr_id, start_date) {
   });}
 
 exports.getCumulativeInvestmentsWithValue = async function(req, res) {
-  console.log("coucou")
   const start_date = await dateHelper.translateStartDateQueryToStringDate(req.usr_id, req.query.portfolio_start_date);
-  console.log(start_date);
+
   Promise.all([
     getCumulativeInvestments(req.usr_id, start_date), 
     getPlusValueHistoryPromise(req.usr_id, start_date)

@@ -49,3 +49,23 @@ exports.update = function (req, res) {
         }
     })
 }
+
+exports.getPortfolioValueForeachCat = function (req, res) {
+    Category.getPortfolioValueForeachCat(req.usr_id, function (err, values) {
+        if (err) {
+            res.status(500).send({ message: err.message});
+        } else {
+            res.status(200).send({state: "Success", values: values})
+        }
+    })
+}
+
+exports.getPortfolioValueForeachType = function (req, res) {
+    Category.getPortfolioValueForeachType(req.usr_id, function (err, values) {
+        if (err) {
+            res.status(500).send({ message: err.message});
+        } else {
+            res.status(200).send({state: "Success", values: values})
+        }
+    })
+}

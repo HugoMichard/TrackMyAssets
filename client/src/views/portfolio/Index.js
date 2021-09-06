@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import PortfolioNavbar from "components/navbars/PortfolioNavbar";
 import OverviewPortfolio from "views/portfolio/Overview";
 import InvestmentsPortfolio from "views/portfolio/Investments";
+import CategoriesPortfolio from "views/portfolio/Categories";
 
 class IndexPortfolio extends Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class IndexPortfolio extends Component {
           : portfolioPage === "investments" 
           ? <InvestmentsPortfolio></InvestmentsPortfolio>
           : portfolioPage === "categories"
-          ? <InvestmentsPortfolio></InvestmentsPortfolio>
+          ? <CategoriesPortfolio></CategoriesPortfolio>
           : <InvestmentsPortfolio></InvestmentsPortfolio>
       }
         </div>

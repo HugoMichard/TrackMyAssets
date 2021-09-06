@@ -112,6 +112,16 @@ class APIService {
     return axios.get(url, this.getUserHeader()).then(res => { return res })
   }
 
+  getPortfolioValueForeachCat () {
+    const url = `${API_URL}/categories/getPortfolioValueForeachCat`
+    return axios.get(url, this.getUserHeader()).then(res => { return res })
+  }
+
+  getPortfolioValueForeachType () {
+    const url = `${API_URL}/categories/getPortfolioValueForeachType`
+    return axios.get(url, this.getUserHeader()).then(res => { return res })
+  }
+
   // dashboard methods
   getDashboardSummary () {
     const url = `${API_URL}/dashboard/summary`
