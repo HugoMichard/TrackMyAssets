@@ -5,9 +5,10 @@ const { authJwt } = require("../middlewares");
 
 router.use(authJwt.verifyToken)
 
-router.get('/', asset.search);
+router.get("/getAssetsOwned", asset.getAssetsOwned);
 
 router.post("/", asset.create);
+router.get('/', asset.search);
 
 router.get("/:ast_id", asset.getDetail);
 router.post("/:ast_id", asset.update);

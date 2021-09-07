@@ -54,3 +54,13 @@ exports.update = function (req, res) {
       }
   })
 }
+
+exports.getAssetsOwned = function (req, res) {
+  Asset.getAssetsOwned(req.usr_id, function (err, assets) {
+      if (err) {
+          res.status(500).send({ message: err.message});
+      } else {
+          res.status(200).send({assets: assets});
+      }
+  })
+}

@@ -11,7 +11,6 @@ import {
   CardTitle,
   Row,
   Col,
-  Button,
   Table
 } from "reactstrap";
 import PortfolioPlusValueHistory from "components/charts/PortfolioPlusValueHistory";
@@ -20,7 +19,7 @@ class OverviewPortfolio extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            categories: [],
+            assetsOwned: [],
             diffDay: 0,
             pDiffDay: 0,
             diffWeek: 0,
@@ -53,7 +52,7 @@ class OverviewPortfolio extends Component {
             pDiffTotal: this.getPourcentageDiffTodayWithDateColumn(dayPlusValues, 6)
           })
         });
-        APIService.searchCategory({}).then(res => { this.setState({categories: res.data.categories });});
+        APIService.getAssetsOwned().then(res => { this.setState({assetsOwned: res.data.assets}); })
     }
     getDiffTodayWithDateColumn(values, dateColumn) {
       return values[0] - values[dateColumn];
@@ -62,20 +61,33 @@ class OverviewPortfolio extends Component {
       return 100 * (values[0] - values[dateColumn]) / Math.abs(values[dateColumn]);
     }
     renderTableData() {
-        return this.state.categories.map((cat, index) => {
-            const { cat_id, name, color } = cat
-            return (
-                <tr key={index} onClick={() => window.location = "/categories/" + cat_id}>
-                    <td>{name}</td>
-                    <td style={{
-                        color: color,
-                        backgroundColor: color
-                        }}>
-                            {color}
-                    </td>
-                </tr>
-            )
+      if(this.state.assetsOwned) {
+        return this.state.assetsOwned.map((ast, index) => {
+          const { ast_id, name, ast_type, ast_value, quantity, price, perf, perf100, cat_color, cat_name, code } = ast
+          return (
+            <tr key={index} onClick={() => window.location = "/assets/" + ast_id}>
+              <td>{name}</td>
+              <td>{code}</td>
+              <td>{ast_type}</td>
+              <td style={{ color: cat_color }}>{cat_name}</td>
+              <td>{quantity}</td>
+              <td>{Math.round(price * 100) / 100}</td>
+              <td>{Math.round(ast_value * 100) / 100}</td>
+              <td className={`${perf >= 0 ? "text-success" : "text-danger"}`}>
+                {perf > 0 ? "+ " : perf < 0 ? "- " : ""}
+                {Math.round(Math.abs(perf) * 100) / 100}
+              </td>
+              <td className={`${perf100 >= 0 ? "text-success" : "text-danger"}`}>
+                {perf100 > 0 ? "+ " : perf100 < 0 ? "- " : ""}
+                {Math.round(Math.abs(perf100) * 100) / 100} % 
+              </td>
+            </tr>
+          )
         })
+      } else {
+        return (<tr></tr>)
+      }
+        
     }
     displayCardPlusValue(percentage, value, periodName) {
         return (
@@ -118,7 +130,7 @@ class OverviewPortfolio extends Component {
     return (
       <>
         <div>
-        <Row>
+          <Row>
             {this.displayCardPlusValue(this.state.pDiffDay, this.state.diffDay, "day")}
             {this.displayCardPlusValue(this.state.pDiffWeek, this.state.diffWeek, "week")}
             {this.displayCardPlusValue(this.state.pDiffMonth, this.state.diffMonth, "month")}
@@ -131,36 +143,35 @@ class OverviewPortfolio extends Component {
               <PortfolioPlusValueHistory></PortfolioPlusValueHistory>
             </Col>
           </Row>
-            <Row>
+          <Row>
             <Col md="12">
-                <Card>
-                    <CardHeader>
-                        <CardTitle tag="h4" className="no-margin-bottom">Assets owned</CardTitle>
-                    </CardHeader>
-                    <CardBody>
-                        <Table>
-                            <thead className="text-primary">
-                            <tr>
-                              <th>Name</th>
-                              <th>Type</th>
-                              <th>Ticker / Coin</th>
-                              <th>Category</th>
-                              <th>Platform</th>
-                              <th>Current Quantity</th>
-                              <th>Average Buying Price</th>
-                              <th>Quantity Sold</th>
-                              <th>Average Selling Price</th>
-                              <th>Total</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                {this.renderTableData()}
-                            </tbody>
-                        </Table>
-                    </CardBody>
-                </Card>
-                </Col>
-            </Row>
+              <Card>
+                <CardHeader>
+                  <CardTitle tag="h4" className="no-margin-bottom">Assets owned</CardTitle>
+                </CardHeader>
+                <CardBody>
+                  <Table>
+                    <thead className="text-primary">
+                      <tr>
+                        <th>Name</th>
+                        <th>Ticker / Coin</th>
+                        <th>Type</th>
+                        <th>Category</th>
+                        <th>Current Quantity</th>
+                        <th>Average Buying Price</th>
+                        <th>Current value</th>
+                        <th>Performance</th>
+                        <th>RoI</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {this.renderTableData()}
+                    </tbody>
+                  </Table>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
         </div>
       </>
     );

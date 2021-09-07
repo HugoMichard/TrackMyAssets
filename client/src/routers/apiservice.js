@@ -58,6 +58,11 @@ class APIService {
     return axios.get(url, this.getUserHeader()).then(res => { return res })
   }
 
+  getAssetsOwned () {
+    const url = `${API_URL}/assets/getAssetsOwned`
+    return axios.get(url, this.getUserHeader()).then(res => { return res })
+  }
+
   getAssetHistory (astId) {
     const url = `${API_URL}/histories/asset/` + astId
     return axios.get(url, this.getUserHeader()).then(res => { return res })
