@@ -5,7 +5,7 @@ const { authJwt } = require("../middlewares");
 
 router.use(authJwt.verifyToken)
 
-router.get("/asset/:ast_id", history.getAssetHistory);
+router.get("/asset", history.getAssetHistory);
 
 
 module.exports = router;

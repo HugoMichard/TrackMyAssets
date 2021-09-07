@@ -9,7 +9,8 @@ import {
   CardBody,
   CardTitle,
   Row,
-  Col
+  Col,
+  Button
 } from "reactstrap";
 
 import {
@@ -27,12 +28,20 @@ class DetailAsset extends Component {
             chart_data: [{
                 "id": AssetHistoryChartData[0].id,
                 "data": AssetHistoryChartData[0].data
-            }]
+            }],
+            selectedPortfolioChartRange: "year"
         }
     }
     componentDidMount() {
         APIService.getAsset(this.state.ast_id).then(res => { this.setState({asset: res.data.asset });});
-        APIService.getAssetHistory(this.state.ast_id).then(res => { 
+        this.updatePortfolioChartDataWithRange(this.state.selectedPortfolioChartRange);
+    }
+    handleClickPortfolioRange(value) {
+        this.setState({selectedPortfolioChartRange: value});
+        this.updatePortfolioChartDataWithRange(value)
+    }
+    updatePortfolioChartDataWithRange(range) {
+        APIService.getAssetHistory({ast_id: this.state.ast_id, start_date: range}).then(res => { 
             const data = res.data.histories.map(h => {
                 return {
                     "x": new Date(h.hst_date).toLocaleDateString(),
@@ -43,6 +52,16 @@ class DetailAsset extends Component {
             chart_data[0].data = data
             this.setState({histories: res.data.histories, chart_data: chart_data });
         });
+    }
+    renderPortfolioRangeButton(text, range, color) {
+        return (
+          <Button
+            className={`justify-content-end no-margin-top ${this.state.selectedPortfolioChartRange === range ? "btn-square" : "btn-round"}`}
+            color={color}
+            onClick={() => this.handleClickPortfolioRange(range)}>
+            {text}
+          </Button>
+        );
     }
     render() {
         return (
@@ -71,6 +90,10 @@ class DetailAsset extends Component {
                 <Card>
                     <CardHeader>
                         <CardTitle tag="h4" className="no-margin-bottom">Asset History</CardTitle>
+                        {this.renderPortfolioRangeButton("Year", "year", "danger")}
+                        {this.renderPortfolioRangeButton("Month", "month", "warning")}
+                        {this.renderPortfolioRangeButton("Week", "week", "info")}
+                        {this.renderPortfolioRangeButton("All", "all", "success")}
                     </CardHeader>
                     <CardBody style={ { height: 500 } }>
                         {AssetHistoryChart(this.state.chart_data)}

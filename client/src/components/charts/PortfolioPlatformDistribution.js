@@ -6,9 +6,7 @@ import {
   Card,
   CardBody,
   CardHeader,
-  CardFooter,
-  CardTitle,
-  Button
+  CardTitle
 } from "reactstrap";
 
 import {

@@ -42,6 +42,7 @@ class IndexAssets extends Component {
             return (
                 <tr key={index} onClick={() => window.location = "/orders/" + ord_id}>
                     <td>{execution_date}</td>
+                    <td className={quantity < 0 ? "redtext" : "greentext"}>{quantity < 0 ? "Sell" : "Buy"}</td>
                     <td>{ast_name}</td>
                     <td>{ast_code}</td>
                     <td>{this.state.typeValueToLabel[ast_type]}</td>
@@ -53,10 +54,10 @@ class IndexAssets extends Component {
                         color: plt_color
                         }}>{plt_name}
                     </td>
-                    <td>{quantity}</td>
+                    <td className={quantity < 0 ? "redtext" : "greentext"}>{Math.abs(quantity)}</td>
                     <td>{price}</td>
                     <td>{fees}</td>
-                    <td>{quantity * price + fees}</td>
+                    <td className={quantity < 0 ? "redtext" : "greentext"}>{Math.abs(quantity * price + fees)}</td>
                     <td>
                         <i 
                             className="nc-icon nc-simple-remove" 
@@ -88,6 +89,7 @@ class IndexAssets extends Component {
                         <thead className="text-primary">
                         <tr>
                             <th>Date</th>
+                            <th>Type</th>
                             <th>Asset</th>
                             <th>Ticker / Coin</th>
                             <th>Type</th>

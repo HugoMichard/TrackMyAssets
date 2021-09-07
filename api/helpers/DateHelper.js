@@ -1,5 +1,10 @@
 var portfolio = require('../controllers/PortfolioController')
 
+function dateToStringDate(_date) {
+    return new Date(_date).toISOString().slice(0, 10).replace('T', ' ');
+}
+exports.dateToStringDate = dateToStringDate
+
 async function getStartDateFromQuery(usr_id, date_query) {
     return new Promise(function(resolve, reject) {
         if(date_query === "month") {
@@ -21,8 +26,7 @@ async function getStartDateFromQuery(usr_id, date_query) {
 async function translateStartDateQueryToStringDate(usr_id, start_date_query) {
     return new Promise(function(resolve, reject) {
         getStartDateFromQuery(usr_id, start_date_query).then(start_date => {
-            const start_date_string = new Date(start_date).toISOString().slice(0, 10).replace('T', ' ');
-            resolve(start_date_string);
+            resolve(dateToStringDate(start_date));
         })
     });
   }

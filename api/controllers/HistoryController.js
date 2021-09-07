@@ -1,10 +1,21 @@
 var History = require('../models/History')
 var stockScraper = require('../webscrapers/StockScraper');
+var dateHelper = require('../helpers/DateHelper')
 
 exports.getAssetHistory = function (req, res) {
-    req.query.ast_id = parseInt(req.params.ast_id);
-    req.query.usr_id = req.usr_id
-    History.getAssetHistory(req.query, function (err, histories) {
+    const start_date_string =
+        req.query.start_date === "all" ? new Date('1970-01-01') 
+        : req.query.start_date === "week" ? new Date().setDate(new Date().getDate() - 7)
+        : req.query.start_date === "month" ? new Date().setMonth(new Date().getMonth() - 1)
+        : new Date().setYear(new Date().getFullYear() - 1);
+
+    const params = {
+        ast_id: parseInt(req.query.ast_id),
+        start_date: dateHelper.dateToStringDate(start_date_string),
+        usr_id: req.usr_id
+    } 
+
+    History.getAssetHistory(params, function (err, histories) {
       if (err) {
           res.status(500).send({ message: err.message});
       } else {

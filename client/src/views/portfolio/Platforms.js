@@ -44,11 +44,11 @@ class PlatformsPortfolio extends Component {
                 <td>{quantity}</td>
                 <td>{Math.round(price * 100) / 100}</td>
                 <td>{Math.round(ast_value * 100) / 100}</td>
-                <td className={`${perf >= 0 ? "text-success" : "text-danger"}`}>
+                <td className={`${perf >= 0 ? "greentext" : "redtext"}`}>
                   {perf > 0 ? "+ " : perf < 0 ? "- " : ""}
                   {Math.round(Math.abs(perf) * 100) / 100}
                 </td>
-                <td className={`${perf100 >= 0 ? "text-success" : "text-danger"}`}>
+                <td className={`${perf100 >= 0 ? "greentext" : "redtext"}`}>
                   {perf100 > 0 ? "+ " : perf100 < 0 ? "- " : ""}
                   {Math.round(Math.abs(perf100) * 100) / 100} % 
                 </td>

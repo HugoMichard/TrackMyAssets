@@ -52,6 +52,7 @@ exports.update = function (req, res) {
           res.status(500).send({ message: err.message});
       } else {
           res.status(200).send({asset: asset});
+          history.initializeAssetHistory(asset);
       }
   })
 }

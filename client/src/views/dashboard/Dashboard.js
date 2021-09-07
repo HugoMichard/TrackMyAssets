@@ -6,13 +6,11 @@ import APIService from "routers/apiservice";
 // reactstrap components
 import {
   Card,
-  CardHeader,
   CardBody,
   CardFooter,
   CardTitle,
   Row,
-  Col,
-  Button
+  Col
 } from "reactstrap";
 
 import PortfolioPriceHistory from "components/charts/PortfolioPriceHistory";

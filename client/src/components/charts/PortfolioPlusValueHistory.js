@@ -6,7 +6,6 @@ import {
   Card,
   CardBody,
   CardHeader,
-  CardFooter,
   CardTitle,
   Button
 } from "reactstrap";
@@ -57,7 +56,7 @@ class PortfolioPlusValueHistory extends Component {
             {text}
           </Button>
         );
-      }
+    }
     render() {
         return (
         <>

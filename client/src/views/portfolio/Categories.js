@@ -1,18 +1,9 @@
 import React, { Component } from "react";
 
-import APIService from "routers/apiservice";
-
 // reactstrap components
 import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  CardTitle,
   Row,
-  Col,
-  Button,
-  Table
+  Col
 } from "reactstrap";
 import PortfolioCategoryDistribution from "components/charts/PortfolioCategoryDistribution";
 import PortfolioTypeDistribution from "components/charts/PortfolioTypeDistribution";

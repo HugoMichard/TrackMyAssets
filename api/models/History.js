@@ -35,9 +35,23 @@ History.getHistoryByCode = function (code, result) {
 
 History.getAssetHistory = function (params, result) {
   sql.query(
-    `SELECT * FROM histories h INNER JOIN assets a ON a.code = h.code WHERE a.ast_id = ? AND a.usr_id = ?`, [
+    `SELECT 
+        hst_id,
+        DATE_FORMAT(hst_date, '%Y-%m-%d') as hst_date,
+        vl,
+        h.code,
+        ast_id,
+        usr_id,
+        cat_id,
+        name,
+        ast_type
+      FROM histories h 
+      INNER JOIN assets a ON a.code = h.code 
+      WHERE a.ast_id = ? AND a.usr_id = ? AND hst_date >= ?
+      ORDER BY hst_date`, [
         params.ast_id,
-        params.usr_id
+        params.usr_id,
+        params.start_date
       ], function (err, res) {
       if (err) {
         result(null, err)

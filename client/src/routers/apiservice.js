@@ -63,9 +63,10 @@ class APIService {
     return axios.get(url, this.getUserHeader()).then(res => { return res })
   }
 
-  getAssetHistory (astId) {
-    const url = `${API_URL}/histories/asset/` + astId
-    return axios.get(url, this.getUserHeader()).then(res => { return res })
+  getAssetHistory (data) {
+    var formattedData = this.formatSearch(data)
+    const url = `${API_URL}/histories/asset/`
+    return axios.get(url + formattedData, this.getUserHeader()).then(res => { return res })
   }
 
   deleteAsset (astId) {

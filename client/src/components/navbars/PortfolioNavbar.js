@@ -1,15 +1,9 @@
 import React, { Component } from "react";
 
-import AuthService from "services/auth";
-import APIService from "routers/apiservice";
-
 // reactstrap components
 import {
   Card,
-  CardHeader,
   CardBody,
-  CardFooter,
-  CardTitle,
   Row,
   Col,
   Button

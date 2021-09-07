@@ -2,6 +2,7 @@ var Order = require('../models/Order')
 
 
 exports.create = function (req, res) {
+  req.body.quantity = req.body.isBuy ? req.body.quantity : -req.body.quantity;
   var newOrder = new Order(req.body)
   newOrder.usr_id = req.usr_id
   Order.create(newOrder, function (err, order) {
@@ -38,6 +39,7 @@ exports.getDetail = function (req, res) {
 }
 
 exports.update = function (req, res) {
+  req.body.quantity = req.body.isBuy ? req.body.quantity : -req.body.quantity;
   var updatedOrder = new Order(req.body)
   updatedOrder.ord_id = parseInt(req.params.ord_id);
   updatedOrder.usr_id = req.usr_id

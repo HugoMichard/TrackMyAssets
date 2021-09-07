@@ -34,3 +34,16 @@
 .tooltip-colorblock {
     display: block; width: 12px; height: 12px; margin-right: 7px;
 }
+
+.switch-label {
+    margin-left: 5px;
+    font-size: 20px;
+}
+
+.greentext {
+    color: green !important;
+}
+
+.redtext {
+    color: red !important;
+}

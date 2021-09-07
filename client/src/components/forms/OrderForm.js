@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import APIService from "routers/apiservice";
 import Select from 'react-select';
+import Switch from "react-switch";
 
 // reactstrap components
 import {
@@ -22,7 +23,8 @@ class OrderForm extends Component {
             quantity: "",
             price: "",
             fees: "",
-            execution_date: new Date().toISOString().slice(0, 10).replace('T', ' ')
+            execution_date: new Date().toISOString().slice(0, 10).replace('T', ' '),
+            isBuy: true
         };
         const selectedAstData = {
             ast_type: "",
@@ -33,6 +35,7 @@ class OrderForm extends Component {
         this.state = { form: form, selectedAst: null, selectedAstData: selectedAstData, selectedPlt: null }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleChangeSwitch = this.handleChangeSwitch.bind(this);
     }
     componentWillReceiveProps(nextProps) {
         const assets = this.state.assets;
@@ -45,7 +48,8 @@ class OrderForm extends Component {
             quantity: nextProps.quantity,
             ast_id: nextProps.ast_id,
             plt_id: nextProps.plt_id,
-            execution_date: nextProps.execution_date
+            execution_date: nextProps.execution_date,
+            isBuy: nextProps.isBuy
         }
 
         var selectedAst = {}
@@ -58,9 +62,9 @@ class OrderForm extends Component {
             }
         }
         var selectedPlt = {}
-        for(var i in platforms){
-            if(platforms[i].value === form.plt_id){
-                selectedPlt = platforms[i];
+        for(var j in platforms){
+            if(platforms[j].value === form.plt_id){
+                selectedPlt = platforms[j];
                 break;
             }
         }
@@ -92,7 +96,6 @@ class OrderForm extends Component {
               }));
             this.setState({ platforms: platforms });
         });
-
     }
     handleChange(property, event) {
         var { form, selectedAst, selectedAstData, selectedPlt } = this.state;
@@ -105,6 +108,11 @@ class OrderForm extends Component {
             selectedPlt = event;
         }
         this.setState({form: form, selectedAst: selectedAst, selectedAstData: selectedAstData, selectedPlt: selectedPlt});
+    }
+    handleChangeSwitch(value) {
+        var form = this.state.form;
+        form.isBuy = value
+        this.setState({form: form});
     }
     
     handleSubmit(e){
@@ -120,10 +128,30 @@ class OrderForm extends Component {
     }
     render() {
         let { selectedAst, assets, selectedAstData, selectedPlt, platforms } = this.state
-        let submitText = this.state.form.ord_id === undefined ? "Create" : "Update";
+        let submitText = this.state.form.ord_id === undefined ? this.state.form.isBuy ? "Buy" : "Sell" : "Update";
         return (
         <>
             <Form>
+                <Row>
+                    <Col md="6">
+                        <FormGroup>
+                            <Switch 
+                                checked={this.state.form.isBuy} 
+                                onChange={this.handleChangeSwitch}
+                                offColor="#FF0000"/>
+                                <div 
+                                    className={this.state.form.isBuy ? "greentext switch-label" : "redtext switch-label"}>
+                                    {this.state.form.isBuy ? "Buy" : "Sell"}
+                                </div>
+                        </FormGroup>
+                    </Col>
+                    <Col md="6">
+                        <FormGroup>
+                            <label>Platform</label>
+                            <Select options={platforms} onChange={(evt) => this.handleChange("plt_id", evt)} value={selectedPlt}></Select>
+                        </FormGroup>
+                    </Col>
+                </Row>
                 <Row>
                     <Col md="6">
                         <FormGroup>
@@ -146,14 +174,6 @@ class OrderForm extends Component {
                             <p style={{
                                 color: selectedAstData.cat_color
                             }}>{selectedAstData.cat_name}</p>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col md="6">
-                        <FormGroup>
-                            <label>Platform</label>
-                            <Select options={platforms} onChange={(evt) => this.handleChange("plt_id", evt)} value={selectedPlt}></Select>
-                        </FormGroup>
                     </Col>
                 </Row>
                 <Row>

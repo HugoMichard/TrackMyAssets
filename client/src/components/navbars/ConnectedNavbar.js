@@ -112,8 +112,10 @@ function Header(props) {
           </form>
           <Nav navbar>
             <NavItem>
-              <Link className="nav-link btn-magnify" 
-                onClick={refresh}>
+              <Link 
+                className="nav-link btn-magnify" 
+                onClick={refresh}
+                to="#">
                 <i className="nc-icon nc-refresh-69" />
                 <p>
                   <span className="d-lg-none d-md-block">Refresh</span>
