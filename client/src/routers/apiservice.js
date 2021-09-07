@@ -190,6 +190,11 @@ class APIService {
       return axios.get(url, this.getUserHeader()).then(res => { return res })
     }
 
+    getUserAssetsInEachPlt () {
+      const url = `${API_URL}/platforms/getUserAssetsInEachPlt`
+      return axios.get(url, this.getUserHeader()).then(res => { return res })
+    }
+
 }
 
 export default new APIService();

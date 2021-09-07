@@ -59,3 +59,22 @@ exports.getPortfolioValueForeachPlt = function (req, res) {
         }
     })
 }
+
+exports.getUserAssetsInEachPlt = function (req, res) {
+    Platform.getUserAssetsWithPlatformDetails(req.usr_id, function (err, values) {
+        if (err) {
+            res.status(500).send({ message: err.message});
+        } else {
+            const platforms = values.map(item => item.plt_id).filter((value, index, self) => self.indexOf(value) === index);
+            var assetsByPlt = {}
+            platforms.forEach(p => {
+                assetsByPlt[p] = []
+            })
+            values.forEach(v => {
+                assetsByPlt[v.plt_id].push(v)
+            });
+
+            res.status(200).send({state: "Success", assetsByPlt: assetsByPlt, platformIds: platforms})
+        }
+    })
+}

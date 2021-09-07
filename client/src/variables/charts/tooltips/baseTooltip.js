@@ -1,5 +1,4 @@
 export function basicTooltip(input) {
-  console.log(input.datum);
     return (
         <div className="basic-tooltip">
           <div className="inside-basic-tooltip">

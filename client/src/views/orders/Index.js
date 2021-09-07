@@ -31,7 +31,7 @@ class IndexAssets extends Component {
         }
     }
     searchForOrders() {
-        APIService.searchOrders(this.state.searchForm).then(res => { console.log(res.data);this.setState({ orders: res.data.orders }); });
+        APIService.searchOrders(this.state.searchForm).then(res => { this.setState({ orders: res.data.orders }); });
     }
     componentDidMount() {
         this.searchForOrders()
