@@ -61,39 +61,44 @@ class PlatformsPortfolio extends Component {
 
   }
   renderPlatformCards() {
-    return this.state.userPltIds.map((plt_id, index) => {
-      const pltDetails = this.state.platforms[this.state.platforms.findIndex(plt => plt.plt_id === plt_id)];
-      return (
-        <Row key={index}>
-          <Col md="12">
-            <Card>
-              <CardHeader>
-                <CardTitle tag="h4" className="no-margin-bottom" style={{color: pltDetails.color}}>{pltDetails.name}</CardTitle>
-              </CardHeader>
-              <CardBody>
-                <Table>
-                  <thead className="text-primary">
-                    <tr>
-                      <th>Name</th>
-                      <th>Ticker / Coin</th>
-                      <th>Category</th>
-                      <th>Current Quantity</th>
-                      <th>Average Buying Price</th>
-                      <th>Current Value</th>
-                      <th>Performance</th>
-                      <th>RoI</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {this.renderTableData(this.state.assetsInPlatforms[plt_id])}
-                  </tbody>
-                </Table>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      )
-    })
+    if(this.state.userPltIds && this.state.platforms) {
+      return this.state.userPltIds.map((plt_id, index) => {
+        const pltDetails = this.state.platforms[this.state.platforms.findIndex(plt => plt.plt_id === plt_id)];
+        return (
+          <Row key={index}>
+            <Col md="12">
+              <Card>
+                <CardHeader>
+                  <CardTitle tag="h4" className="no-margin-bottom" style={{color: pltDetails.color}}>{pltDetails.name}</CardTitle>
+                </CardHeader>
+                <CardBody>
+                  <Table>
+                    <thead className="text-primary">
+                      <tr>
+                        <th>Name</th>
+                        <th>Ticker / Coin</th>
+                        <th>Category</th>
+                        <th>Current Quantity</th>
+                        <th>Average Buying Price</th>
+                        <th>Current Value</th>
+                        <th>Performance</th>
+                        <th>RoI</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {this.renderTableData(this.state.assetsInPlatforms[plt_id])}
+                    </tbody>
+                  </Table>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+        )
+      })
+    } else {
+      return(<Row></Row>)
+    }
+    
   }
   render() {
     return (
