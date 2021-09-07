@@ -6,6 +6,7 @@ import Register from "views/users/Register.js";
 import IndexAssets from "views/assets/Index.js";
 import CreateAsset from "views/assets/Create.js";
 import DetailAsset from "views/assets/Detail.js";
+import DeleteAsset from "views/assets/Delete.js";
 
 import IndexOrders from "views/orders/Index.js";
 import CreateOrder from "views/orders/Create.js";
@@ -36,6 +37,7 @@ var routes = {
   },
   "/assets": {
     "/create": CreateAsset,
+    "/delete/:ast_id": DeleteAsset,
     "/:ast_id": DetailAsset,
     "/": IndexAssets
   },

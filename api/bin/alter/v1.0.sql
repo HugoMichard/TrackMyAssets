@@ -70,7 +70,7 @@ CREATE TABLE histories
   hst_id          INT unsigned NOT NULL AUTO_INCREMENT,
   hst_date        DATE NOT NULL,
   vl              FLOAT NOT NULL,
-  code            VARCHAR(30),
+  code            VARCHAR(30) NOT NULL,
   PRIMARY KEY     (hst_id)
 );
 

@@ -12,6 +12,7 @@ router.get('/', asset.search);
 
 router.get("/:ast_id", asset.getDetail);
 router.post("/:ast_id", asset.update);
+router.delete("/:ast_id", asset.delete);
 
 
 module.exports = router;

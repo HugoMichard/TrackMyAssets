@@ -1,4 +1,5 @@
 var Asset = require('../models/Asset')
+var Order = require('../models/Order')
 var history = require('../controllers/HistoryController')
 
 
@@ -61,6 +62,26 @@ exports.getAssetsOwned = function (req, res) {
           res.status(500).send({ message: err.message});
       } else {
           res.status(200).send({assets: assets});
+      }
+  })
+}
+
+exports.delete = function (req, res) {
+  params = {
+    ast_id: parseInt(req.params.ast_id),
+    usr_id: req.usr_id
+  }  
+  Order.deleteOrdersOfAsset(params, function (err, orders) {
+      if (err) {
+          res.status(500).send({ message: err.message});
+      } else {
+        Asset.delete(params, function (err, asset) {
+          if (err) {
+              res.status(500).send({ message: err.message});
+          } else {
+              res.status(200).send({asset: asset});
+          }
+      })
       }
   })
 }

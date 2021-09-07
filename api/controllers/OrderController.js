@@ -63,3 +63,18 @@ exports.delete = function (req, res) {
       }
   })
 }
+
+exports.getOrdersOfAsset = function (req, res) {
+  const params = {
+    ast_id: parseInt(req.params.ast_id),
+    usr_id: req.usr_id
+  }
+
+  Order.getOrdersOfAsset(params, function (err, orders) {
+      if (err) {
+          res.status(500).send({ message: err.message});
+      } else {
+          res.status(200).send({orders: orders});
+      }
+  })
+}

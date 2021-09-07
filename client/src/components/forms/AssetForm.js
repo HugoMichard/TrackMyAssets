@@ -36,8 +36,8 @@ class AssetForm extends Component {
             name: nextProps.name,
             ast_type: nextProps.ast_type,
             cat_id: nextProps.cat_id,
-            ticker: nextProps.ticker,
-            coin: nextProps.coin,
+            ticker: nextProps.code,
+            coin: nextProps.code,
             ast_id: nextProps.ast_id
         }
         const selectedType = form.ast_type === "stock" ? this.state.typeOptions[0] : this.state.typeOptions[1];
@@ -152,17 +152,19 @@ class AssetForm extends Component {
                         </FormGroup>
                     </Col>
                 </Row>
-                <Row>
-                    <div className="update ml-auto mr-auto">
-                        <Button
-                            className="btn-round"
-                            color="primary"
-                            onClick={this.handleSubmit}
-                        >
-                            {submitText}
-                        </Button>
-                    </div>
-                </Row>
+                {this.props.noSubmitButton ? "" :
+                    <Row>
+                        <div className="update ml-auto mr-auto">
+                            <Button
+                                className="btn-round"
+                                color="primary"
+                                onClick={this.handleSubmit}
+                            >
+                                {submitText}
+                            </Button>
+                        </div>
+                    </Row>
+                }
             </Form>
         </>
         );

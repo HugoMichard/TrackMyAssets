@@ -107,4 +107,45 @@ Order.delete = function (params, result) {
   )
 }
 
+Order.deleteOrdersOfAsset = function (params, result) {
+  sql.query(
+    `DELETE FROM orders WHERE ast_id = ? AND usr_id = ?`, [
+        params.ast_id,
+        params.usr_id
+    ], (err, res) => {
+      if (err) {
+        result(null, res)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
+
+Order.getOrdersOfAsset = function (params, result) {
+  sql.query(
+    `SELECT 
+      o.ord_id, 
+      DATE_FORMAT(o.execution_date, '%Y-%m-%d') as execution_date,
+      o.price, 
+      o.quantity, 
+      o.fees, 
+      p.name as plt_name, p.color as plt_color
+      FROM orders o
+      INNER JOIN assets a ON a.ast_id = o.ast_id 
+      INNER JOIN platforms p ON p.plt_id = o.plt_id
+      WHERE a.usr_id = ? AND a.ast_id = ?
+      ORDER BY o.execution_date DESC`, [
+        params.usr_id,
+        params.ast_id
+    ], (err, res) => {
+      if (err) {
+        result(null, res)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
+
 module.exports = Order

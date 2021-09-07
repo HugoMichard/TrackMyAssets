@@ -68,6 +68,11 @@ class APIService {
     return axios.get(url, this.getUserHeader()).then(res => { return res })
   }
 
+  deleteAsset (astId) {
+    const url = `${API_URL}/assets/` + astId
+    return axios.delete(url, this.getUserHeader(), astId).then(res => { return res })
+  }
+
   // order methods
   createOrder (data) {
     const url = `${API_URL}/orders`
@@ -87,6 +92,11 @@ class APIService {
 
   getOrder (ordId) {
     const url = `${API_URL}/orders/` + ordId
+    return axios.get(url, this.getUserHeader()).then(res => { return res })
+  }
+
+  getOrdersOfAsset (astId) {
+    const url = `${API_URL}/orders/getOrdersOfAsset/` + astId
     return axios.get(url, this.getUserHeader()).then(res => { return res })
   }
 

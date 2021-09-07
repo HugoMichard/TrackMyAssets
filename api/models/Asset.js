@@ -76,6 +76,21 @@ Asset.update = function (params, result) {
   )
 }
 
+Asset.delete = function (params, result) {
+  sql.query(
+    `DELETE FROM assets WHERE ast_id = ? AND usr_id = ?`, [
+        params.ast_id,
+        params.usr_id
+    ], (err, res) => {
+      if (err) {
+        result(null, res)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
+
 Asset.getAssetsOwned = function (usr_id, result) {
   sql.query(
     `SELECT 

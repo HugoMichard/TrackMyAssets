@@ -44,6 +44,11 @@ class IndexAssets extends Component {
                     <td style={{
                         color: cat_color
                         }}>{cat_name}</td>
+                    <td>
+                        <i 
+                            className="nc-icon nc-simple-remove" 
+                            onClick={(e) => { e.stopPropagation(); window.location = "/assets/delete/" + ast_id }} />
+                    </td>
                 </tr>
             )
         })
@@ -73,6 +78,7 @@ class IndexAssets extends Component {
                             <th>Type</th>
                             <th>Ticker / Coin</th>
                             <th>Category</th>
+                            <th>Delete</th>
                         </tr>
                         </thead>
                         <tbody>
