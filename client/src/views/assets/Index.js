@@ -71,7 +71,7 @@ class IndexAssets extends Component {
                                 Create
                         </Button>
                     </Link>
-                    <Table>
+                    <Table responsive>
                         <thead className="text-primary">
                         <tr>
                             <th>Name</th>

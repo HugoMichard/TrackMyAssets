@@ -6,6 +6,7 @@ const { authJwt } = require("../middlewares");
 router.use(authJwt.verifyToken)
 
 router.get('/getOrdersOfAsset/:ast_id', order.getOrdersOfAsset);
+router.get('/getBuyingQuantityOfAssetByDay/:ast_id', order.getBuyingQuantityOfAssetByDay);
 
 router.post("/", order.create);
 

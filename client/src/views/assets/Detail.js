@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import APIService from "routers/apiservice";
 import AssetForm from "components/forms/AssetForm";
+import OrdersOfAssetTable from "components/tables/OrdersOfAsset";
 
 // reactstrap components
 import {
@@ -29,11 +30,13 @@ class DetailAsset extends Component {
                 "id": AssetHistoryChartData[0].id,
                 "data": AssetHistoryChartData[0].data
             }],
-            selectedPortfolioChartRange: "year"
+            selectedPortfolioChartRange: "year",
+            orderDates: []
         }
     }
     componentDidMount() {
-        APIService.getAsset(this.state.ast_id).then(res => { this.setState({asset: res.data.asset });});
+        APIService.getAsset(this.state.ast_id).then(res => { this.setState({asset: res.data.asset }); });
+        APIService.getBuyingQuantityOfAssetByDay(this.state.ast_id).then(res => { this.setState({orderDates: res.data.orders}); })
         this.updatePortfolioChartDataWithRange(this.state.selectedPortfolioChartRange);
     }
     handleClickPortfolioRange(value) {
@@ -96,12 +99,16 @@ class DetailAsset extends Component {
                         {this.renderPortfolioRangeButton("All", "all", "success")}
                     </CardHeader>
                     <CardBody style={ { height: 500 } }>
-                        {AssetHistoryChart(this.state.chart_data)}
+                        {AssetHistoryChart(this.state.chart_data, this.state.orderDates)}
                     </CardBody>
-
                 </Card>
                 </Col>
             </Row>
+            <OrdersOfAssetTable
+                title="Orders"
+                displayDeleteButton={false}
+                ast_id={this.state.ast_id}>
+            </OrdersOfAssetTable>
             </div>
         </>
         );

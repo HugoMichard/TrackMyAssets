@@ -148,4 +148,25 @@ Order.getOrdersOfAsset = function (params, result) {
   )
 }
 
+Order.getBuyingQuantityOfAssetByDay = function (params, result) {
+  sql.query(
+    `SELECT 
+      DATE_FORMAT(execution_date, '%Y-%m-%d') as execution_date,
+      SUM(quantity) as quantity
+      FROM orders
+      WHERE usr_id = ? AND ast_id = ?
+      GROUP BY execution_date
+      ORDER BY execution_date ASC`, [
+        params.usr_id,
+        params.ast_id
+    ], (err, res) => {
+      if (err) {
+        result(null, res)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
+
 module.exports = Order

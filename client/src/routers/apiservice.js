@@ -101,6 +101,11 @@ class APIService {
     return axios.get(url, this.getUserHeader()).then(res => { return res })
   }
 
+  getBuyingQuantityOfAssetByDay (astId) {
+    const url = `${API_URL}/orders/getBuyingQuantityOfAssetByDay/` + astId
+    return axios.get(url, this.getUserHeader()).then(res => { return res })
+  }
+
   deleteOrder (ordId) {
     const url = `${API_URL}/orders/` + ordId
     return axios.delete(url, this.getUserHeader(), ordId).then(res => { return res })

@@ -15,6 +15,7 @@ import {
 } from "reactstrap";
 
 import APIService from "routers/apiservice";
+import AuthService from "services/auth";
 
 
 function Header(props) {
@@ -49,6 +50,9 @@ function Header(props) {
     APIService.refreshPortfolio().then(res => {
       console.log("cool");
     })
+  }
+  const logout = () => {
+    AuthService.logout();
   }
   React.useEffect(() => {
     window.addEventListener("resize", updateColor.bind(this));
@@ -123,7 +127,7 @@ function Header(props) {
               </Link>
             </NavItem>
             <NavItem>
-              <Link to="/login" className="nav-link btn-rotate">
+              <Link onClick={logout} to="/login" className="nav-link btn-rotate">
                 <i className="nc-icon nc-button-power" />
                 <p>
                   <span className="d-lg-none d-md-block">Disconnect</span>

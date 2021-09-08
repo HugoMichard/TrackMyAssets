@@ -72,7 +72,7 @@ class PlatformsPortfolio extends Component {
                   <CardTitle tag="h4" className="no-margin-bottom" style={{color: pltDetails.color}}>{pltDetails.name}</CardTitle>
                 </CardHeader>
                 <CardBody>
-                  <Table>
+                  <Table responsive>
                     <thead className="text-primary">
                       <tr>
                         <th>Name</th>

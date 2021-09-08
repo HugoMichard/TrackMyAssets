@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import APIService from "routers/apiservice";
 import AssetForm from "components/forms/AssetForm";
+import OrdersOfAssetTable from "components/tables/OrdersOfAsset";
 
 // reactstrap components
 import {
@@ -9,9 +10,7 @@ import {
   CardBody,
   CardTitle,
   Row,
-  Col,
-  Button,
-  Table
+  Col
 } from "reactstrap";
 
 
@@ -76,44 +75,12 @@ class DeleteAsset extends Component {
                         </Card>
                     </Col>
                 </Row>
-                <Row>
-                    <Col md="12">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle tag="h4" className="no-margin-bottom">These Orders are associated with the Asset and will be deleted</CardTitle>
-                            </CardHeader>
-                            <CardBody>
-                                <Table>
-                                    <thead className="text-primary">
-                                        <tr>
-                                            <th>Execution Date</th>
-                                            <th>Platform</th>
-                                            <th>Quantity</th>
-                                            <th>Price</th>
-                                            <th>Fees</th>
-                                            <th>Total Price</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {this.renderTableData()}
-                                    </tbody>
-                                </Table>
-                                <Button                             
-                                    className="btn-round justify-content-end no-margin-top"
-                                    onClick={this.handleDelete}
-                                    color="danger">
-                                    Confirm Delete
-                                </Button>
-                                <Button                             
-                                    className="btn-round justify-content-end no-margin-top"
-                                    onClick={() => window.location = "/assets"}
-                                    color="primary">
-                                    Cancel
-                                </Button>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
+                <OrdersOfAssetTable
+                    title="These Orders are associated with the Asset and will be deleted"
+                    displayDeleteButton={true}
+                    handleDelete={this.handleDelete}
+                    ast_id={this.state.ast_id}>
+                </OrdersOfAssetTable>
             </div>
         </>
         );

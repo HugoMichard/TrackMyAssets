@@ -1,4 +1,5 @@
 import { ResponsiveLine } from '@nivo/line'
+import { orderQuantityTooltip } from './tooltips/orderQuantityTooltip';
 // make sure parent container have a defined height when using
 // responsive component, otherwise height will be 0 and
 // no chart will be rendered.
@@ -16,7 +17,8 @@ export const AssetHistoryChartData = [
   }
 ];
 
-export function AssetHistoryChart(data) {
+export function AssetHistoryChart(data, orderDates) {
+  console.log(orderDates)
   const values = data[0].data;
   const ordered_values = values.map(v => v.y).sort((a, b) => a - b);
   const y_max = ordered_values[values.length - 1];
@@ -33,6 +35,7 @@ export function AssetHistoryChart(data) {
         xFormat="time:%d/%m/%Y"
         curve="monotoneX"
         axisTop={null}
+        tooltip={(e) => orderQuantityTooltip(orderDates, e)}
         axisRight={{
             tickValues: yRange,
             tickSize: 5,
@@ -74,5 +77,15 @@ export function AssetHistoryChart(data) {
         pointLabelYOffset={-12}
         useMesh={true}
         gridYValues={yRange}
+        pointSymbol={e => {
+          const index = orderDates.findIndex(d => d.execution_date === new Date(e.datum.x).toISOString().slice(0, 10).replace('T', ' '));
+          const color = index === -1 ? "rgb(31, 119, 180)" 
+                        : orderDates[index].quantity === 0 ? "rgb(31, 119, 180)" 
+                        : orderDates[index].quantity > 0 ? 'green' : 'red';
+          const backColor = index === -1 ? "white" : color;
+          return (
+              <circle cx="0" cy="0" r="2" stroke={color} strokeWidth="2" fill={backColor} />
+          );
+      }}
     />
 )};

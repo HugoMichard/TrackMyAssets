@@ -150,7 +150,7 @@ class OverviewPortfolio extends Component {
                   <CardTitle tag="h4" className="no-margin-bottom">Assets owned</CardTitle>
                 </CardHeader>
                 <CardBody>
-                  <Table>
+                  <Table responsive>
                     <thead className="text-primary">
                       <tr>
                         <th>Name</th>

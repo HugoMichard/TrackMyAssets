@@ -12,4 +12,4 @@ export function basicTooltip(input) {
           </div>
         </div>
     );
-}  
+}
