@@ -89,6 +89,11 @@ class DetailAsset extends Component {
                 </Card>
                 </Col>
             </Row>
+            <OrdersOfAssetTable
+                title="Orders"
+                displayDeleteButton={false}
+                ast_id={this.state.ast_id}>
+            </OrdersOfAssetTable>
             <Row>
                 <Col>
                 <Card>
@@ -105,11 +110,6 @@ class DetailAsset extends Component {
                 </Card>
                 </Col>
             </Row>
-            <OrdersOfAssetTable
-                title="Orders"
-                displayDeleteButton={false}
-                ast_id={this.state.ast_id}>
-            </OrdersOfAssetTable>
             </div>
         </>
         );

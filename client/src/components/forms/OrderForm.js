@@ -46,7 +46,7 @@ class OrderForm extends Component {
             cat_id: nextProps.cat_id,
             price: nextProps.price,
             fees: nextProps.fees,
-            quantity: nextProps.quantity,
+            quantity: Math.abs(nextProps.quantity),
             ast_id: nextProps.ast_id,
             plt_id: nextProps.plt_id,
             execution_date: nextProps.execution_date,

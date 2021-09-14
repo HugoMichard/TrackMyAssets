@@ -26,7 +26,7 @@ class IndexCategories extends Component {
         }
     }
     componentDidMount() {
-        APIService.searchCategory(this.state.searchForm).then(res => { this.setState({categories: res.data.categories });});
+        APIService.searchCategories(this.state.searchForm).then(res => { this.setState({categories: res.data.categories });});
     }
     renderTableData() {
         return this.state.categories.map((cat, index) => {

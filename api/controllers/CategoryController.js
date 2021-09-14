@@ -70,3 +70,23 @@ exports.getPortfolioValueForeachType = function (req, res) {
         }
     })
 }
+
+exports.getUserAssetsInEachCat = function (req, res) {
+    console.log("geting")
+    Category.getUserAssetsWithCategoryDetails(req.usr_id, function (err, values) {
+        if (err) {
+            res.status(500).send({ message: err.message});
+        } else {
+            const categories = values.map(item => item.cat_id).filter((value, index, self) => self.indexOf(value) === index);
+            var assetsByCat = {}
+            categories.forEach(c => {
+                assetsByCat[c] = []
+            })
+            values.forEach(v => {
+                assetsByCat[v.cat_id].push(v)
+            });
+
+            res.status(200).send({assetsByCat: assetsByCat, categoryIds: categories})
+        }
+    })
+}

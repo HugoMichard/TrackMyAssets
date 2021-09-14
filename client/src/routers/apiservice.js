@@ -128,7 +128,7 @@ class APIService {
     return axios.post(url, data, this.getUserHeader()).then(res => { return res })
   }
 
-  searchCategory (data) {
+  searchCategories (data) {
     const url = `${API_URL}/categories`
     var search = this.formatSearch(data)
     return axios.get(url + search, this.getUserHeader()).then(res => { return res })
@@ -146,6 +146,11 @@ class APIService {
 
   getPortfolioValueForeachType () {
     const url = `${API_URL}/categories/getPortfolioValueForeachType`
+    return axios.get(url, this.getUserHeader()).then(res => { return res })
+  }
+
+  getUserAssetsInEachCat () {
+    const url = `${API_URL}/categories/getUserAssetsInEachCat`
     return axios.get(url, this.getUserHeader()).then(res => { return res })
   }
 
@@ -190,37 +195,37 @@ class APIService {
     return axios.get(url + search, this.getUserHeader()).then(res => { return res })
   }
 
-    // platforms methods
-    createPlatform (data) {
-      const url = `${API_URL}/platforms`
-      return axios.post(url, data, this.getUserHeader()).then(res => { return res })
-    }
+  // platforms methods
+  createPlatform (data) {
+    const url = `${API_URL}/platforms`
+    return axios.post(url, data, this.getUserHeader()).then(res => { return res })
+  }
   
-    updatePlatform (data) {
-      const url = `${API_URL}/platforms/${data.plt_id}`
-      return axios.post(url, data, this.getUserHeader()).then(res => { return res })
-    }
+  updatePlatform (data) {
+    const url = `${API_URL}/platforms/${data.plt_id}`
+    return axios.post(url, data, this.getUserHeader()).then(res => { return res })
+  }
   
-    searchPlatforms (data) {
-      const url = `${API_URL}/platforms`
-      var search = this.formatSearch(data)
-      return axios.get(url + search, this.getUserHeader()).then(res => { return res })
-    }
+  searchPlatforms (data) {
+    const url = `${API_URL}/platforms`
+    var search = this.formatSearch(data)
+    return axios.get(url + search, this.getUserHeader()).then(res => { return res })
+  }
   
-    getPlatform (plt_id) {
-      const url = `${API_URL}/platforms/${plt_id}`
-      return axios.get(url, this.getUserHeader()).then(res => { return res })
-    }
+  getPlatform (plt_id) {
+    const url = `${API_URL}/platforms/${plt_id}`
+    return axios.get(url, this.getUserHeader()).then(res => { return res })
+  }
 
-    getPortfolioValueForeachPlt () {
-      const url = `${API_URL}/platforms/getPortfolioValueForeachPlt`
-      return axios.get(url, this.getUserHeader()).then(res => { return res })
-    }
+  getPortfolioValueForeachPlt () {
+    const url = `${API_URL}/platforms/getPortfolioValueForeachPlt`
+    return axios.get(url, this.getUserHeader()).then(res => { return res })
+  }
 
-    getUserAssetsInEachPlt () {
-      const url = `${API_URL}/platforms/getUserAssetsInEachPlt`
-      return axios.get(url, this.getUserHeader()).then(res => { return res })
-    }
+  getUserAssetsInEachPlt () {
+    const url = `${API_URL}/platforms/getUserAssetsInEachPlt`
+    return axios.get(url, this.getUserHeader()).then(res => { return res })
+  }
 
 }
 

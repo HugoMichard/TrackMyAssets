@@ -1,4 +1,5 @@
 exports.getNotif = function (label, values) {
+    values = values ? values : []
     return notifMessage(values)[label]
 }
 

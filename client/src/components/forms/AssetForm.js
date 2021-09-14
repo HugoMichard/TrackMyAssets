@@ -52,7 +52,7 @@ class AssetForm extends Component {
         this.setState({form: form, selectedType: selectedType, selectedCat: selectedCat})
     }
     componentDidMount() {
-        APIService.searchCategory({}).then(res => { 
+        APIService.searchCategories({}).then(res => { 
             const categories = res.data.categories.map(({
                 cat_id: value,
                 name: label,

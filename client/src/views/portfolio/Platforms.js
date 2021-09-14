@@ -98,7 +98,6 @@ class PlatformsPortfolio extends Component {
     } else {
       return(<Row></Row>)
     }
-    
   }
   render() {
     return (

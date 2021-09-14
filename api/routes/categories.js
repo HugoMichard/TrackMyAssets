@@ -5,6 +5,7 @@ const { authJwt } = require("../middlewares");
 
 router.use(authJwt.verifyToken)
 
+router.get("/getUserAssetsInEachCat", category.getUserAssetsInEachCat);
 router.get("/getPortfolioValueForeachCat", category.getPortfolioValueForeachCat);
 router.get("/getPortfolioValueForeachType", category.getPortfolioValueForeachType);
 router.get("/:cat_id", category.getDetail);
