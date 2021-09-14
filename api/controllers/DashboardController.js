@@ -1,5 +1,4 @@
 var Dashboard = require('../models/Dashboard')
-var portfolio = require('./PortfolioController')
 var Portfolio = require('../models/Portfolio')
 var dateHelper = require('../helpers/DateHelper')
 

@@ -36,6 +36,12 @@ class APIService {
     return axios.post(url, data).then(res => { return res.data })
   }
 
+  // user methods
+  getUserLastRefresh () {
+    const url = `${API_URL}/users/getLastRefresh`
+    return axios.get(url, this.getUserHeader()).then(res => { return res })
+  }
+
   // asset methods
   createAsset (data) {
     const url = `${API_URL}/assets`

@@ -1,4 +1,5 @@
 var Platform = require('../models/Platform')
+var notifHelper = require('../helpers/NotifHelper');
 
 exports.create = function (req, res) {
   var newPlt = new Platform(req.body)
@@ -8,7 +9,7 @@ exports.create = function (req, res) {
     if (err) {
       res.status(500).send(err)
     }
-    res.status(200).send({state: "Success", platform: platform});
+    res.status(200).send({platform: platform, notif: notifHelper.getNotif("createPlatformSuccess", [newPlt.name])});
   })
 }
 
@@ -45,7 +46,7 @@ exports.update = function (req, res) {
         if (err) {
             res.status(500).send({ message: err.message});
         } else {
-            res.status(200).send({platform: plt});
+            res.status(200).send({platform: plt, notif: notifHelper.getNotif("updatePlatformSuccess", [req.body.name])});
         }
     })
 }
@@ -55,7 +56,7 @@ exports.getPortfolioValueForeachPlt = function (req, res) {
         if (err) {
             res.status(500).send({ message: err.message});
         } else {
-            res.status(200).send({state: "Success", values: values})
+            res.status(200).send({values: values})
         }
     })
 }
@@ -74,7 +75,7 @@ exports.getUserAssetsInEachPlt = function (req, res) {
                 assetsByPlt[v.plt_id].push(v)
             });
 
-            res.status(200).send({state: "Success", assetsByPlt: assetsByPlt, platformIds: platforms})
+            res.status(200).send({assetsByPlt: assetsByPlt, platformIds: platforms})
         }
     })
 }

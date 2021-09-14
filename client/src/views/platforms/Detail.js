@@ -34,6 +34,7 @@ class DetailPlatform extends Component {
                     </CardHeader>
                     <CardBody>
                         <PlatformForm
+                            {...this.props}
                             name={this.state.platform.name}
                             color={this.state.platform.color}
                             plt_id={this.state.plt_id}>

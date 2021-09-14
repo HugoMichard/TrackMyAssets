@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import APIService from "routers/apiservice";
 import { SketchPicker } from 'react-color';
+import { Redirect } from "react-router";
 
 // reactstrap components
 import {
@@ -19,7 +20,7 @@ class CategoryForm extends Component {
             name: "",
             color: "000000"
         }
-        this.state = { form: form }
+        this.state = { form: form, redirect: false }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
@@ -46,11 +47,13 @@ class CategoryForm extends Component {
     handleSubmit(e){
         if(this.state.form.cat_id) {
             APIService.updateCategory(this.state.form).then(res => {
-                if(res.status === 200) { window.location = "/categories" }
+                this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
+                this.setState({redirect: res.status === 200});
             });
         } else {
             APIService.createCategory(this.state.form).then(res => {
-                if(res.status === 200) { window.location = "/categories" }
+                this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
+                this.setState({redirect: res.status === 200});
             });
         }
     }
@@ -91,6 +94,7 @@ class CategoryForm extends Component {
                         </Button>
                     </div>
                 </Row>
+                {this.state.redirect ? <Redirect to="/categories"/> : ""}
             </Form>
         </>
         );

@@ -23,7 +23,7 @@ class CreateAsset extends Component {
                         <CardTitle tag="h4" className="no-margin-bottom">Create an Asset</CardTitle>
                     </CardHeader>
                     <CardBody>
-                        <AssetForm>
+                        <AssetForm {...this.props}>
                         </AssetForm>
                     </CardBody>
                 </Card>

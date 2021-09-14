@@ -25,10 +25,16 @@ class PortfolioPriceHistory extends Component {
         }]
         this.state = {
             portfolioChartData: portfolioChartData,
-            selectedPortfolioChartRange: "year"
+            selectedPortfolioChartRange: "year",
+            last_refresh: '1970-01-01'
         }
     }
     componentDidMount() {
+        APIService.getUserLastRefresh().then(res => {
+          this.setState({
+            last_refresh: new Date().toISOString().slice(0, 10) === res.data.refresh_date ? "today" : res.data.refresh_date
+          }) 
+        })
         this.updatePortfolioChartDataWithRange(this.state.selectedPortfolioChartRange);
     }
     handleClickPortfolioRange(value) {
@@ -75,7 +81,7 @@ class PortfolioPriceHistory extends Component {
                 <CardFooter>
                   <hr />
                   <div className="stats">
-                    <i className="fa fa-history" /> Updated 3 minutes ago
+                    <i className="fa fa-history" /> Updated {this.state.last_refresh}
                   </div>
                 </CardFooter>
             </Card>

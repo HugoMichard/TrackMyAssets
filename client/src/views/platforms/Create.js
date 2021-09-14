@@ -23,7 +23,7 @@ class CreatePlatform extends Component {
                         <CardTitle tag="h4" className="no-margin-bottom">Add a Platform</CardTitle>
                     </CardHeader>
                     <CardBody>
-                        <PlatformForm></PlatformForm>
+                        <PlatformForm {...this.props}></PlatformForm>
                     </CardBody>
                 </Card>
                 </Col>

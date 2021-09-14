@@ -1,7 +1,8 @@
 var Portfolio = require('../models/Portfolio')
 var History = require('../models/History')
 var history = require('./HistoryController')
-var dateHelper = require('../helpers/DateHelper')
+var dateHelper = require('../helpers/DateHelper');
+const User = require('../models/User');
 
 
 function getPortfolioStartDate(usr_id) {
@@ -27,6 +28,7 @@ exports.refresh = async function(req, res) {
     history.updateAssetHistory(a);
   });
   res.status(200).send({state: "Success"});
+  User.updateRefresh(req.usr_id);
 }
 
 function getPlusValueHistoryPromise(usr_id, start_date) {

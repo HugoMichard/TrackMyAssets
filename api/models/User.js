@@ -59,4 +59,25 @@ User.getDetail = function (params, result) {
   )
 }
 
+User.updateRefresh = function (usrId) {
+  sql.query(
+    `UPDATE users 
+      SET refresh_date = CURDATE()
+      WHERE usr_id = ${usrId}`,
+      function (err, res) {}
+  )
+}
+
+User.getLastRefresh = function (usrId, result) {
+  sql.query(
+    `SELECT DATE_FORMAT(refresh_date, '%Y-%m-%d') as refresh_date FROM users WHERE usr_id = ${usrId}`, function (err, res) {
+      if (err) {
+        result(null, res)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
+
 module.exports = User

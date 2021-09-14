@@ -23,7 +23,7 @@ class CreateCategory extends Component {
                         <CardTitle tag="h4" className="no-margin-bottom">Create a Category</CardTitle>
                     </CardHeader>
                     <CardBody>
-                        <CategoryForm></CategoryForm>
+                        <CategoryForm {...this.props}></CategoryForm>
                     </CardBody>
                 </Card>
                 </Col>

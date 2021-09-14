@@ -23,7 +23,7 @@ class CreateOrder extends Component {
                         <CardTitle tag="h4" className="no-margin-bottom">Create an Order</CardTitle>
                     </CardHeader>
                     <CardBody>
-                        <OrderForm></OrderForm>
+                        <OrderForm {...this.props}></OrderForm>
                     </CardBody>
                 </Card>
                 </Col>

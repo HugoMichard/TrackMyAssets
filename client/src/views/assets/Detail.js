@@ -78,6 +78,7 @@ class DetailAsset extends Component {
                     </CardHeader>
                     <CardBody>
                         <AssetForm
+                            {...this.props}
                             name={this.state.asset.name}
                             code={this.state.asset.code}
                             ast_type={this.state.asset.ast_type}

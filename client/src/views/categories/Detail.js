@@ -34,9 +34,11 @@ class DetailCategory extends Component {
                     </CardHeader>
                     <CardBody>
                         <CategoryForm
-                        name={this.state.category.name}
-                        color={this.state.category.color}
-                        cat_id={this.state.cat_id}></CategoryForm>
+                            {...this.props}
+                            name={this.state.category.name}
+                            color={this.state.category.color}
+                            cat_id={this.state.cat_id}>
+                        </CategoryForm>
                     </CardBody>
                 </Card>
                 </Col>

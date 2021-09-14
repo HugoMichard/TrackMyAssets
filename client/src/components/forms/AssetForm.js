@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import APIService from "routers/apiservice";
 import Select from 'react-select'
+import { Redirect } from "react-router";
 
 // reactstrap components
 import {
@@ -26,7 +27,7 @@ class AssetForm extends Component {
             { value: 'stock', label: 'Stock Asset' },
             { value: 'crypto', label: 'Cryptocurrency' }
         ]
-        this.state = { form: form, categories: {}, selectedType: null, selectedCat: null, typeOptions: typeOptions }
+        this.state = { redirect: false, form: form, categories: {}, selectedType: null, selectedCat: null, typeOptions: typeOptions }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
@@ -78,14 +79,17 @@ class AssetForm extends Component {
     handleSubmit(e){
         if(this.state.form.ast_id) {
             APIService.updateAsset(this.state.form).then(res => {
-                if(res.status === 200) { window.location = "/assets" }
+                this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
+                this.setState({redirect: res.status === 200});
             });
         } else {
             APIService.createAsset(this.state.form).then(res => {
-                if(res.status === 200) { window.location = "/assets" }
+                this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
+                this.setState({redirect: res.status === 200});
             });
         }
     }
+    
     assetIdentifier() {
         if(this.state.form.ast_type !== "crypto") {
             return (
@@ -165,6 +169,7 @@ class AssetForm extends Component {
                         </div>
                     </Row>
                 }
+            {this.state.redirect ? <Redirect to="/assets"/> : ""}
             </Form>
         </>
         );

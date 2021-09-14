@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import APIService from "routers/apiservice";
 import Select from 'react-select';
 import Switch from "react-switch";
+import { Redirect } from "react-router";
 
 // reactstrap components
 import {
@@ -32,7 +33,7 @@ class OrderForm extends Component {
             cat_color: "",
             code: ""
         }
-        this.state = { form: form, selectedAst: null, selectedAstData: selectedAstData, selectedPlt: null }
+        this.state = { redirect:false, form: form, selectedAst: null, selectedAstData: selectedAstData, selectedPlt: null }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeSwitch = this.handleChangeSwitch.bind(this);
@@ -118,16 +119,18 @@ class OrderForm extends Component {
     handleSubmit(e){
         if(this.state.form.ord_id) {
             APIService.updateOrder(this.state.form).then(res => {
-                if(res.status === 200) { window.location = "/orders" }
+                this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
+                this.setState({redirect: res.status === 200});
             });
         } else {
             APIService.createOrder(this.state.form).then(res => {
-                if(res.status === 200) { window.location = "/orders" }
+                this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
+                this.setState({redirect: res.status === 200});
             });
         }
     }
     render() {
-        let { selectedAst, assets, selectedAstData, selectedPlt, platforms } = this.state
+        let { redirect, selectedAst, assets, selectedAstData, selectedPlt, platforms } = this.state
         let submitText = this.state.form.ord_id === undefined ? this.state.form.isBuy ? "Buy" : "Sell" : "Update";
         return (
         <>
@@ -238,6 +241,7 @@ class OrderForm extends Component {
                         </Button>
                     </div>
                 </Row>
+                {redirect ? <Redirect to="/orders"/> : ""}
             </Form>
         </>
         );

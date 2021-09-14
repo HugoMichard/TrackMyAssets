@@ -1,4 +1,5 @@
 var Category = require('../models/Category')
+var notifHelper = require('../helpers/NotifHelper');
 
 exports.create = function (req, res) {
   var newCat = new Category(req.body)
@@ -8,7 +9,7 @@ exports.create = function (req, res) {
     if (err) {
       res.status(500).send(err)
     }
-    res.status(200).send({state: "Success", category: category});
+    res.status(200).send({category: category, notif: notifHelper.getNotif("createCategorySuccess", [newCat.name])});
   })
 }
 
@@ -45,7 +46,7 @@ exports.update = function (req, res) {
         if (err) {
             res.status(500).send({ message: err.message});
         } else {
-            res.status(200).send({category: cat});
+            res.status(200).send({category: cat, notif: notifHelper.getNotif("updateCategorySuccess", [req.body.name])});
         }
     })
 }

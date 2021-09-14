@@ -34,6 +34,7 @@ class DetailOrder extends Component {
                     </CardHeader>
                     <CardBody>
                         <OrderForm
+                            {...this.props}
                             ord_id={this.state.ord_id}
                             cat_id={this.state.order.cat_id}
                             price={this.state.order.price}

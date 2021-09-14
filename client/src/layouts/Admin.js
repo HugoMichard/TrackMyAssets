@@ -8,6 +8,7 @@ import Sidebar from "components/sidebars/Sidebar.js";
 import AuthService from 'services/auth'
 
 import routes from "routers/routes.js";
+import NotificationAlert from "react-notification-alert";
 
 var ps;
 
@@ -40,6 +41,26 @@ function Dashboard(props) {
     mainPanel.current.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
   }, [location]);
+
+  const notify = React.createRef();
+  const displayNotification = (notify, message, severity) => {
+    const icon = severity === "success" ? "nc-check-2" : "nc-bell-55"
+    const options = {
+      place: "tc",
+      message: (
+        <div>
+          <div>
+            {message}
+          </div>
+        </div>
+      ),
+      type: severity,
+      icon: "nc-icon " + icon,
+      autoDismiss: 3,
+    };
+    notify.current.notificationAlert(options);
+  }
+
   return (
     <div className="wrapper">
       <Sidebar
@@ -47,17 +68,25 @@ function Dashboard(props) {
       />
       <div className="main-panel" ref={mainPanel}>
         <ConnectedNavbar {...props} />
+        <NotificationAlert ref={notify} zIndex={9999} />
         <Switch>
             {allRoutes.map((prop, key) => {
+                const MainContent = prop.component;
                 return (
                 <Route
                     path={prop.path}
-                    component={prop.component}
+                    render={(props) => (
+                      <MainContent
+                        {...props}
+                        notify={notify}
+                        displayNotification={displayNotification}/>
+                    )}
                     key={key}
                 />
                 );
             })}
         </Switch>
+
       </div>
     </div>
   );

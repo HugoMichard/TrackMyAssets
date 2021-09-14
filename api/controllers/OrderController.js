@@ -1,4 +1,5 @@
 var Order = require('../models/Order')
+var notifHelper = require('../helpers/NotifHelper');
 
 
 exports.create = function (req, res) {
@@ -9,7 +10,7 @@ exports.create = function (req, res) {
     if (err) {
       res.status(500).send(err)
     }
-    res.status(200).send({state: "Success", ord_id: order.insertId});
+    res.status(200).send({ord_id: order.insertId, notif: notifHelper.getNotif("createOrderSuccess")});
   })
 }
 
@@ -47,7 +48,7 @@ exports.update = function (req, res) {
       if (err) {
           res.status(500).send({ message: err.message});
       } else {
-          res.status(200).send({order: order});
+          res.status(200).send({order: order, notif: notifHelper.getNotif("updateOrderSuccess")});
       }
   })
 }

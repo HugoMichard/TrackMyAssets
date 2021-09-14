@@ -1,6 +1,7 @@
 var Asset = require('../models/Asset')
 var Order = require('../models/Order')
 var history = require('../controllers/HistoryController')
+var notifHelper = require('../helpers/NotifHelper');
 
 
 exports.create = function (req, res) {
@@ -12,7 +13,7 @@ exports.create = function (req, res) {
     if (err) {
       res.status(500).send(err)
     }
-    res.status(200).send({state: "Success", ast_id: asset.insertId});
+    res.status(200).send({ast_id: asset.insertId, notif: notifHelper.getNotif("createAssetSuccess", [newAsset.name])});
     newAsset.ast_id = asset.insertId
     history.initializeAssetHistory(newAsset);
   })
@@ -51,7 +52,7 @@ exports.update = function (req, res) {
       if (err) {
           res.status(500).send({ message: err.message});
       } else {
-          res.status(200).send({asset: asset});
+          res.status(200).send({asset: asset, notif: notifHelper.getNotif("updateAssetSuccess", [req.body.name])});
           history.initializeAssetHistory(asset);
       }
   })

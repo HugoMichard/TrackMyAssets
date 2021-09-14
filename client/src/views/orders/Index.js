@@ -35,6 +35,7 @@ class IndexAssets extends Component {
     }
     componentDidMount() {
         this.searchForOrders()
+        //this.props.displayNotification(this.props.notify, "a", "danger");
     }
     renderTableData() {
         return this.state.orders.map((ord, index) => {
