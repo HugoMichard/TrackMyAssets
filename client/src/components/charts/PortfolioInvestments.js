@@ -40,13 +40,14 @@ class PortfolioInvestments extends Component {
           var colors = {}
           res.data.values.forEach(item => {
             const index = data.findIndex(x => x.execution_date === item.execution_date);
+            const item_value = Math.round(item.investment * 100) / 100
             if(index === -1) {
               var toAdd = { execution_date: item.execution_date };
-              toAdd[item.cat_name] = item.investment;
+              toAdd[item.cat_name] = item_value;
               colors[item.cat_name] = item.cat_color;
               data.push(toAdd);
             } else {
-              data[index][item.cat_name] = item.investment;
+              data[index][item.cat_name] = item_value;
               colors[item.cat_name] = item.cat_color;
             }
           });

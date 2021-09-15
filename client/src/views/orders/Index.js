@@ -35,7 +35,6 @@ class IndexAssets extends Component {
     }
     componentDidMount() {
         this.searchForOrders()
-        //this.props.displayNotification(this.props.notify, "a", "danger");
     }
     renderTableData() {
         return this.state.orders.map((ord, index) => {
@@ -58,7 +57,7 @@ class IndexAssets extends Component {
                     <td className={quantity < 0 ? "redtext" : "greentext"}>{Math.abs(quantity)}</td>
                     <td>{price}</td>
                     <td>{fees}</td>
-                    <td className={quantity < 0 ? "redtext" : "greentext"}>{Math.abs(quantity * price + fees)}</td>
+                    <td className={quantity < 0 ? "redtext" : "greentext"}>{Math.round(Math.abs(quantity * price + fees) * 10) / 10}</td>
                     <td>
                         <i 
                             className="nc-icon nc-simple-remove" 

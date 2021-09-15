@@ -1,5 +1,5 @@
 var History = require('../models/History')
-var stockScraper = require('../webscrapers/StockScraper');
+var scraperHelper = require('../helpers/ScraperHelper');
 var dateHelper = require('../helpers/DateHelper')
 
 exports.getAssetHistory = function (req, res) {
@@ -32,7 +32,7 @@ var initializeAssetHistory = exports.initializeAssetHistory = function (asset) {
             ytd.setFullYear(ytd.getFullYear() - 1);
             ytd = new Date(ytd).toISOString().slice(0, 10).replace('T', ' ');
 
-            getDataOfAsset = asset.ast_type === "stock" ? stockScraper.getDataOfTicker : stockScraper.getDataOfCoin 
+            getDataOfAsset = asset.ast_type === "stock" ? scraperHelper.getDataOfTicker : scraperHelper.getDataOfCoin 
         
             getDataOfAsset(asset.code, ytd).then(ytd_data => {
                 if(ytd_data.length > 0) {

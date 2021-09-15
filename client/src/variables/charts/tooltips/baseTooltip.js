@@ -6,7 +6,7 @@ export function basicTooltip(input) {
             <span>
               {input.datum.label + ": "} 
               <strong>
-                {input.datum.data.tooltipValue}
+                {Math.round(input.datum.data.tooltipValue * 100) / 100 }
               </strong>
             </span>
           </div>

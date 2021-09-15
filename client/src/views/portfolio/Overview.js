@@ -14,6 +14,7 @@ import {
   Table
 } from "reactstrap";
 import PortfolioPlusValueHistory from "components/charts/PortfolioPlusValueHistory";
+import PortfolioAssetDistribution from "components/charts/PortfolioAssetDistribution";
 
 class OverviewPortfolio extends Component {
     constructor(props) {
@@ -141,6 +142,11 @@ class OverviewPortfolio extends Component {
             <Row>
             <Col md="12">
               <PortfolioPlusValueHistory></PortfolioPlusValueHistory>
+            </Col>
+          </Row>
+          <Row>
+            <Col md="12">
+              <PortfolioAssetDistribution assetsOwned={this.state.assetsOwned}></PortfolioAssetDistribution>
             </Col>
           </Row>
           <Row>

@@ -126,7 +126,7 @@ Asset.getAssetsOwned = function (usr_id, result) {
         WHERE random_date = CURDATE() - INTERVAL 1 DAY
       )	current_ast_values
       INNER JOIN (
-        SELECT ast_id, SUM(quantity) as quantity, AVG(quantity * price + fees) as price FROM orders WHERE usr_id = ? GROUP BY ast_id
+        SELECT ast_id, SUM(quantity) as quantity, SUM(quantity * price + fees) / SUM(quantity) as price FROM orders WHERE usr_id = ? GROUP BY ast_id
       ) owned_assets
       ON current_ast_values.ast_id = owned_assets.ast_id
       INNER JOIN assets a ON a.ast_id = owned_assets.ast_id
