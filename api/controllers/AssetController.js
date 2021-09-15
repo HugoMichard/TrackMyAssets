@@ -46,14 +46,16 @@ exports.getDetail = function (req, res) {
 }
 
 exports.update = function (req, res) {
-  req.body.ast_id = parseInt(req.params.ast_id);
-  req.body.usr_id = req.usr_id
-  Asset.update(req.body, function (err, asset) {
+  var updateAsset = new Asset(req.body);
+  updateAsset.code = req.body.coin || req.body.ticker;
+  updateAsset.usr_id = req.usr_id;
+  updateAsset.ast_id = parseInt(req.params.ast_id);
+  Asset.update(updateAsset, function (err, asset) {
       if (err) {
           res.status(500).send({ message: err.message});
       } else {
-          res.status(200).send({asset: asset, notif: notifHelper.getNotif("updateAssetSuccess", [req.body.name])});
-          history.initializeAssetHistory(asset);
+          res.status(200).send({asset: updateAsset, notif: notifHelper.getNotif("updateAssetSuccess", [updateAsset.name])});
+          history.initializeAssetHistory(updateAsset);
       }
   })
 }

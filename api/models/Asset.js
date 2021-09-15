@@ -117,7 +117,7 @@ Asset.getAssetsOwned = function (usr_id, result) {
               sum(case when vl is null then 0 else 1 end) over (partition by date_code_combis.code order by random_date) as value_partition
             FROM histories h
             RIGHT JOIN (
-              SELECT DISTINCT a.code as code, d.random_date, a.ast_id FROM dates d, assets a WHERE usr_id = 9
+              SELECT DISTINCT a.code as code, d.random_date, a.ast_id FROM dates d, assets a WHERE usr_id = ?
             ) date_code_combis 
             ON h.hst_date = date_code_combis.random_date AND h.code = date_code_combis.code
             WHERE random_date BETWEEN CURDATE() - INTERVAL 5 DAY AND CURDATE() - INTERVAL 1 DAY
@@ -126,7 +126,7 @@ Asset.getAssetsOwned = function (usr_id, result) {
         WHERE random_date = CURDATE() - INTERVAL 1 DAY
       )	current_ast_values
       INNER JOIN (
-        SELECT ast_id, SUM(quantity) as quantity, AVG(quantity * price + fees) as price FROM orders WHERE usr_id = 9 GROUP BY ast_id
+        SELECT ast_id, SUM(quantity) as quantity, AVG(quantity * price + fees) as price FROM orders WHERE usr_id = ? GROUP BY ast_id
       ) owned_assets
       ON current_ast_values.ast_id = owned_assets.ast_id
       INNER JOIN assets a ON a.ast_id = owned_assets.ast_id

@@ -152,14 +152,14 @@ Category.getPortfolioValueForeachType = function (usr_id, result) {
 
 Category.getUserAssetsWithCategoryDetails = function (usr_id, result) {
   sql.query(
-    `SELECT current_ast_values.ast_vl as ast_value, 
+    `SELECT current_ast_values.ast_vl * owned_assets.quantity as ast_value, 
       owned_assets.ast_id, 
       a.name, 
       a.code, 
       owned_assets.quantity, 
       owned_assets.price,
-      (current_ast_values.ast_vl - owned_assets.price)  * owned_assets.quantity as perf,
-      (current_ast_values.ast_vl - owned_assets.price) * 100 / owned_assets.price as perf100,
+      (current_ast_values.ast_vl * owned_assets.quantity - owned_assets.price) as perf,
+      (current_ast_values.ast_vl * owned_assets.quantity - owned_assets.price) * 100 / owned_assets.price as perf100,
       c.name as cat_name,
       c.color as cat_color,
       c.cat_id as cat_id

@@ -65,35 +65,39 @@ class CategoriesPortfolio extends Component {
     if(this.state.userCatIds && this.state.categories) {
       return this.state.userCatIds.map((cat_id, index) => {
         const catDetails = this.state.categories[this.state.categories.findIndex(cat => cat.cat_id === cat_id)];
-        return (
-          <Row key={index}>
-            <Col md="12">
-              <Card>
-                <CardHeader>
-                  <CardTitle tag="h4" className="no-margin-bottom" style={{color: catDetails.color}}>{catDetails.name}</CardTitle>
-                </CardHeader>
-                <CardBody>
-                  <Table responsive>
-                    <thead className="text-primary">
-                      <tr>
-                        <th>Name</th>
-                        <th>Ticker / Coin</th>
-                        <th>Current Quantity</th>
-                        <th>Average Buying Price</th>
-                        <th>Current Value</th>
-                        <th>Performance</th>
-                        <th>RoI</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {this.renderTableData(this.state.assetsInCategories[cat_id])}
-                    </tbody>
-                  </Table>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-        )
+        if(catDetails) {
+          return (
+            <Row key={index}>
+              <Col md="12">
+                <Card>
+                  <CardHeader>
+                    <CardTitle tag="h4" className="no-margin-bottom" style={{color: catDetails.color}}>{catDetails.name}</CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <Table responsive>
+                      <thead className="text-primary">
+                        <tr>
+                          <th>Name</th>
+                          <th>Ticker / Coin</th>
+                          <th>Current Quantity</th>
+                          <th>Average Buying Price</th>
+                          <th>Current Value</th>
+                          <th>Performance</th>
+                          <th>RoI</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {this.renderTableData(this.state.assetsInCategories[cat_id])}
+                      </tbody>
+                    </Table>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          )
+        } else {
+          return(<Row></Row>)
+        }
       })
     } else {
       return(<Row></Row>)
