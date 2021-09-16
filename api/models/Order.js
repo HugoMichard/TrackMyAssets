@@ -73,13 +73,14 @@ Order.getDetail = function (params, result) {
 Order.update = function (params, result) {
   sql.query(
     `UPDATE orders 
-      SET execution_date = ?, ast_id = ?, quantity = ?, price = ?, fees = ?
+      SET execution_date = ?, ast_id = ?, quantity = ?, price = ?, fees = ?, plt_id = ?
       WHERE ord_id = ? AND usr_id = ?`, [
         params.execution_date,
         params.ast_id,
         params.quantity,
         params.price,
         params.fees,
+        params.plt_id,
         params.ord_id,
         params.usr_id
     ], (err, res) => {

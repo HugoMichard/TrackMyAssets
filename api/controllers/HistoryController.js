@@ -56,7 +56,7 @@ exports.updateAssetHistory = function (asset) {
         if(!historyExists) {
             initializeAssetHistory(asset);
         } else {
-            getDataOfAsset = asset.ast_type === "stock" ? stockScraper.getDataOfTicker : stockScraper.getDataOfCoin;
+            getDataOfAsset = asset.ast_type === "stock" ? scraperHelper.getDataOfTicker : scraperHelper.getDataOfCoin;
             var from_date = new Date(asset.last_date);
             from_date.setDate(from_date.getDate() + 1);
             from_date =  new Date(from_date).toISOString().slice(0, 10).replace('T', ' ');

@@ -4,7 +4,6 @@ exports.getPricesFromYahooFinance = function(code, from_date) {
     return axios.get(`https://finance.yahoo.com/quote/${code}/history?p=${code}`).then((data) => {
         const str_prices = data.data.match(new RegExp("\"HistoricalPriceStore\":{\"prices\":" + "(.*)" + ",\"isPending\":false"))[1];
         const prices = JSON.parse(str_prices);
-
         const currentDate = new Date().toISOString().slice(0, 10).replace('T', ' ');
         const filter_prices_dates = prices.filter(p => 
             new Date(p.date * 1000) >= new Date(from_date) 
