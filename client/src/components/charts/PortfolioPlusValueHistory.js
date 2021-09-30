@@ -11,19 +11,13 @@ import {
 } from "reactstrap";
 
 import {
-    PortfolioPlusValueHistoryChart,
-    PortfolioPlusValueHistoryChartData
+    PortfolioPlusValueHistoryChart
   } from "variables/charts/PortfolioPlusValueHistoryChart";
 
 class PortfolioPlusValueHistory extends Component {
     constructor(props) {
         super(props);
-        const portfolioChartData = [{
-          "id": PortfolioPlusValueHistoryChartData[0].id,
-          "data": PortfolioPlusValueHistoryChartData[0].data
-        }]
         this.state = {
-            portfolioChartData: portfolioChartData,
             selectedPortfolioChartRange: "year"
         }
     }
@@ -42,9 +36,7 @@ class PortfolioPlusValueHistory extends Component {
                 "y": v.plus_value
             }
           });
-          var portfolioChartData = this.state.portfolioChartData
-          portfolioChartData[0].data = data
-          this.setState({portfolioChartData: portfolioChartData });
+          this.setState({portfolioChartData: [{data: data, id: 'portfolio_plus_value'}] });
         })
     }
     renderPortfolioRangeButton(text, range, color) {
@@ -68,9 +60,11 @@ class PortfolioPlusValueHistory extends Component {
                   {this.renderPortfolioRangeButton("Week", "week", "info")}
                   {this.renderPortfolioRangeButton("All", "all", "success")}
                 </CardHeader>
-                <CardBody style={ { height: 500 } }>
-                  {PortfolioPlusValueHistoryChart(this.state.portfolioChartData)}
-                </CardBody>
+                {this.state.portfolioChartData ? 
+                  <CardBody style={ { height: 500 } }>
+                    {PortfolioPlusValueHistoryChart(this.state.portfolioChartData)}
+                  </CardBody> : ""
+                }
             </Card>
         </>
         );

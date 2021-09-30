@@ -25,7 +25,8 @@ class AssetForm extends Component {
         }
         const typeOptions = [
             { value: 'stock', label: 'Stock Asset' },
-            { value: 'crypto', label: 'Cryptocurrency' }
+            { value: 'crypto', label: 'Cryptocurrency' },
+            { value: 'fix', label: 'Fixed Price Asset' }
         ]
         this.state = { redirect: false, form: form, categories: {}, selectedType: null, selectedCat: null, typeOptions: typeOptions }
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -39,9 +40,10 @@ class AssetForm extends Component {
             cat_id: nextProps.cat_id,
             ticker: nextProps.code,
             coin: nextProps.code,
-            ast_id: nextProps.ast_id
+            ast_id: nextProps.ast_id,
+            fix_vl: nextProps.fix_vl
         }
-        const selectedType = form.ast_type === "stock" ? this.state.typeOptions[0] : this.state.typeOptions[1];
+        const selectedType = form.ast_type === "stock" ? this.state.typeOptions[0] : form.ast_type === "crypto" ? this.state.typeOptions[1] : this.state.typeOptions[2];
         var selectedCat = {}
         for(var i in categories){
             if(categories[i].value === form.cat_id){
@@ -91,7 +93,7 @@ class AssetForm extends Component {
     }
     
     assetIdentifier() {
-        if(this.state.form.ast_type !== "crypto") {
+        if(this.state.form.ast_type === "stock") {
             return (
                 <div>                            
                     <label>Ticker Code</label>
@@ -104,17 +106,31 @@ class AssetForm extends Component {
                 </div>
             );
         } else {
-            return (
-                <div>                            
-                    <label>Coin Code</label>
-                    <Input
-                        placeholder="Coin"
-                        type="text"
-                        onChange={(evt) => this.handleChange("coin", evt)}
-                        value={this.state.form.coin}
-                    />
-                </div>
-            );
+            if(this.state.form.ast_type === "crypto") {
+                return (
+                    <div>                            
+                        <label>Coin Code</label>
+                        <Input
+                            placeholder="Coin"
+                            type="text"
+                            onChange={(evt) => this.handleChange("coin", evt)}
+                            value={this.state.form.coin}
+                        />
+                    </div>
+                );
+            } else {
+                return (
+                    <div>                            
+                        <label>Fixed Value</label>
+                        <Input
+                            placeholder="Value"
+                            type="text"
+                            onChange={(evt) => this.handleChange("fix_vl", evt)}
+                            value={this.state.form.fix_vl}
+                        />
+                    </div>
+                )
+            }
         }
     }
     render() {

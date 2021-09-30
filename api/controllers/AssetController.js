@@ -2,9 +2,15 @@ var Asset = require('../models/Asset')
 var Order = require('../models/Order')
 var history = require('../controllers/HistoryController')
 var notifHelper = require('../helpers/NotifHelper');
+var miscHelper = require('../helpers/MiscHelper');
 
 
 exports.create = function (req, res) {
+  if(req.body.ast_type === "fix") {
+    const random_code = miscHelper.generateRandomVarchar(30);
+    req.body.coin = random_code
+    req.body.ticker = random_code
+  }
   var newAsset = new Asset(req.body)
   newAsset.usr_id = req.usr_id;
   newAsset.code = req.body.coin || req.body.ticker;
@@ -55,7 +61,7 @@ exports.update = function (req, res) {
           res.status(500).send({ message: err.message});
       } else {
           res.status(200).send({asset: updateAsset, notif: notifHelper.getNotif("updateAssetSuccess", [updateAsset.name])});
-          history.initializeAssetHistory(updateAsset);
+          history.updateAssetHistory(updateAsset);
       }
   })
 }

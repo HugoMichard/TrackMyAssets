@@ -5,6 +5,7 @@ var Asset = function (asset) {
   this.ast_type = asset.ast_type
   this.usr_id = asset.usr_id
   this.code = asset.code
+  this.fix_vl = asset.fix_vl
   this.cat_id = asset.cat_id
   this.created_at = new Date()
 }
@@ -58,12 +59,13 @@ Asset.getDetail = function (params, result) {
 Asset.update = function (params, result) {
   sql.query(
     `UPDATE assets 
-      SET name = ?, code = ?, cat_id = ?, ast_type = ?
+      SET name = ?, code = ?, cat_id = ?, ast_type = ?, fix_vl = ?
       WHERE ast_id = ? AND usr_id = ?`, [
         params.name,
         params.code,
         params.cat_id,
         params.ast_type,
+        params.fix_vl,
         params.ast_id,
         params.usr_id
     ], (err, res) => {

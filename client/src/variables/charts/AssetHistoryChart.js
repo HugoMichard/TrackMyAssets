@@ -18,7 +18,6 @@ export const AssetHistoryChartData = [
 ];
 
 export function AssetHistoryChart(data, orderDates) {
-  console.log(orderDates)
   const values = data[0].data;
   const ordered_values = values.map(v => v.y).sort((a, b) => a - b);
   const y_max = ordered_values[values.length - 1];

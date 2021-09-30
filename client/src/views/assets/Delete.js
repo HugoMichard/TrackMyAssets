@@ -25,8 +25,8 @@ class DeleteAsset extends Component {
     this.handleDelete = this.handleDelete.bind(this);
     }
     componentDidMount() {
-        APIService.getAsset(this.state.ast_id).then(res => { console.log(res.data); this.setState({ asset: res.data.asset });});
-        APIService.getOrdersOfAsset(this.state.ast_id).then(res => { console.log(res.data.orders);this.setState({ orders: res.data.orders });});
+        APIService.getAsset(this.state.ast_id).then(res => { this.setState({ asset: res.data.asset });});
+        APIService.getOrdersOfAsset(this.state.ast_id).then(res => { this.setState({ orders: res.data.orders });});
     }
     handleDelete(){
         if(this.state.ast_id) {

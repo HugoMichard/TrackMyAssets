@@ -19,7 +19,8 @@ class PortfolioCategoryDistribution extends Component {
         super(props);
         const typeValueToLabel = {
           stock: "Stock Asset",
-          crypto: "Cryptocurrency"
+          crypto: "Cryptocurrency",
+          fix: "Fixed Price Asset"
       }
         this.state = {
             portfolioChartData: PortfolioTypeDistributionChartData.data,

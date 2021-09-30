@@ -15,8 +15,7 @@ import {
 } from "reactstrap";
 
 import {
-    AssetHistoryChart,
-    AssetHistoryChartData
+    AssetHistoryChart
   } from "variables/charts/AssetHistoryChart";
 
 class DetailAsset extends Component {
@@ -26,10 +25,6 @@ class DetailAsset extends Component {
             ast_id: this.props.match.params.ast_id,
             asset: {},
             histories: [],
-            chart_data: [{
-                "id": AssetHistoryChartData[0].id,
-                "data": AssetHistoryChartData[0].data
-            }],
             selectedPortfolioChartRange: "year",
             orderDates: []
         }
@@ -51,9 +46,7 @@ class DetailAsset extends Component {
                     "y": h.vl
                 }
             });
-            var chart_data = this.state.chart_data
-            chart_data[0].data = data
-            this.setState({histories: res.data.histories, chart_data: chart_data });
+            this.setState({histories: res.data.histories, chart_data: [{data: data, id: 'asset_value'}] });
         });
     }
     renderPortfolioRangeButton(text, range, color) {
@@ -70,46 +63,51 @@ class DetailAsset extends Component {
         return (
         <>
             <div className="content">
-            <Row>
-                <Col md="12">
-                <Card>
-                    <CardHeader>
-                        <CardTitle tag="h4" className="no-margin-bottom">Asset Detail</CardTitle>
-                    </CardHeader>
-                    <CardBody>
-                        <AssetForm
-                            {...this.props}
-                            name={this.state.asset.name}
-                            code={this.state.asset.code}
-                            ast_type={this.state.asset.ast_type}
-                            ast_id={this.state.asset.ast_id}
-                            cat_id={this.state.asset.cat_id}>
-                        </AssetForm>
-                    </CardBody>
-                </Card>
-                </Col>
-            </Row>
-            <OrdersOfAssetTable
-                title="Orders"
-                displayDeleteButton={false}
-                ast_id={this.state.ast_id}>
-            </OrdersOfAssetTable>
-            <Row>
-                <Col>
-                <Card>
-                    <CardHeader>
-                        <CardTitle tag="h4" className="no-margin-bottom">Asset History</CardTitle>
-                        {this.renderPortfolioRangeButton("Year", "year", "danger")}
-                        {this.renderPortfolioRangeButton("Month", "month", "warning")}
-                        {this.renderPortfolioRangeButton("Week", "week", "info")}
-                        {this.renderPortfolioRangeButton("All", "all", "success")}
-                    </CardHeader>
-                    <CardBody style={ { height: 500 } }>
-                        {AssetHistoryChart(this.state.chart_data, this.state.orderDates)}
-                    </CardBody>
-                </Card>
-                </Col>
-            </Row>
+                <Row>
+                    <Col md="12">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle tag="h4" className="no-margin-bottom">Asset Detail</CardTitle>
+                        </CardHeader>
+                        <CardBody>
+                            <AssetForm
+                                {...this.props}
+                                name={this.state.asset.name}
+                                code={this.state.asset.code}
+                                ast_type={this.state.asset.ast_type}
+                                ast_id={this.state.asset.ast_id}
+                                cat_id={this.state.asset.cat_id}
+                                fix_vl={this.state.asset.fix_vl}>
+                            </AssetForm>
+                        </CardBody>
+                    </Card>
+                    </Col>
+                </Row>
+                <OrdersOfAssetTable
+                    title="Orders"
+                    displayDeleteButton={false}
+                    ast_id={this.state.ast_id}>
+                </OrdersOfAssetTable>
+                {this.state.asset.ast_type !== "fix" ? 
+                    <Row>
+                        <Col>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle tag="h4" className="no-margin-bottom">Asset History</CardTitle>
+                                {this.renderPortfolioRangeButton("Year", "year", "danger")}
+                                {this.renderPortfolioRangeButton("Month", "month", "warning")}
+                                {this.renderPortfolioRangeButton("Week", "week", "info")}
+                                {this.renderPortfolioRangeButton("All", "all", "success")}
+                            </CardHeader>
+                            {this.state.chart_data ? 
+                                <CardBody style={ { height: 500 } }>
+                                    {AssetHistoryChart(this.state.chart_data, this.state.orderDates)}
+                                </CardBody> : ""
+                            }
+                        </Card>
+                        </Col>
+                    </Row> : ""
+                }
             </div>
         </>
         );

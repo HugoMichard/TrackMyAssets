@@ -43,6 +43,7 @@ CREATE TABLE assets
   name            VARCHAR(150) NOT NULL,
   ast_type        VARCHAR(150) NOT NULL,
   code            VARCHAR(30),
+  fix_vl          FLOAT,
   created_at      DATE,
   PRIMARY KEY     (ast_id),
   FOREIGN KEY     (usr_id) REFERENCES users(usr_id),
@@ -83,7 +84,7 @@ CREATE TABLE dates
 INSERT INTO dates (random_date) 
 SELECT DISTINCT STR_TO_DATE(a_date, '%Y-%m-%d') date_to_insert 
 FROM (
-	select adddate('2010-01-01', t3.i*1000 + t2.i*100 + t1.i*10 + t0.i) a_date from
+	select adddate('2020-01-01', t3.i*1000 + t2.i*100 + t1.i*10 + t0.i) a_date from
 	 (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t0,
 	 (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t1,
 	 (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t2,

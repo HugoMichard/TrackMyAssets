@@ -68,7 +68,7 @@ class OverviewPortfolio extends Component {
           return (
             <tr key={index} onClick={() => window.location = "/assets/" + ast_id}>
               <td>{name}</td>
-              <td>{code}</td>
+              <td>{ast_type !== "fix" ? code : ""}</td>
               <td>{ast_type}</td>
               <td style={{ color: cat_color }}>{cat_name}</td>
               <td>{quantity}</td>

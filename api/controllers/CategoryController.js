@@ -72,7 +72,6 @@ exports.getPortfolioValueForeachType = function (req, res) {
 }
 
 exports.getUserAssetsInEachCat = function (req, res) {
-    console.log("geting")
     Category.getUserAssetsWithCategoryDetails(req.usr_id, function (err, values) {
         if (err) {
             res.status(500).send({ message: err.message});

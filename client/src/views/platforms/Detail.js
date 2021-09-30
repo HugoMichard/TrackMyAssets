@@ -20,7 +20,7 @@ class DetailPlatform extends Component {
             platform: {} }
     }
     componentDidMount() {
-        APIService.getPlatform(this.state.plt_id).then(res => { console.log(res.data);this.setState({platform: res.data.platform });});
+        APIService.getPlatform(this.state.plt_id).then(res => { this.setState({platform: res.data.platform });});
     }
     render() {
         return (

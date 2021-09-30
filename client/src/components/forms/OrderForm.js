@@ -162,15 +162,27 @@ class OrderForm extends Component {
                             <Select options={assets} onChange={(evt) => this.handleChange("ast_id", evt)} value={selectedAst}></Select>
                         </FormGroup>
                     </Col>
-                    <Col md="2">
+                    {this.state.selectedAstData.ast_type !== "fix" ?
+                        <Col md="2">
+                            <div>
+                                <label>{this.state.selectedAstData.ast_type !== "crypto" ? "Ticker" : "Coin"}</label>
+                                <p>{this.state.selectedAstData.code}</p>
+                            </div>
+                        </Col> :
+                        <Col md="2">
                         <div>
-                            <label>{this.state.selectedAstData.ast_type !== "crypto" ? "Ticker" : "Coin"}</label>
-                            <p>{this.state.selectedAstData.code}</p>
+                            <label>Fixed Value</label>
+                            <p>{this.state.selectedAstData.fix_vl}</p>
                         </div>
-                    </Col>
+                        </Col>
+                    }
                     <Col md="2">
                             <label>Type</label>
-                            <p>{selectedAstData.ast_type ? selectedAstData.ast_type === "stock" ? "Stock Asset" : "Cryptocurrency" : ""}</p>
+                            <p>{selectedAstData.ast_type ? 
+                                  selectedAstData.ast_type === "stock" ? "Stock Asset" 
+                                : selectedAstData.ast_type === "crypto" ? "Cryptocurrency" 
+                                : "Fixed Price Asset"
+                                : ""}</p>
                     </Col>
                     <Col md="2">
                             <label>Category</label>

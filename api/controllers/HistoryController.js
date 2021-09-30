@@ -26,52 +26,61 @@ exports.getAssetHistory = function (req, res) {
 
 var initializeAssetHistory = exports.initializeAssetHistory = function (asset) {
     console.log("initializing asset history");
-    checkHistoryWithCodeExists(asset.code).then(historyExists => {
-        if(!historyExists) {
-            var ytd = new Date();
-            ytd.setFullYear(ytd.getFullYear() - 1);
-            ytd = new Date(ytd).toISOString().slice(0, 10).replace('T', ' ');
-
-            getDataOfAsset = asset.ast_type === "stock" ? scraperHelper.getDataOfTicker : scraperHelper.getDataOfCoin 
-        
-            getDataOfAsset(asset.code, ytd).then(ytd_data => {
-                if(ytd_data.length > 0) {
-                    ytd_data.map(item => {
-                        item.date = new Date(item.date * 1000).toISOString().slice(0, 10).replace('T', ' ');
-                        return item;
-                    });
-                    sql_histories = ytd_data.map(item => (`('${asset.code}', '${item.date}', ${item.close})`))
-                    History.addHistories(sql_histories, function (err, histories) {
-                        console.log("added "+ histories.affectedRows + " histories");
-                    });
-                }
-            });
-        }
-    });
+    if(asset.ast_type === "fix") {
+        initializeFixAssetHistory(asset)
+    } else {
+        checkHistoryWithCodeExists(asset.code).then(lastHistory => {
+            if(lastHistory.length === 0) {
+                var ytd = new Date();
+                ytd.setFullYear(ytd.getFullYear() - 1);
+                ytd = new Date(ytd).toISOString().slice(0, 10).replace('T', ' ');
+    
+                getDataOfAsset = asset.ast_type === "stock" ? scraperHelper.getDataOfTicker : scraperHelper.getDataOfCoin 
+            
+                getDataOfAsset(asset.code, ytd).then(ytd_data => {
+                    if(ytd_data.length > 0) {
+                        ytd_data.map(item => {
+                            item.date = new Date(item.date * 1000).toISOString().slice(0, 10).replace('T', ' ');
+                            return item;
+                        });
+                        sql_histories = ytd_data.map(item => (`('${asset.code}', '${item.date}', ${item.close})`))
+                        History.addHistories(sql_histories, function (err, histories) {
+                            console.log("added "+ histories.affectedRows + " histories");
+                        });
+                    }
+                });
+            }
+        });
+    }   
 }
 
 exports.updateAssetHistory = function (asset) {
     console.log("updating asset history");
-    checkHistoryWithCodeExists(asset.code).then(historyExists => {
-        if(!historyExists) {
+    checkHistoryWithCodeExists(asset.code).then(lastHistory => {
+        if(lastHistory.length === 0) {
             initializeAssetHistory(asset);
         } else {
-            getDataOfAsset = asset.ast_type === "stock" ? scraperHelper.getDataOfTicker : scraperHelper.getDataOfCoin;
-            var from_date = new Date(asset.last_date);
+            var from_date = new Date(lastHistory[0].hst_date);
             from_date.setDate(from_date.getDate() + 1);
-            from_date =  new Date(from_date).toISOString().slice(0, 10).replace('T', ' ');
-            getDataOfAsset(asset.code, from_date).then(data => {
-                if(data.length > 0) {
-                    data.map(item => {
-                        item.date = new Date(item.date * 1000).toISOString().slice(0, 10).replace('T', ' ');
-                        return item;
-                    });
-                    sql_histories = data.map(item => (`('${asset.code}', '${item.date}', ${item.close})`))
-                    History.addHistories(sql_histories, function (err, histories) {
-                        console.log("added "+ histories.affectedRows + " histories");
-                    });
-                }
-            });
+            from_date = from_date.toISOString().slice(0, 10).replace('T', ' ');
+            asset.last_date = from_date
+            if(asset.ast_type === "fix") {
+                updateFixAssetHistory(asset)
+            } else {
+                getDataOfAsset = asset.ast_type === "stock" ? scraperHelper.getDataOfTicker : scraperHelper.getDataOfCoin;
+                getDataOfAsset(asset.code, asset.last_date).then(data => {
+                    if(data.length > 0) {
+                        data.map(item => {
+                            item.date = new Date(item.date * 1000).toISOString().slice(0, 10).replace('T', ' ');
+                            return item;
+                        });
+                        sql_histories = data.map(item => (`('${asset.code}', '${item.date}', ${item.close})`))
+                        History.addHistories(sql_histories, function (err, histories) {
+                            console.log("added "+ histories.affectedRows + " histories");
+                        });
+                    }
+                });
+            }
         }
     });
 }
@@ -79,7 +88,28 @@ exports.updateAssetHistory = function (asset) {
 function checkHistoryWithCodeExists(code) {
     return new Promise((resolve, reject) => {
         History.getHistoryByCode(code, function(err, res) {
-            resolve(res.length > 0);
+            resolve(res);
         });
     });
+}
+
+
+function initializeFixAssetHistory(asset) {
+    History.getRandomDatesUntilToday(function(err, random_dates) {
+        sql_histories = random_dates.map(item => (`('${asset.code}', '${item.random_date}', ${asset.fix_vl})`))
+        History.addHistories(sql_histories, function (err, histories) {
+            console.log("added "+ histories.affectedRows + " histories");
+        });
+    })
+}
+
+
+function updateFixAssetHistory(asset) {
+    History.modifyFixAssetVlHistory(asset, function(err, res) {});
+    History.getRandomDatesFromDateUntilToday(asset.from_date, function(err, random_dates) {
+        sql_histories = random_dates.map(item => (`('${asset.code}', '${item.random_date}', ${asset.fix_vl})`))
+        History.addHistories(sql_histories, function (err, histories) {
+            console.log("added "+ histories.affectedRows + " histories");
+        });
+    })
 }

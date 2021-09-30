@@ -37,7 +37,6 @@ export function PortfolioPlatformDistributionChart(data, keys, colors) {
         arcLabelsSkipAngle={10}
         arcLabelsTextColor={{ from: 'color', modifiers: [ [ 'darker', 2 ] ] }}
         tooltip={basicTooltip}
-        labelFormat={(input) => console.log(input)}
         legends={[
             {
                 anchor: 'bottom',

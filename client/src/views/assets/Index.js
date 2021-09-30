@@ -19,7 +19,8 @@ class IndexAssets extends Component {
         super(props);
         const typeValueToLabel = {
             stock: "Stock Asset",
-            crypto: "Cryptocurrency"
+            crypto: "Cryptocurrency",
+            fix: "Fixed Price Asset"
         }
         const searchForm = {
             name: ""
@@ -40,7 +41,7 @@ class IndexAssets extends Component {
                 <tr key={index} onClick={() => window.location = "/assets/" + ast_id}>
                     <td>{name}</td>
                     <td>{this.state.typeValueToLabel[ast_type]}</td>
-                    <td>{code}</td>
+                    <td>{ast_type !== "fix" ? code : ""}</td>
                     <td style={{
                         color: cat_color
                         }}>{cat_name}</td>

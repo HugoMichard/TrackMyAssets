@@ -23,7 +23,6 @@ class PortfolioAssetDistribution extends Component {
     }
     componentWillReceiveProps(nextProps) {
         if(nextProps.assetsOwned) {
-            console.log(nextProps.assetsOwned)
             const totalValue = nextProps.assetsOwned.map(v => v.quantity * v.ast_value).reduce((a, b) => a + b);
  
             var keys = []

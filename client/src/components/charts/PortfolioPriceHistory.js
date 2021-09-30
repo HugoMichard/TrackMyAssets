@@ -12,19 +12,13 @@ import {
 } from "reactstrap";
 
 import {
-    PortfolioPriceHistoryChart,
-    PortfolioPriceHistoryChartData
+    PortfolioPriceHistoryChart
   } from "variables/charts/PortfolioPriceHistoryChart";
 
 class PortfolioPriceHistory extends Component {
     constructor(props) {
         super(props);
-        const portfolioChartData = [{
-          "id": PortfolioPriceHistoryChartData[0].id,
-          "data": PortfolioPriceHistoryChartData[0].data
-        }]
         this.state = {
-            portfolioChartData: portfolioChartData,
             selectedPortfolioChartRange: "year",
             last_refresh: '1970-01-01'
         }
@@ -49,9 +43,7 @@ class PortfolioPriceHistory extends Component {
                 "y": v.value
             }
           });
-          var portfolioChartData = this.state.portfolioChartData
-          portfolioChartData[0].data = data
-          this.setState({portfolioChartData: portfolioChartData });
+          this.setState({portfolioChartData: [{data: data, id: 'portfolio_price'}] });
         })
     }
     renderPortfolioRangeButton(text, range, color) {
@@ -75,9 +67,11 @@ class PortfolioPriceHistory extends Component {
                   {this.renderPortfolioRangeButton("Week", "week", "info")}
                   {this.renderPortfolioRangeButton("All", "all", "success")}
                 </CardHeader>
-                <CardBody style={ { height: 500 } }>
-                  {PortfolioPriceHistoryChart(this.state.portfolioChartData)}
-                </CardBody>
+                {this.state.portfolioChartData ? 
+                  <CardBody style={ { height: 500 } }>
+                    {PortfolioPriceHistoryChart(this.state.portfolioChartData)}
+                  </CardBody> : ""
+                }
                 <CardFooter>
                   <hr />
                   <div className="stats">
