@@ -79,48 +79,6 @@ Portfolio.getPorfolioValueHistory = function (params, result) {
   )
 }
 
-Portfolio.getPlusValueKDaysAgo = function (params, result) {
-  sql.query(
-    `SELECT COALESCE(SUM(cum_o.quantity * ast_vl) - SUM(price_paid), 0) as plus_value 
-      FROM ( 
-        SELECT a.code, SUM(o.price * o.quantity + o.fees) as price_paid, SUM(o.quantity) as quantity
-        FROM orders o
-        INNER JOIN assets a ON a.ast_id = o.ast_id
-        WHERE a.usr_id = ? AND o.execution_date <= CURDATE() - INTERVAL ? DAY
-        GROUP BY a.code) cum_o
-      INNER JOIN 
-        (SELECT random_date, code,  first_value(vl) over (partition by code, value_partition order by random_date) as ast_vl
-                FROM (
-                  SELECT vl, 
-                    date_code_combis.code, 
-                    random_date,
-                    sum(case when vl is null then 0 else 1 end) over (partition by date_code_combis.code order by random_date) as value_partition
-                  FROM histories h
-                RIGHT JOIN 
-                  (SELECT DISTINCT a.code as code, d.random_date FROM dates d, assets a WHERE usr_id = ?) date_code_combis 
-                ON h.hst_date = date_code_combis.random_date AND h.code = date_code_combis.code
-                WHERE random_date BETWEEN CURDATE() - INTERVAL ? + 4 DAY AND CURDATE() - INTERVAL ? DAY) as vl_with_nulls
-              ) ast_values 
-      ON ast_values.code = cum_o.code
-      WHERE ast_values.random_date = CURDATE() - INTERVAL ? DAY`,
-    [
-      params.usr_id,
-      params.days_ago,
-      params.usr_id,
-      params.days_ago,
-      params.days_ago,
-      params.days_ago
-    ], 
-    function (err, res) {
-      if (err) {
-        result(null, err)
-      } else {
-        result(null, res)
-      }
-    }
-  )
-}
-
 Portfolio.getInvestments = function (params, result) {
   sql.query(
     `SELECT 
@@ -184,32 +142,5 @@ Portfolio.getCumulativeInvestments = function (params, result) {
   )
 }
 
-Portfolio.getCumulativeInvestments = function (params, result) {
-  sql.query(
-    `SELECT * FROM ( 
-        SELECT
-          DATE_FORMAT(random_date, '%Y-%m-%d') as random_date, 
-          COALESCE(SUM(day_sum) OVER(ORDER BY random_date ASC), 0) as cum_sum
-          FROM (
-            SELECT SUM(price * quantity + fees) as day_sum, execution_date
-            FROM orders WHERE usr_id = ? AND execution_date <= CURDATE() - INTERVAL 1 DAY
-            GROUP BY execution_date
-          ) o
-        RIGHT JOIN dates d ON o.execution_date = d.random_date) cum_investments
-      WHERE random_date BETWEEN ? - INTERVAL 1 DAY AND CURDATE() - INTERVAL 1 DAY
-      ORDER BY random_date ASC`,
-    [
-      params.usr_id,
-      params.start_date
-    ], 
-    function (err, res) {
-      if (err) {
-        result(null, err)
-      } else {
-        result(null, res)
-      }
-    }
-  )
-}
 
 module.exports = Portfolio

@@ -183,7 +183,7 @@ Category.getUserAssetsWithCategoryDetails = function (usr_id, result) {
       WHERE random_date = CURDATE() - INTERVAL 1 DAY
       )	current_ast_values
       INNER JOIN (
-        SELECT o2.ast_id, a2.cat_id, SUM(quantity) as quantity, SUM(quantity * price + fees) / SUM(quantity) as price 
+        SELECT o2.ast_id, a2.cat_id, SUM(cast(quantity as decimal)) as quantity, SUM(cast(quantity as decimal) * price + fees) / SUM(cast(quantity as decimal)) as price 
         FROM orders o2
         INNER JOIN assets a2 ON a2.ast_id = o2.ast_id 
         WHERE a2.usr_id = ?
