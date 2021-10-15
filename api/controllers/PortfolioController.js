@@ -73,7 +73,9 @@ function getCumulativeInvestments(usr_id, start_date) {
       }
       resolve(values)
     })
-  });}
+  });
+}
+
 
 exports.getCumulativeInvestmentsWithValue = async function(req, res) {
   const start_date = await dateHelper.translateStartDateQueryToStringDate(req.usr_id, req.query.portfolio_start_date);
@@ -87,5 +89,37 @@ exports.getCumulativeInvestmentsWithValue = async function(req, res) {
   })
   .then(values => {
     res.status(200).send({state: "Success", investments: values[0], value_history: values[1]});
+  });
+}
+
+
+exports.getInvestmentsSummary = async function(req, res) {
+  const totalInvestmentsPromise = new Promise(function(resolve, reject) {
+    Portfolio.getTotalInvestments({ usr_id: req.usr_id }, function (err, values) {
+      if (err) {
+        reject(err)
+      }
+      resolve(values)
+    })
+  });
+
+  const totalPortfolioValuePromise = new Promise(function(resolve, reject) {
+    Portfolio.getCurrentPortfolioValue({ usr_id: req.usr_id }, function (err, values) {
+      if (err) {
+        reject(err)
+      }
+      resolve(values)
+    })
+  });
+
+  Promise.all([
+    totalInvestmentsPromise,
+    totalPortfolioValuePromise
+  ])
+  .catch(err => {
+    res.status(500).send({message: err.message});
+  })
+  .then(values => {
+    res.status(200).send({totalInvested: values[0][0].investment, totalWithdrawn: values[0][1].investment, totalPortfolioValue: values[1][0].value});
   });
 }

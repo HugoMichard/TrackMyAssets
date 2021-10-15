@@ -190,6 +190,11 @@ class APIService {
     return axios.get(url + search, this.getUserHeader()).then(res => { return res })
   }
 
+  getInvestmentsSummary() {
+    const url = `${API_URL}/portfolio/getInvestmentsSummary`
+    return axios.get(url, this.getUserHeader()).then(res => { return res })
+  }
+
   // platforms methods
   createPlatform (data) {
     const url = `${API_URL}/platforms`

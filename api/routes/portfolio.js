@@ -12,6 +12,7 @@ router.get('/getPlusValueHistory', portfolio.getPlusValueHistory);
 
 // investments page
 router.get('/getInvestments', portfolio.getInvestments);
+router.get('/getInvestmentsSummary', portfolio.getInvestmentsSummary);
 router.get('/getCumulativeInvestmentsWithValue', portfolio.getCumulativeInvestmentsWithValue);
 
 module.exports = router;

@@ -50,8 +50,8 @@ Portfolio.getPorfolioValueHistory = function (params, result) {
           COALESCE(price_sum, 0) as total_price
         FROM
           (SELECT DISTINCT date_code_combis.code, date_code_combis.random_date, 
-            SUM(o.quantity) OVER(PARTITION BY date_code_combis.code ORDER BY date_code_combis.random_date ASC) as quantity_sum,
-            SUM(o.quantity * o.price + o.fees) OVER(PARTITION BY date_code_combis.code ORDER BY date_code_combis.random_date ASC) as price_sum
+            SUM(cast(o.quantity as decimal)) OVER(PARTITION BY date_code_combis.code ORDER BY date_code_combis.random_date ASC) as quantity_sum,
+            SUM(cast(o.quantity as decimal) * o.price + o.fees) OVER(PARTITION BY date_code_combis.code ORDER BY date_code_combis.random_date ASC) as price_sum
           FROM (
             SELECT DISTINCT a.ast_id, a.code, d.random_date, a.usr_id from assets a, dates d
             WHERE a.ast_id IN (SELECT ast_id FROM orders WHERE usr_id = ?)) date_code_combis
@@ -83,7 +83,7 @@ Portfolio.getInvestments = function (params, result) {
   sql.query(
     `SELECT 
         DATE_FORMAT(date_cat_combis.random_date, ?) as execution_date, 
-        SUM(o.price * o.quantity + o.fees) as investment, 
+        SUM(o.price * cast(o.quantity as decimal) + o.fees) as investment, 
         c.name as cat_name, 
         c.color as cat_color
       FROM orders o
@@ -121,7 +121,7 @@ Portfolio.getCumulativeInvestments = function (params, result) {
           DATE_FORMAT(random_date, '%Y-%m-%d') as random_date, 
           COALESCE(SUM(day_sum) OVER(ORDER BY random_date ASC), 0) as cum_sum
           FROM (
-            SELECT SUM(price * quantity + fees) as day_sum, execution_date
+            SELECT SUM(price * cast(quantity as decimal) + fees) as day_sum, execution_date
             FROM orders WHERE usr_id = ? AND execution_date <= CURDATE() - INTERVAL 1 DAY
             GROUP BY execution_date
           ) o
@@ -142,5 +142,47 @@ Portfolio.getCumulativeInvestments = function (params, result) {
   )
 }
 
+Portfolio.getTotalInvestments = function (params, result) {
+  sql.query(
+    `SELECT SUM(cast(quantity as decimal) * price + fees) as investment FROM orders WHERE usr_id = ? GROUP BY quantity > 0 ORDER BY investment DESC`,
+    [
+      params.usr_id
+    ], 
+    function (err, res) {
+      if (err) {
+        result(null, err)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
+
+Portfolio.getCurrentPortfolioValue = function (params, result) {
+  sql.query(
+    `SELECT 
+      SUM(cast(quantity as decimal) * ast_prices.vl) as value
+    FROM orders 
+    INNER JOIN (
+      SELECT ast.ast_id, hst.vl
+      FROM 
+      ( SELECT MAX(hst_date) as hst_date, code FROM histories GROUP BY code ) last_histories
+      INNER JOIN histories hst ON hst.code = last_histories.code AND hst.hst_date = last_histories.hst_date
+      INNER JOIN assets ast ON ast.code = hst.code
+    ) ast_prices
+    ON ast_prices.ast_id = orders.ast_id 
+    WHERE usr_id = ?`,
+    [
+      params.usr_id
+    ], 
+    function (err, res) {
+      if (err) {
+        result(null, err)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
 
 module.exports = Portfolio

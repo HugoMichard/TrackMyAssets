@@ -15,7 +15,7 @@ function Sidebar(props) {
   const sidebar = React.useRef();
   const pathname = props.location.pathname;
   // TO DO : use if on const dict to generate the list of links
-  const routes = "coucou";
+  //const routes = "coucou";
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(sidebar.current, {
