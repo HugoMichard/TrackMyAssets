@@ -7,6 +7,7 @@ import {
   Card,
   CardHeader,
   CardBody,
+  CardFooter,
   CardTitle,
   Table,
   Row,
@@ -18,11 +19,13 @@ class IndexWires extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            wires: []
+            wires: [],
+            totalWired: 0
         }
     }
     searchForWires() {
         APIService.searchWires().then(res => { this.setState({ wires: res.data.wires }); });
+        APIService.getWireSummary().then(res => { this.setState({ totalWired: res.data.totalWired }); });
     }
     componentDidMount() {
         this.searchForWires()
@@ -46,9 +49,35 @@ class IndexWires extends Component {
         })
     }
     render() {
+        const { totalWired } = this.state
         return (
         <>
             <div className="content">
+            <Row>
+                <Col lg="3" md="6" sm="6">
+                <Card className="card-stats">
+                    <CardBody>
+                    <Row className={`${totalWired >= 0 ? "text-success" : "text-danger"}`}>
+                        <Col md="7" xs="7">
+                        <div className="text-center numbers">
+                            <CardTitle tag="p">
+                            {totalWired > 0 ? "+ " : totalWired < 0 ? "- " : ""}
+                            {Math.round(Math.abs(totalWired) * 10) / 10}
+                            </CardTitle>
+                            <p />
+                        </div>
+                        </Col>
+                    </Row>
+                    </CardBody>
+                    <CardFooter>
+                    <hr />
+                    <div className="stats">
+                        <i className="far fa-clock" /> Total Wired
+                    </div>
+                    </CardFooter>
+                </Card>
+                </Col>
+            </Row>
             <Row>
                 <Col md="12">
                 <Card>

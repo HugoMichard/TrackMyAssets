@@ -41,7 +41,7 @@ export function PortfolioTypeDistributionChart(data, keys) {
                 justify: false,
                 translateX: 0,
                 translateY: 56,
-                itemsSpacing: 0,
+                itemsSpacing: 10,
                 itemWidth: 100,
                 itemHeight: 18,
                 itemTextColor: '#999',

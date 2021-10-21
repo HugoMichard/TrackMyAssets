@@ -252,6 +252,11 @@ class APIService {
       const url = `${API_URL}/wires/` + wirId
       return axios.delete(url, this.getUserHeader(), wirId).then(res => { return res })
     }
+
+    getWireSummary () {
+      const url = `${API_URL}/wires/getSummary`
+      return axios.get(url, this.getUserHeader()).then(res => { return res })
+    }
 }
 
 export default new APIService();

@@ -88,4 +88,20 @@ Wire.delete = function (params, result) {
   )
 }
 
+Wire.getSummary = function (usr_id, result) {
+    sql.query(
+      `SELECT SUM(amount) as totalWired
+        From wires
+        WHERE usr_id = ?`, [
+          usr_id
+      ], (err, res) => {
+        if (err) {
+          result(null, res)
+        } else {
+          result(null, res)
+        }
+      }
+    )
+  }
+
 module.exports = Wire

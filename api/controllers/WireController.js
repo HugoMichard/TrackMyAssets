@@ -67,3 +67,13 @@ exports.delete = function (req, res) {
       }
   })
 }
+
+exports.getSummary = function (req, res) {
+    Wire.getSummary(req.usr_id, function (err, resultat) {
+      if (err) {
+          res.status(500).send({ message: err.message});
+      } else {
+          res.status(200).send({totalWired: resultat[0].totalWired});
+      }
+    })
+  }
