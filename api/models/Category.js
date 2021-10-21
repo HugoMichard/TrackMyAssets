@@ -74,15 +74,15 @@ Category.getPortfolioValueForeachCat = function (usr_id, result) {
           SELECT * FROM (
             SELECT random_date, ast_id, cat_id, first_value(vl) over (partition by code, value_partition order by random_date) as ast_vl
               FROM (
-                SELECT vl, 
-                        date_code_combis.code, 
-                        ast_id,
-                        cat_id,
-                        random_date,
-                        sum(case when vl is null then 0 else 1 end) over (partition by date_code_combis.code order by random_date) as value_partition
+                SELECT COALESCE(date_code_combis.fix_vl, h.vl) as vl, 
+                  date_code_combis.code, 
+                  ast_id,
+                  cat_id,
+                  random_date,
+                  sum(case when vl is null then 0 else 1 end) over (partition by date_code_combis.code order by random_date) as value_partition
                 FROM histories h
                   RIGHT JOIN (
-                    SELECT DISTINCT a.code as code, d.random_date, a.ast_id, a.cat_id FROM dates d, assets a WHERE usr_id = ?
+                    SELECT DISTINCT a.code as code, d.random_date, a.ast_id, a.cat_id, a.fix_vl FROM dates d, assets a WHERE usr_id = ?
                   ) date_code_combis 
                   ON h.hst_date = date_code_combis.random_date AND h.code = date_code_combis.code
                   WHERE random_date BETWEEN CURDATE() - INTERVAL 5 DAY AND CURDATE() - INTERVAL 1 DAY
@@ -116,15 +116,15 @@ Category.getPortfolioValueForeachType = function (usr_id, result) {
         SELECT * FROM (
           SELECT random_date, ast_id, ast_type, first_value(vl) over (partition by code, value_partition order by random_date) as ast_vl
             FROM (
-              SELECT vl, 
-                      date_code_combis.code, 
-                      ast_id,
-                      ast_type,
-                      random_date,
-                      sum(case when vl is null then 0 else 1 end) over (partition by date_code_combis.code order by random_date) as value_partition
+              SELECT COALESCE(date_code_combis.fix_vl, h.vl) as vl, 
+                date_code_combis.code, 
+                ast_id,
+                ast_type,
+                random_date,
+                sum(case when vl is null then 0 else 1 end) over (partition by date_code_combis.code order by random_date) as value_partition
               FROM histories h
                 RIGHT JOIN (
-                  SELECT DISTINCT a.code as code, d.random_date, a.ast_id, a.ast_type FROM dates d, assets a WHERE usr_id = ?
+                  SELECT DISTINCT a.code as code, d.random_date, a.ast_id, a.ast_type, a.fix_vl FROM dates d, assets a WHERE usr_id = ?
                 ) date_code_combis 
                 ON h.hst_date = date_code_combis.random_date AND h.code = date_code_combis.code
                 WHERE random_date BETWEEN CURDATE() - INTERVAL 5 DAY AND CURDATE() - INTERVAL 1 DAY
@@ -167,14 +167,14 @@ Category.getUserAssetsWithCategoryDetails = function (usr_id, result) {
         SELECT * FROM (
           SELECT random_date, ast_id, first_value(vl) over (partition by code, value_partition order by random_date) as ast_vl
           FROM (
-            SELECT vl, 
+            SELECT COALESCE(date_code_combis.fix_vl, h.vl) as vl, 
               date_code_combis.code, 
               ast_id,
               random_date,
               sum(case when vl is null then 0 else 1 end) over (partition by date_code_combis.code order by random_date) as value_partition
             FROM histories h
             RIGHT JOIN (
-              SELECT DISTINCT a.code as code, d.random_date, a.ast_id FROM dates d, assets a WHERE usr_id = ?
+              SELECT DISTINCT a.code as code, d.random_date, a.ast_id, a.fix_vl FROM dates d, assets a WHERE usr_id = ?
             ) date_code_combis
             ON h.hst_date = date_code_combis.random_date AND h.code = date_code_combis.code
             WHERE random_date BETWEEN CURDATE() - INTERVAL 5 DAY AND CURDATE() - INTERVAL 1 DAY

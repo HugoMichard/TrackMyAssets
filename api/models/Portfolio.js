@@ -33,13 +33,13 @@ Portfolio.getPorfolioValueHistory = function (params, result) {
         FROM ( 
           SELECT random_date, code,  first_value(vl) over (partition by code, value_partition order by random_date) as ast_vl
           FROM (
-            SELECT vl, 
+            SELECT COALESCE(date_code_combis.fix_vl, h.vl) as vl, 
               date_code_combis.code, 
               random_date,
               sum(case when vl is null then 0 else 1 end) over (partition by date_code_combis.code order by random_date) as value_partition
             FROM histories h
           RIGHT JOIN 
-            (SELECT DISTINCT a.code as code, d.random_date FROM dates d, assets a WHERE usr_id = ?) date_code_combis 
+            (SELECT DISTINCT a.code as code, d.random_date, a.fix_vl FROM dates d, assets a WHERE usr_id = ?) date_code_combis 
           ON h.hst_date = date_code_combis.random_date AND h.code = date_code_combis.code
           WHERE random_date BETWEEN ? - INTERVAL 5 DAY AND CURDATE() - INTERVAL 1 DAY) as vl_with_nulls
         ) ast_values
