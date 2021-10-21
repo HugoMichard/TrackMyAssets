@@ -227,6 +227,31 @@ class APIService {
     return axios.get(url, this.getUserHeader()).then(res => { return res })
   }
 
+    // wire methods
+    createWire (data) {
+      const url = `${API_URL}/wires`
+      return axios.post(url, data, this.getUserHeader()).then(res => { return res })
+    }
+  
+    updateWire (data) {
+      const url = `${API_URL}/wires/${data.wir_id}`
+      return axios.post(url, data, this.getUserHeader()).then(res => { return res })
+    }
+  
+    searchWires () {
+      const url = `${API_URL}/wires`
+      return axios.get(url, this.getUserHeader()).then(res => { return res })
+    }
+  
+    getWire (wirId) {
+      const url = `${API_URL}/wires/` + wirId
+      return axios.get(url, this.getUserHeader()).then(res => { return res })
+    }
+
+    deleteWire (wirId) {
+      const url = `${API_URL}/wires/` + wirId
+      return axios.delete(url, this.getUserHeader(), wirId).then(res => { return res })
+    }
 }
 
 export default new APIService();

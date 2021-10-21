@@ -14,7 +14,7 @@ import {
   Button
 } from "reactstrap";
 
-class IndexAssets extends Component {
+class IndexOrders extends Component {
     constructor(props) {
         super(props);
         const typeValueToLabel = {
@@ -117,4 +117,4 @@ class IndexAssets extends Component {
     }
 }
 
-export default IndexAssets;
+export default IndexOrders;

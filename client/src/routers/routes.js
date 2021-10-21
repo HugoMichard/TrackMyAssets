@@ -20,6 +20,10 @@ import IndexPlatforms from "views/platforms/Index.js";
 import CreatePlatform from "views/platforms/Create.js";
 import DetailPlatform from "views/platforms/Detail.js";
 
+import IndexWires from "views/wires/Index.js";
+import CreateWire from "views/wires/Create.js";
+import DetailWire from "views/wires/Detail.js";
+
 import IndexPortfolio from "views/portfolio/Index.js";
 
 var routes = {
@@ -53,6 +57,11 @@ var routes = {
     "/create": CreatePlatform,
     "/:plt_id": DetailPlatform,
     "/": IndexPlatforms
+  },
+  "/wires": {
+    "/create": CreateWire,
+    "/:wir_id": DetailWire,
+    "/": IndexWires
   },
 }
 export default routes;

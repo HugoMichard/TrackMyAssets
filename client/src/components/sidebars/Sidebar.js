@@ -113,6 +113,16 @@ function Sidebar(props) {
                     <p>Platforms</p>
                 </NavLink>
             </li>
+            <li className={checkActiveRoute(pathname, "wires") ? "active" : ""}>
+                <NavLink
+                    to={"/wires"}
+                    className="nav-link"
+                    activeClassName={checkActiveRoute(pathname, "wires") ? "active" : ""}
+                    >
+                    <i className="nc-icon nc-send" />
+                    <p>Wires</p>
+                </NavLink>
+            </li>
         </Nav>
       </div>
     </div>

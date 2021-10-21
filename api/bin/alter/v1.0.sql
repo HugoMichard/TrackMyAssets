@@ -90,3 +90,14 @@ FROM (
 	 (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t2,
 	 (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t3
   ) dates_to_insert;
+
+CREATE TABLE wires
+(
+  wir_id          INT unsigned NOT NULL AUTO_INCREMENT,
+  usr_id          INT unsigned NOT NULL,
+  execution_date  DATE NOT NULL,
+  amount          FLOAT NOT NULL,
+  target          VARCHAR(30),
+  PRIMARY KEY     (wir_id),
+  FOREIGN KEY     (usr_id) REFERENCES users(usr_id)                                        
+);
