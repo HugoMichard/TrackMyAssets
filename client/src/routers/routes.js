@@ -24,6 +24,8 @@ import IndexWires from "views/wires/Index.js";
 import CreateWire from "views/wires/Create.js";
 import DetailWire from "views/wires/Detail.js";
 
+import IndexDexs from "views/dexs/Index.js";
+
 import IndexPortfolio from "views/portfolio/Index.js";
 
 var routes = {
@@ -62,6 +64,9 @@ var routes = {
     "/create": CreateWire,
     "/:wir_id": DetailWire,
     "/": IndexWires
+  },
+  "/dexs": {
+    "/": IndexDexs
   },
 }
 export default routes;

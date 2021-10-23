@@ -61,12 +61,14 @@ History.getAssetHistory = function (params, result) {
   )
 }
 
-History.getLastHistoryOfUserAssets = function (params, result) {
+History.getLastHistoryOfUserCexAssets = function (params, result) {
   sql.query(
     `SELECT a.ast_type, a.code, DATE_FORMAT(MAX(h.hst_date), '%Y-%m-%d') as last_date
       FROM histories h
       RIGHT JOIN assets a ON a.code = h.code
-      WHERE a.usr_id = ?
+      LEFT JOIN orders o ON o.ast_id = a.ast_id
+      LEFT JOIN platforms p ON p.plt_id = o.plt_id 
+      WHERE a.usr_id = ? AND p.dex_id IS NULL
       GROUP BY a.ast_type, a.code`, [
         params.usr_id
       ], function (err, res) {
@@ -109,6 +111,36 @@ History.modifyFixAssetVlHistory = function (asset, result) {
   sql.query(
     `UPDATE histories SET vl = ? WHERE code = ?`, 
     [asset.fix_vl, asset.code], 
+    function (err, res) {
+      if (err) {
+        result(null, err)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
+
+History.updateDexAssetsHistoryOfUser = function (usr_id, result) {
+  sql.query(
+    `INSERT INTO histories (code, vl, hst_date)
+      SELECT code, fix_vl as vl, random_date as hst_date
+      FROM (
+          SELECT a.code, last_hst.hst_date, a.fix_vl 
+          FROM (
+            SELECT h.code, MAX(hst_date) as hst_date
+            FROM histories h
+            INNER JOIN assets a ON a.code = h.code
+            INNER JOIN orders o ON o.ast_id = a.ast_id
+            INNER JOIN platforms p ON p.plt_id = o.plt_id
+            INNER JOIN dexs d ON p.dex_id = d.dex_id
+            WHERE o.usr_id = ? 
+            GROUP BY h.code
+          ) last_hst
+          INNER JOIN assets a ON a.code = last_hst.code
+        ) ast_to_update, dates
+      WHERE random_date BETWEEN hst_date + INTERVAL 1 DAY AND CURDATE()`, 
+    [usr_id], 
     function (err, res) {
       if (err) {
         result(null, err)

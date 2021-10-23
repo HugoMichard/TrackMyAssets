@@ -257,6 +257,23 @@ class APIService {
       const url = `${API_URL}/wires/getSummary`
       return axios.get(url, this.getUserHeader()).then(res => { return res })
     }
+
+    // dex methods
+    searchDexs() {
+      const url = `${API_URL}/dexs`
+      return axios.get(url, this.getUserHeader()).then(res => { return res })
+    }
+
+    searchWallets() {
+      const url = `${API_URL}/dexs/wallets`
+      return axios.get(url, this.getUserHeader()).then(res => { return res })
+    }
+
+    searchPlatformDexs() {
+      const url = `${API_URL}/dexs/platforms`
+      return axios.get(url, this.getUserHeader()).then(res => { return res })
+    }
+
 }
 
 export default new APIService();

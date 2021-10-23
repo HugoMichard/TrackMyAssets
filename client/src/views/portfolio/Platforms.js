@@ -39,7 +39,7 @@ class PlatformsPortfolio extends Component {
         return (
             <tr key={index} onClick={() => window.location = "/assets/" + ast_id}>
                 <td>{name}</td>
-                <td>{code}</td>
+                <td>{code.length > 29 ? "" : code}</td>
                 <td style={{ color: cat_color }}>{cat_name}</td>
                 <td>{quantity}</td>
                 <td>{Math.round(price * 100) / 100}</td>

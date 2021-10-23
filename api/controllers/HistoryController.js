@@ -1,6 +1,8 @@
 var History = require('../models/History')
+var Dex = require('../models/Dex')
 var scraperHelper = require('../helpers/ScraperHelper');
 var dateHelper = require('../helpers/DateHelper')
+var dexScraper = require('../webscrapers/DexScraper');
 
 exports.getAssetHistory = function (req, res) {
     const start_date_string =
@@ -111,5 +113,50 @@ function updateFixAssetHistory(asset) {
         History.addHistories(sql_histories, function (err, histories) {
             console.log("added "+ histories.affectedRows + " histories");
         });
+    })
+}
+
+
+exports.updateDexAssetsHistory = function(assets, usr_id) {
+    // Get all unique dex and wallet unique combinaisons
+    const dex_references = assets.map(item => item.reference_name).filter((value, index, self) => self.indexOf(value) === index)
+    var wallet_dex_combinaisons = []
+    dex_references.forEach(ref => {
+        const wallets = assets.filter(a => a.reference_name === ref).map(item => item.wallet_address).filter((value, index, self) => self.indexOf(value) === index);
+        wallets.forEach(w => wallet_dex_combinaisons.push({wallet_address: w, dex_reference: ref}));
+    })
+    console.log(wallet_dex_combinaisons)
+
+    Promise.all(
+        wallet_dex_combinaisons.map(combi => updateVlOfAssetsInDexWallet(combi, assets))
+    ).then(() => History.updateDexAssetsHistoryOfUser(usr_id, function(err, res) {console.log("done");}));
+}
+
+function updateVlOfAssetsInDexWallet(dexWallet, assets) {
+    console.log("Updating this dex wallet")
+    console.log(dexWallet)
+    console.log(assets);
+    // Get asset prices in dex wallet
+    return new Promise((resolve, reject) => {
+        dexScraper.getMoneyInDexWallet(dexWallet.dex_reference, dexWallet.wallet_address).then(res => {
+            console.log(res);
+            Promise.all(
+                res.map(lp => {
+                    const asset_with_name = assets.filter(a => a.name.toLowerCase() === lp.symbol1.toLowerCase() + '-' + lp.symbol2.toLowerCase() || a.name.toLowerCase() === lp.symbol2.toLowerCase() + '-' + lp.symbol1.toLowerCase());
+                    const toUpdate = {code: asset_with_name[0].code, fix_vl: lp.value}
+                    console.log(toUpdate);
+                    updateDexAsset(toUpdate);
+                })
+            ).then(() => resolve());
+        });
+    })
+}
+
+function updateDexAsset(assetToUpdate) {
+    return new Promise((resolve, reject) => {
+        Dex.updateDexAssetVl(assetToUpdate, function(err, asset) {
+            console.log(asset);
+            resolve()
+        })
     })
 }

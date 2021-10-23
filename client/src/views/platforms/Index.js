@@ -30,10 +30,11 @@ class IndexPlatforms extends Component {
     }
     renderTableData() {
         return this.state.platforms.map((plf, index) => {
-            const { plt_id, name, color } = plf
+            const { plt_id, name, color, dex_name } = plf
             return (
                 <tr key={index} onClick={() => window.location = "/platforms/" + plt_id}>
                     <td>{name}</td>
+                    <td>{dex_name}</td>
                     <td style={{
                         color: color,
                         backgroundColor: color
@@ -66,6 +67,7 @@ class IndexPlatforms extends Component {
                         <thead className="text-primary">
                         <tr>
                             <th>Name</th>
+                            <th>DEX</th>
                             <th>Color</th>
                         </tr>
                         </thead>

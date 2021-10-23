@@ -93,6 +93,26 @@ function Sidebar(props) {
                     <p>Assets</p>
                 </NavLink>
             </li>
+            <li className={checkActiveRoute(pathname, "dexs") ? "active" : ""}>
+                <NavLink
+                    to={"/dexs"}
+                    className="nav-link"
+                    activeClassName={checkActiveRoute(pathname, "dexs") ? "active" : ""}
+                    >
+                    <i className="nc-icon nc-globe" />
+                    <p>Dexs</p>
+                </NavLink>
+            </li>
+            <li className={checkActiveRoute(pathname, "wires") ? "active" : ""}>
+                <NavLink
+                    to={"/wires"}
+                    className="nav-link"
+                    activeClassName={checkActiveRoute(pathname, "wires") ? "active" : ""}
+                    >
+                    <i className="nc-icon nc-send" />
+                    <p>Wires</p>
+                </NavLink>
+            </li>
             <li className={checkActiveRoute(pathname, "categories") ? "active" : ""}>
                 <NavLink
                     to={"/categories"}
@@ -111,16 +131,6 @@ function Sidebar(props) {
                     >
                     <i className="nc-icon nc-laptop" />
                     <p>Platforms</p>
-                </NavLink>
-            </li>
-            <li className={checkActiveRoute(pathname, "wires") ? "active" : ""}>
-                <NavLink
-                    to={"/wires"}
-                    className="nav-link"
-                    activeClassName={checkActiveRoute(pathname, "wires") ? "active" : ""}
-                    >
-                    <i className="nc-icon nc-send" />
-                    <p>Wires</p>
                 </NavLink>
             </li>
         </Nav>

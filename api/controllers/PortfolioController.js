@@ -1,5 +1,6 @@
 var Portfolio = require('../models/Portfolio')
 var History = require('../models/History')
+var Dex = require('../models/Dex')
 var history = require('./HistoryController')
 var dateHelper = require('../helpers/DateHelper');
 const User = require('../models/User');
@@ -19,7 +20,7 @@ exports.getPortfolioStartDate = getPortfolioStartDate;
 
 exports.refresh = async function(req, res) {
   const assets = await new Promise(function(resolve, reject) {
-    History.getLastHistoryOfUserAssets({usr_id: req.usr_id}, function (err, assets) {
+    History.getLastHistoryOfUserCexAssets({usr_id: req.usr_id}, function (err, assets) {
       if (err) { reject(err) }
       resolve(assets)
     })
@@ -27,6 +28,14 @@ exports.refresh = async function(req, res) {
   assets.forEach(a => {
     history.updateAssetHistory(a);
   });
+
+  const dexAssets = await new Promise(function(resolve, reject) {
+    Dex.getUserDexAssets({usr_id: req.usr_id}, function (err, dexAssets) {
+      if (err) { reject(err) }
+      resolve(dexAssets)
+    })
+  });
+  history.updateDexAssetsHistory(dexAssets, req.usr_id);
   res.status(200).send({state: "Success"});
   User.updateRefresh(req.usr_id);
 }

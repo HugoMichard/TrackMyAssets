@@ -1,9 +1,11 @@
 var sql = require('./db.js')
 
-var Platform = function (cat) {
-  this.name = cat.name
-  this.color = cat.color
-  this.usr_id = cat.usr_id
+var Platform = function (plt) {
+  this.name = plt.name
+  this.color = plt.color
+  this.usr_id = plt.usr_id
+  this.dex_id = plt.dex_id
+  this.wallet_address = plt.wallet_address
 }
 
 Platform.create = function (newPlt, result) {
@@ -20,7 +22,10 @@ Platform.create = function (newPlt, result) {
 
 Platform.search = function (params, result) {
   sql.query(
-    `SELECT * FROM platforms WHERE name LIKE ? AND usr_id = ?`, [
+    `SELECT p.plt_id, p.usr_id, p.name, p.color, d.name as dex_name, p.wallet_address
+      FROM platforms p 
+      LEFT JOIN dexs d ON d.dex_id = p.dex_id 
+      WHERE p.name LIKE ? AND usr_id = ?`, [
       params.name,
       params.usr_id
     ], (err, res) => {
@@ -51,10 +56,12 @@ Platform.getDetail = function (params, result) {
 Platform.update = function (params, result) {
     sql.query(
       `UPDATE platforms 
-        SET name = ?, color = ? 
+        SET name = ?, color = ?, dex_id = ?, wallet_address = ?
         WHERE plt_id = ? AND usr_id = ?`, [
           params.name,
           params.color,
+          params.dex_id,
+          params.wallet_address,
           params.plt_id,
           params.usr_id
       ], (err, res) => {

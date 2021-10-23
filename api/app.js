@@ -16,6 +16,7 @@ var dashboardRouter = require('./routes/dashboard');
 var portfolioRouter = require('./routes/portfolio');
 var platformsRouter = require('./routes/platforms');
 var wiresRouter = require('./routes/wires');
+var dexsRouter = require('./routes/dexs');
 
 var app = express();
 
@@ -49,6 +50,7 @@ app.use('/api/dashboard', dashboardRouter);
 app.use('/api/portfolio', portfolioRouter);
 app.use('/api/platforms', platformsRouter);
 app.use('/api/wires', wiresRouter);
+app.use('/api/dexs', dexsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

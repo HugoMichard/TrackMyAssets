@@ -37,7 +37,9 @@ class DetailPlatform extends Component {
                             {...this.props}
                             name={this.state.platform.name}
                             color={this.state.platform.color}
-                            plt_id={this.state.plt_id}>
+                            plt_id={this.state.plt_id}
+                            dex_id={this.state.platform.dex_id}
+                            wallet_address={this.state.platform.wallet_address}>
                         </PlatformForm>
                     </CardBody>
                 </Card>

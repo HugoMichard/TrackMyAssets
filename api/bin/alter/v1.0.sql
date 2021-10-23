@@ -101,3 +101,23 @@ CREATE TABLE wires
   PRIMARY KEY     (wir_id),
   FOREIGN KEY     (usr_id) REFERENCES users(usr_id)                                        
 );
+
+CREATE TABLE dexs
+(
+  dex_id          INT unsigned NOT NULL AUTO_INCREMENT,
+  name            VARCHAR(30) NOT NULL,
+  reference_name  VARCHAR(50) NOT NULL,
+  PRIMARY KEY     (dex_id)                                   
+);
+
+ALTER TABLE platforms
+	ADD COLUMN dex_id INT unsigned,
+  ADD COLUMN wallet_address VARCHAR(150),
+ 	ADD	CONSTRAINT dex_id FOREIGN KEY (dex_id) REFERENCES dexs(dex_id);
+
+INSERT INTO dexs (name, reference_name)
+VALUES  ('PancakeSwapBSC', 'pancakeswapBsc'),
+        ('YieldYakAvax', 'yieldyakAvax'),
+        ('BeefyFantom', 'beefyFantom'),
+        ('OsmosisCosmos', 'osmosisCosmos'), 
+        ('PylonTerra', 'pylonTerra');

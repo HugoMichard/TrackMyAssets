@@ -40,7 +40,7 @@ exports.getDetail = function (req, res) {
 }
 
 exports.update = function (req, res) {
-    req.body.cat_id = parseInt(req.params.plt_id);
+    req.body.plt_id = parseInt(req.params.plt_id);
     req.body.usr_id = req.usr_id
     Platform.update(req.body, function (err, plt) {
         if (err) {
