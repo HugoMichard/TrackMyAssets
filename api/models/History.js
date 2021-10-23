@@ -128,14 +128,14 @@ History.updateDexAssetsHistoryOfUser = function (usr_id, result) {
       FROM (
           SELECT a.code, last_hst.hst_date, a.fix_vl 
           FROM (
-            SELECT h.code, MAX(hst_date) as hst_date
+            SELECT a.code, COALESCE(MAX(hst_date), CURDATE() - INTERVAL 1 DAY)  as hst_date
             FROM histories h
-            INNER JOIN assets a ON a.code = h.code
+            RIGHT JOIN assets a ON a.code = h.code
             INNER JOIN orders o ON o.ast_id = a.ast_id
             INNER JOIN platforms p ON p.plt_id = o.plt_id
             INNER JOIN dexs d ON p.dex_id = d.dex_id
             WHERE o.usr_id = ? 
-            GROUP BY h.code
+            GROUP BY a.code
           ) last_hst
           INNER JOIN assets a ON a.code = last_hst.code
         ) ast_to_update, dates

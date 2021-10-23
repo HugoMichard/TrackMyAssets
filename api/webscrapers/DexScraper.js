@@ -9,6 +9,7 @@ exports.getMoneyInDexWallet = function(dex_reference_name, wallet_address) {
                 'passcode': passcode
             }
         }).then((data) => {
+            console.log(data.data.positions)
             const farms = [];
             data.data.farms.forEach(farm => {
                 farms.push({
