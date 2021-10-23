@@ -19,6 +19,7 @@ function getPortfolioStartDate(usr_id) {
 exports.getPortfolioStartDate = getPortfolioStartDate;
 
 exports.refresh = async function(req, res) {
+  
   const assets = await new Promise(function(resolve, reject) {
     History.getLastHistoryOfUserCexAssets({usr_id: req.usr_id}, function (err, assets) {
       if (err) { reject(err) }
@@ -28,7 +29,7 @@ exports.refresh = async function(req, res) {
   assets.forEach(a => {
     history.updateAssetHistory(a);
   });
-
+  
   const dexAssets = await new Promise(function(resolve, reject) {
     Dex.getUserDexAssets({usr_id: req.usr_id}, function (err, dexAssets) {
       if (err) { reject(err) }

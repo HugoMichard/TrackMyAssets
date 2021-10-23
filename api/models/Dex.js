@@ -51,11 +51,11 @@ Dex.searchWallets = function (params, result) {
 
 Dex.getUserDexAssets = function (params, result) {
     sql.query(
-      `SELECT DISTINCT a.code, a.name, d.reference_name, p.wallet_address
+      `SELECT DISTINCT a.code, a.name, d.reference_name, p.wallet_address, p.plt_id
         FROM platforms p
         INNER JOIN dexs d ON p.dex_id = d.dex_id
         INNER JOIN orders o ON o.plt_id = p.plt_id
-        INNER JOIN assets a ON o.ast_id = a.ast_id
+        INNER JOIN assets a ON o.plt_id = a.plt_id
         WHERE p.usr_id = ?`, [params.usr_id], (err, res) => {
         if (err) {
           result(null, err)
@@ -68,8 +68,8 @@ Dex.getUserDexAssets = function (params, result) {
 
 Dex.updateDexAssetVl = function(asset, result) {
     sql.query(
-      `UPDATE assets SET fix_vl = ? WHERE code = ?`, 
-      [asset.fix_vl, asset.code], 
+      `UPDATE assets SET fix_vl = ? WHERE code = ? AND plt_id = ?`, 
+      [asset.fix_vl, asset.code, asset.plt_id], 
       function (err, res) {
         if (err) {
           result(null, err)

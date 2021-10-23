@@ -44,11 +44,11 @@ class IndexDexs extends Component {
     renderTableData(wallets) {
         if(wallets) {
             return wallets.map((wlt, index) => {
-                const { name, price } = wlt
+                const { name, fix_vl } = wlt
                 return (
                     <tr key={index}>
                         <td>{name}</td>
-                        <td>{price}</td>
+                        <td>{fix_vl}</td>
                     </tr>
                 )
             })

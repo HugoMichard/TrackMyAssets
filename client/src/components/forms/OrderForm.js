@@ -33,7 +33,7 @@ class OrderForm extends Component {
             cat_color: "",
             code: ""
         }
-        this.state = { redirect:false, form: form, selectedAst: null, selectedAstData: selectedAstData, selectedPlt: null }
+        this.state = { redirect:false, isCexDisplay: true, form: form, selectedAst: null, selectedAstData: selectedAstData, selectedPlt: null }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeSwitch = this.handleChangeSwitch.bind(this);
@@ -69,7 +69,8 @@ class OrderForm extends Component {
                 break;
             }
         }
-        this.setState({form: form, selectedAst: selectedAst, selectedAstData: selectedAstData,  selectedPlt: selectedPlt})
+        this.setState({form: form, selectedAst: selectedAst, selectedAstData: selectedAstData,  selectedPlt: selectedPlt});
+        this.handlePlatformChange(form.plt_id);
     }
     componentDidMount() {
         APIService.searchAssets({}).then(res => { 
@@ -82,7 +83,8 @@ class OrderForm extends Component {
                 label,
                 ...rest
               }));
-            this.setState({ assets: assets });
+            this.setState({ assets: assets, availableAssets: assets });
+            console.log(assets)
         });
 
         APIService.searchPlatforms({}).then(res => { 
@@ -96,6 +98,7 @@ class OrderForm extends Component {
                 ...rest
               }));
             this.setState({ platforms: platforms });
+            console.log(platforms)
         });
     }
     handleChange(property, event) {
@@ -107,8 +110,20 @@ class OrderForm extends Component {
         }
         if(property === "plt_id") {
             selectedPlt = event;
+            this.handlePlatformChange(event.value);
         }
         this.setState({form: form, selectedAst: selectedAst, selectedAstData: selectedAstData, selectedPlt: selectedPlt});
+    }
+    handlePlatformChange(plt_id) {
+        const { platforms, form, assets } = this.state;
+        const selectedPlatform = platforms.find(p => p.value === plt_id);
+        if(selectedPlatform.dex_name) {
+            form.quantity = 0.86;
+            const availableAssets = assets.filter(a => a.plt_id === plt_id)
+            this.setState({isCexDisplay: false, form: form, availableAssets: availableAssets});
+        } else {
+            this.setState({isCexDisplay: true, availableAssets: assets});
+        }
     }
     handleChangeSwitch(value) {
         var form = this.state.form;
@@ -130,7 +145,7 @@ class OrderForm extends Component {
         }
     }
     render() {
-        let { redirect, selectedAst, assets, selectedAstData, selectedPlt, platforms } = this.state
+        let { redirect, isCexDisplay, selectedAst, availableAssets, selectedAstData, selectedPlt, platforms } = this.state
         let submitText = this.state.form.ord_id === undefined ? this.state.form.isBuy ? "Buy" : "Sell" : "Update";
         return (
         <>
@@ -159,37 +174,42 @@ class OrderForm extends Component {
                     <Col md="6">
                         <FormGroup>
                             <label>Asset</label>
-                            <Select options={assets} onChange={(evt) => this.handleChange("ast_id", evt)} value={selectedAst}></Select>
+                            <Select options={availableAssets} onChange={(evt) => this.handleChange("ast_id", evt)} value={selectedAst}></Select>
                         </FormGroup>
                     </Col>
-                    {this.state.selectedAstData.ast_type !== "fix" ?
+                    {selectedAstData.ast_type !== "fix" && isCexDisplay ?
                         <Col md="2">
                             <div>
                                 <label>{this.state.selectedAstData.ast_type !== "crypto" ? "Ticker" : "Coin"}</label>
                                 <p>{this.state.selectedAstData.code}</p>
                             </div>
                         </Col> :
-                        <Col md="2">
-                        <div>
-                            <label>Fixed Value</label>
-                            <p>{this.state.selectedAstData.fix_vl}</p>
-                        </div>
-                        </Col>
+                        isCexDisplay ?
+                            <Col md="2">
+                                <div>
+                                    <label>Fixed Value</label>
+                                    <p>{this.state.selectedAstData.fix_vl}</p>
+                                </div>
+                            </Col> : ""
                     }
-                    <Col md="2">
-                            <label>Type</label>
-                            <p>{selectedAstData.ast_type ? 
-                                  selectedAstData.ast_type === "stock" ? "Stock Asset" 
-                                : selectedAstData.ast_type === "crypto" ? "Cryptocurrency" 
-                                : "Fixed Price Asset"
-                                : ""}</p>
-                    </Col>
-                    <Col md="2">
-                            <label>Category</label>
-                            <p style={{
-                                color: selectedAstData.cat_color
-                            }}>{selectedAstData.cat_name}</p>
-                    </Col>
+                    {isCexDisplay ?
+                        <Col md="2">
+                                <label>Type</label>
+                                <p>{selectedAstData.ast_type ? 
+                                    selectedAstData.ast_type === "stock" ? "Stock Asset" 
+                                    : selectedAstData.ast_type === "crypto" ? "Cryptocurrency" 
+                                    : "Fixed Price Asset"
+                                    : ""}</p>
+                        </Col> : ""
+                    }
+                    {isCexDisplay ?
+                        <Col md="2">
+                                <label>Category</label>
+                                <p style={{
+                                    color: selectedAstData.cat_color
+                                }}>{selectedAstData.cat_name}</p>
+                        </Col> : ""
+                    }
                 </Row>
                 <Row>
                     <Col md="4">
@@ -208,20 +228,22 @@ class OrderForm extends Component {
                     </Col>
                 </Row>
                 <Row>
+                    {isCexDisplay ?
+                        <Col md="4">
+                            <FormGroup>
+                                <label>Quantity</label>
+                                <Input 
+                                    placeholder="Quantity" 
+                                    type="text" 
+                                    onChange={(evt) => this.handleChange("quantity", evt)}
+                                    value={this.state.form.quantity}
+                                />
+                            </FormGroup>
+                        </Col> : ""
+                    }
                     <Col md="4">
                         <FormGroup>
-                            <label>Quantity</label>
-                            <Input 
-                                placeholder="Quantity" 
-                                type="text" 
-                                onChange={(evt) => this.handleChange("quantity", evt)}
-                                value={this.state.form.quantity}
-                            />
-                        </FormGroup>
-                    </Col>
-                    <Col md="4">
-                        <FormGroup>
-                            <label>Unit Price</label>
+                            <label>{isCexDisplay ? "Unit Price" : "Price"}</label>
                             <Input 
                                 placeholder="Price" 
                                 type="text" 

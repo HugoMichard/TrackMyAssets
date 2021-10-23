@@ -28,12 +28,12 @@ class AssetForm extends Component {
             { value: 'crypto', label: 'Cryptocurrency' },
             { value: 'fix', label: 'Fixed Price Asset' }
         ]
-        this.state = { redirect: false, form: form, categories: {}, selectedType: null, selectedCat: null, typeOptions: typeOptions }
+        this.state = { redirect: false, form: form, categories: {}, selectedType: null, selectedCat: null, typeOptions: typeOptions, selectedPlt: null, platforms: {} }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
     componentWillReceiveProps(nextProps) {
-        const categories = this.state.categories;
+        const { categories, platforms, typeOptions } = this.state;
         const form = {
             name: nextProps.name,
             ast_type: nextProps.ast_type,
@@ -41,9 +41,10 @@ class AssetForm extends Component {
             ticker: nextProps.code,
             coin: nextProps.code,
             ast_id: nextProps.ast_id,
+            plt_id: nextProps.plt_id,
             fix_vl: nextProps.fix_vl
         }
-        const selectedType = form.ast_type === "stock" ? this.state.typeOptions[0] : form.ast_type === "crypto" ? this.state.typeOptions[1] : this.state.typeOptions[2];
+        const selectedType = form.ast_type === "stock" ? typeOptions[0] : form.ast_type === "crypto" ? typeOptions[1] : typeOptions[2];
         var selectedCat = {}
         for(var i in categories){
             if(categories[i].value === form.cat_id){
@@ -51,7 +52,14 @@ class AssetForm extends Component {
                 break;
             }
         }
-        this.setState({form: form, selectedType: selectedType, selectedCat: selectedCat})
+        var selectedPlt = {}
+        for(var j in platforms){
+            if(platforms[j].value === form.plt_id){
+                selectedPlt = platforms[j];
+                break;
+            }
+        }
+        this.setState({form: form, selectedType: selectedType, selectedCat: selectedCat, selectedPlt: selectedPlt})
     }
     componentDidMount() {
         APIService.searchCategories({}).then(res => { 
@@ -63,19 +71,44 @@ class AssetForm extends Component {
                 value,
                 label,
                 ...rest
-              }));
-            this.setState({categories: categories });});
+            }));
+            this.setState({categories: categories });
+        });
+
+        APIService.searchPlatformDexs({}).then(res => { 
+            const platforms = res.data.dexs.map(({
+                plt_id: value,
+                name: label,
+                ...rest
+              }) => ({
+                value,
+                label,
+                ...rest
+            }));
+            platforms.unshift({value: null, label: 'Not on a DEX platform'});
+
+            this.setState({ platforms: platforms });
+        });
     }
     handleChange(property, event) {
-        var { form, selectedType, selectedCat } = this.state;
-        form[property] = property === "ast_type" || property === "cat_id" ? event.value : event.target.value;
+        var { form, selectedType, selectedCat, selectedPlt } = this.state;
+        form[property] = property === "ast_type" || property === "cat_id" || property === "plt_id" ? event.value : event.target.value;
         if(property === "ast_type") {
             selectedType = event
         }
         if(property === "cat_id") {
             selectedCat = event
         }
-        this.setState({form: form, selectedCat: selectedCat, selectedType: selectedType});
+        if(property === "plt_id") {
+            selectedPlt = event;
+            form.fix_vl = 0;
+        }
+
+        if(form.ast_type !== "fix") {
+            selectedPlt = null;
+            form.plt_id = null;
+        }
+        this.setState({form: form, selectedCat: selectedCat, selectedType: selectedType, selectedPlt: selectedPlt});
     }
     
     handleSubmit(e){
@@ -119,23 +152,27 @@ class AssetForm extends Component {
                     </div>
                 );
             } else {
-                return (
-                    <div>                            
-                        <label>Fixed Value</label>
-                        <Input
-                            placeholder="Value"
-                            type="text"
-                            onChange={(evt) => this.handleChange("fix_vl", evt)}
-                            value={this.state.form.fix_vl}
-                        />
-                    </div>
-                )
+                if(this.state.form.plt_id) {
+                    return (<div></div>)
+                } else {
+                    return (
+                        <div>                            
+                            <label>Fixed Value</label>
+                            <Input
+                                placeholder="Value"
+                                type="text"
+                                onChange={(evt) => this.handleChange("fix_vl", evt)}
+                                value={this.state.form.fix_vl}
+                            />
+                        </div>
+                    )
+                }
             }
         }
     }
     render() {
-        let { typeOptions, selectedType, selectedCat, categories } = this.state
-        let submitText = this.state.form.ast_id === undefined ? "Create" : "Update"; 
+        let { typeOptions, selectedType, selectedCat, categories, form, platforms, selectedPlt } = this.state
+        let submitText = form.ast_id === undefined ? "Create" : "Update"; 
         return (
         <>
             <Form>
@@ -162,7 +199,7 @@ class AssetForm extends Component {
                                 placeholder="Name" 
                                 type="text" 
                                 onChange={(evt) => this.handleChange("name", evt)}
-                                value={this.state.form.name}
+                                value={form.name}
                             />
                         </FormGroup>
                     </Col>
@@ -172,6 +209,16 @@ class AssetForm extends Component {
                         </FormGroup>
                     </Col>
                 </Row>
+                {form.ast_type === 'fix' ?
+                <Row>
+                        <Col md="6">
+                            <FormGroup>
+                                <label>Platform</label>
+                                <Select options={platforms} onChange={(evt) => this.handleChange("plt_id", evt)} value={selectedPlt}></Select>
+                            </FormGroup>
+                        </Col>
+                    </Row> : ""
+                }
                 {this.props.noSubmitButton ? "" :
                     <Row>
                         <div className="update ml-auto mr-auto">

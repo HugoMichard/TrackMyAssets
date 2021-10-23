@@ -21,7 +21,9 @@ exports.create = function (req, res) {
     }
     res.status(200).send({ast_id: asset.insertId, notif: notifHelper.getNotif("createAssetSuccess", [newAsset.name])});
     newAsset.ast_id = asset.insertId
-    history.initializeAssetHistory(newAsset);
+    if(!newAsset.plt_id) {
+      history.initializeAssetHistory(newAsset);
+    }
   })
 }
 
@@ -61,7 +63,9 @@ exports.update = function (req, res) {
           res.status(500).send({ message: err.message});
       } else {
           res.status(200).send({asset: updateAsset, notif: notifHelper.getNotif("updateAssetSuccess", [updateAsset.name])});
-          history.updateAssetHistory(updateAsset);
+          if(!updateAsset.plt_id) {
+            history.updateAssetHistory(updateAsset);
+          }
       }
   })
 }

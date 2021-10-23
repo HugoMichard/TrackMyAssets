@@ -77,6 +77,7 @@ class DetailAsset extends Component {
                                 ast_type={this.state.asset.ast_type}
                                 ast_id={this.state.asset.ast_id}
                                 cat_id={this.state.asset.cat_id}
+                                plt_id={this.state.asset.plt_id}
                                 fix_vl={this.state.asset.fix_vl}>
                             </AssetForm>
                         </CardBody>

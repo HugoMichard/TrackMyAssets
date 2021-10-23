@@ -121,3 +121,7 @@ VALUES  ('PancakeSwapBSC', 'pancakeswapBsc'),
         ('BeefyFantom', 'beefyFantom'),
         ('OsmosisCosmos', 'osmosisCosmos'), 
         ('PylonTerra', 'pylonTerra');
+
+ALTER TABLE assets
+  ADD COLUMN plt_id INT unsigned,
+  ADD CONSTRAINT plt_id FOREIGN KEY (plt_id) REFERENCES platforms(plt_id);

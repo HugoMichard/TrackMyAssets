@@ -7,6 +7,7 @@ var Asset = function (asset) {
   this.code = asset.code
   this.fix_vl = asset.fix_vl
   this.cat_id = asset.cat_id
+  this.plt_id = asset.plt_id
   this.created_at = new Date()
 }
 
@@ -24,7 +25,8 @@ Asset.create = function (newAsset, result) {
 
 Asset.search = function (params, result) {
   sql.query(
-    `SELECT a.*, c.color as cat_color, c.name as cat_name FROM assets a
+    `SELECT a.*, c.color as cat_color, c.name as cat_name 
+      FROM assets a
       INNER JOIN categories c ON c.cat_id = a.cat_id
       WHERE a.name LIKE ? AND a.usr_id = ?`, [
       params.name,
@@ -59,13 +61,14 @@ Asset.getDetail = function (params, result) {
 Asset.update = function (params, result) {
   sql.query(
     `UPDATE assets 
-      SET name = ?, code = ?, cat_id = ?, ast_type = ?, fix_vl = ?
+      SET name = ?, code = ?, cat_id = ?, ast_type = ?, fix_vl = ?, plt_id = ?
       WHERE ast_id = ? AND usr_id = ?`, [
         params.name,
         params.code,
         params.cat_id,
         params.ast_type,
         params.fix_vl,
+        params.plt_id,
         params.ast_id,
         params.usr_id
     ], (err, res) => {
