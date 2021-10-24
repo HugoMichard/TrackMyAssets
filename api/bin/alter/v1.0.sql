@@ -125,3 +125,6 @@ VALUES  ('PancakeSwapBSC', 'pancakeswapBsc'),
 ALTER TABLE assets
   ADD COLUMN plt_id INT unsigned,
   ADD CONSTRAINT plt_id FOREIGN KEY (plt_id) REFERENCES platforms(plt_id);
+
+ALTER TABLE assets
+  ADD COLUMN rewards FLOAT;

@@ -31,7 +31,7 @@ exports.refresh = async function(req, res) {
   });
   
   const dexAssets = await new Promise(function(resolve, reject) {
-    Dex.getUserDexAssets({usr_id: req.usr_id}, function (err, dexAssets) {
+    Dex.getUserDexAssetsToUpdate({usr_id: req.usr_id}, function (err, dexAssets) {
       if (err) { reject(err) }
       resolve(dexAssets)
     })

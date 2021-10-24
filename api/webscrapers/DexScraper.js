@@ -10,12 +10,18 @@ exports.getMoneyInDexWallet = function(dex_reference_name, wallet_address) {
             }
         }).then((data) => {
             console.log(data.data.positions)
+            const pools = data.data.farms != undefined && data.data.farms.length > 0 ? data.data.farms 
+                            : data.data.positions != undefined && data.data.positions.length > 0 ? data.data.positions
+                            : data.data.projects;
             const farms = [];
-            data.data.farms.forEach(farm => {
+            pools.forEach(farm => {
+                const token_price = farm.tokens.map(t => t.price * t.balance).reduce((p, n) => p + n);
+                const rewards = farm.rewards ? farm.rewards.map(r => r.balance * r.price).reduce((p,n) => p + n) : 0;
                 farms.push({
                     symbol1: farm.tokens[0].symbol,
-                    symbol2: farm.tokens[1].symbol,
-                    value: (farm.tokens[0].balance * farm.tokens[0].price) + (farm.tokens[1].balance * farm.tokens[1].price)
+                    symbol2: farm.tokens.length > 1 ? farm.tokens[1].symbol : "",
+                    value: token_price + rewards,
+                    rewards: rewards
                 });
             })
             return farms;

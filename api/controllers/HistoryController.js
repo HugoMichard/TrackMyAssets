@@ -139,11 +139,23 @@ function updateVlOfAssetsInDexWallet(dexWallet, assets) {
     // Get asset prices in dex wallet
     return new Promise((resolve, reject) => {
         dexScraper.getMoneyInDexWallet(dexWallet.dex_reference, dexWallet.wallet_address).then(res => {
-            console.log(res);
+            const uniqueLps = [];
+            res.forEach(lp => {
+                const existingLpIdx = uniqueLps.findIndex(uLp => lp.symbol1 + lp.symbol2 === uLp.symbol1 + uLp.symbol2 || lp.symbol2 + lp.symbol1 === uLp.symbol1 + uLp.symbol2)
+                if(existingLpIdx > -1) {
+                    uniqueLps[existingLpIdx].value = uniqueLps[existingLpIdx].value + lp.value;
+                    uniqueLps[existingLpIdx].rewards = uniqueLps[existingLpIdx].rewards + lp.rewards;
+                } else {
+                    uniqueLps.push(lp);
+                }
+            });
+            console.log(uniqueLps);
             Promise.all(
-                res.map(lp => {
-                    const asset_with_name = assets.filter(a => a.plt_id === dexWallet.plt_id && (a.name.toLowerCase() === lp.symbol1.toLowerCase() + '-' + lp.symbol2.toLowerCase() || a.name.toLowerCase() === lp.symbol2.toLowerCase() + '-' + lp.symbol1.toLowerCase()));
-                    const toUpdate = {code: asset_with_name[0].code, fix_vl: lp.value, plt_id: dexWallet.plt_id}
+                uniqueLps.map(lp => {
+                    const assetsWithName = 
+                        lp.symbol2 > 0 ? assets.filter(a => a.plt_id === dexWallet.plt_id && (a.name.toLowerCase() === lp.symbol1.toLowerCase() + '-' + lp.symbol2.toLowerCase() || a.name.toLowerCase() === lp.symbol2.toLowerCase() + '-' + lp.symbol1.toLowerCase()))
+                        : assets.filter(a => a.plt_id === dexWallet.plt_id && a.name.toLowerCase() === lp.symbol1.toLowerCase());
+                    const toUpdate = {code: assetsWithName[0].code, fix_vl: lp.value, rewards:lp.rewards, plt_id: dexWallet.plt_id}
                     console.log(toUpdate);
                     updateDexAsset(toUpdate);
                 })
