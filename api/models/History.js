@@ -126,7 +126,7 @@ History.updateDexAssetsHistoryOfUser = function (usr_id, result) {
     `INSERT INTO histories (code, vl, hst_date)
       SELECT code, fix_vl as vl, random_date as hst_date
       FROM (
-          SELECT a.code, last_hst.hst_date, a.fix_vl + a.rewards as fix_vl
+          SELECT a.code, last_hst.hst_date, a.fix_vl
           FROM (
             SELECT a.code, COALESCE(MAX(hst_date), CURDATE() - INTERVAL 1 DAY)  as hst_date
             FROM histories h
