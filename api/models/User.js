@@ -80,4 +80,36 @@ User.getLastRefresh = function (usrId, result) {
   )
 }
 
+User.checkEmailExists = function (email, result) {
+  sql.query(
+    `SELECT * FROM users WHERE email = '${email}'`, function(err, res) {
+      result(null, res);
+    }
+  )
+}
+
+User.checkUserHasPlatform = function (params, result) {
+  sql.query(
+    `SELECT * FROM platforms WHERE usr_id = ${params.usr_id} AND plt_id = ${params.plt_id}`, function(err, res) {
+      result(null, res);
+    }
+  )
+}
+
+User.checkUserHasCategory = function (params, result) {
+  sql.query(
+    `SELECT * FROM categories WHERE usr_id = ${params.usr_id} AND cat_id = ${params.cat_id}`, function(err, res) {
+      result(null, res);
+    }
+  )
+}
+
+User.checkUserHasAsset = function (params, result) {
+  sql.query(
+    `SELECT * FROM assets WHERE usr_id = ${params.usr_id} AND ast_id = ${params.ast_id}`, function(err, res) {
+      result(null, res);
+    }
+  )
+}
+
 module.exports = User

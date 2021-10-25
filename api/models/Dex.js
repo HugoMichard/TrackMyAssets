@@ -81,6 +81,14 @@ Dex.updateDexAssetVl = function(asset, result) {
         }
       }
     )
-  }
+}
+
+Dex.checkDexAvailable = function (dex_id, result) {
+  sql.query(
+    `SELECT * FROM dexs WHERE dex_id = ${dex_id}`, function(err, res) {
+      result(null, res);
+    }
+  )
+}
 
 module.exports = Dex

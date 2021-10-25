@@ -47,7 +47,7 @@ class Register extends Component {
       else { 
         this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color); 
       }
-     });
+     }).catch(err => this.props.displayNotification(this.props.notify, err.response.data.notif.text, err.response.data.notif.color));
   }
 
   render() {

@@ -43,7 +43,6 @@ class PlatformForm extends Component {
                 break;
             }
         }
-        console.log(selectedDex)
 
         this.setState({form: form, selectedDex: selectedDex})
     }
@@ -79,18 +78,12 @@ class PlatformForm extends Component {
     }
     
     handleSubmit(e){
-        console.log(this.state.form);
-        if(this.state.form.plt_id) {
-            APIService.updatePlatform(this.state.form).then(res => {
-                this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
-                this.setState({redirect: res.status === 200});
-            });
-        } else {
-            APIService.createPlatform(this.state.form).then(res => {
-                this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
-                this.setState({redirect: res.status === 200});
-            });
-        }
+        const updateOrCreatePlatform = this.state.form.plt_id !== undefined ? APIService.updatePlatform.bind(APIService) : APIService.createPlatform.bind(APIService)
+
+        updateOrCreatePlatform(this.state.form).then(res => {
+            this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
+            this.setState({redirect: res.status === 200});
+        }).catch(err => this.props.displayNotification(this.props.notify, err.response.data.notif.text, err.response.data.notif.color));
     }
     render() {
         let { redirect, selectedDex, dexs } = this.state

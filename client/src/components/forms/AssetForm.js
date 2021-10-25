@@ -112,17 +112,12 @@ class AssetForm extends Component {
     }
     
     handleSubmit(e){
-        if(this.state.form.ast_id) {
-            APIService.updateAsset(this.state.form).then(res => {
-                this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
-                this.setState({redirect: res.status === 200});
-            });
-        } else {
-            APIService.createAsset(this.state.form).then(res => {
-                this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
-                this.setState({redirect: res.status === 200});
-            });
-        }
+        const updateOrCreateAsset = this.state.form.ast_id !== undefined ? APIService.updateAsset.bind(APIService) : APIService.createAsset.bind(APIService)
+
+        updateOrCreateAsset(this.state.form).then(res => {
+            this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
+            this.setState({redirect: res.status === 200});
+        }).catch(err => this.props.displayNotification(this.props.notify, err.response.data.notif.text, err.response.data.notif.color));
     }
     
     assetIdentifier() {

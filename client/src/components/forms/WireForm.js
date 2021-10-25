@@ -54,17 +54,12 @@ class WireForm extends Component {
     }
     
     handleSubmit(e){
-        if(this.state.form.wir_id) {
-            APIService.updateWire(this.state.form).then(res => {
-                this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
-                this.setState({redirect: res.status === 200});
-            });
-        } else {
-            APIService.createWire(this.state.form).then(res => {
-                this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
-                this.setState({redirect: res.status === 200});
-            });
-        }
+        const updateOrCreatePlatform = this.state.form.wir_id !== undefined ? APIService.updateWire.bind(APIService) : APIService.createWire.bind(APIService)
+
+        updateOrCreatePlatform(this.state.form).then(res => {
+            this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
+            this.setState({redirect: res.status === 200});
+        }).catch(err => this.props.displayNotification(this.props.notify, err.response.data.notif.text, err.response.data.notif.color));
     }
     render() {
         let submitText = this.state.form.wir_id === undefined ? this.state.form.isIn ? "Received" : "Sent" : "Update";
