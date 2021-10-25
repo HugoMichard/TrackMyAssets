@@ -128,7 +128,7 @@ exports.updateDexAssetsHistory = function(assets, usr_id) {
     console.log(wallet_dex_combinaisons)
 
     Promise.all(
-        wallet_dex_combinaisons.map(combi => updateVlOfAssetsInDexWallet(combi, assets))
+        wallet_dex_combinaisons.map(combi => updateVlOfAssetsInDexWallet(combi, assets.filter(a => a.plt_id === combi.plt_id && a.reference_name === combi.dex_reference && a.wallet_address === combi.wallet_address)))
     ).then(() => History.updateDexAssetsHistoryOfUser(usr_id, function(err, res) {console.log("done");}));
 }
 
@@ -149,12 +149,15 @@ function updateVlOfAssetsInDexWallet(dexWallet, assets) {
                     uniqueLps.push(lp);
                 }
             });
+            console.log("unique lps");
             console.log(uniqueLps);
             Promise.all(
                 uniqueLps.map(lp => {
                     const assetsWithName = 
-                        lp.symbol2 > 0 ? assets.filter(a => a.plt_id === dexWallet.plt_id && (a.name.toLowerCase() === lp.symbol1.toLowerCase() + '-' + lp.symbol2.toLowerCase() || a.name.toLowerCase() === lp.symbol2.toLowerCase() + '-' + lp.symbol1.toLowerCase()))
+                        lp.symbol2.length > 0 ? assets.filter(a => a.plt_id === dexWallet.plt_id && (a.name.toLowerCase() === lp.symbol1.toLowerCase() + '-' + lp.symbol2.toLowerCase() || a.name.toLowerCase() === lp.symbol2.toLowerCase() + '-' + lp.symbol1.toLowerCase()))
                         : assets.filter(a => a.plt_id === dexWallet.plt_id && a.name.toLowerCase() === lp.symbol1.toLowerCase());
+                    console.log("assets with name");
+                    console.log(assetsWithName)
                     const toUpdate = {code: assetsWithName[0].code, fix_vl: lp.value, rewards:lp.rewards, plt_id: dexWallet.plt_id}
                     console.log(toUpdate);
                     updateDexAsset(toUpdate);

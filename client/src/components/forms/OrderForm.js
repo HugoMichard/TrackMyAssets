@@ -69,8 +69,7 @@ class OrderForm extends Component {
                 break;
             }
         }
-        this.setState({form: form, selectedAst: selectedAst, selectedAstData: selectedAstData,  selectedPlt: selectedPlt});
-        this.handlePlatformChange(form.plt_id);
+        this.setState({form: form, selectedAst: selectedAst, selectedAstData: selectedAstData,  selectedPlt: selectedPlt}, () => this.handlePlatformChange(form.plt_id));
     }
     componentDidMount() {
         APIService.searchAssets({}).then(res => { 
@@ -84,7 +83,6 @@ class OrderForm extends Component {
                 ...rest
               }));
             this.setState({ assets: assets, availableAssets: assets });
-            console.log(assets)
         });
 
         APIService.searchPlatforms({}).then(res => { 
@@ -98,7 +96,6 @@ class OrderForm extends Component {
                 ...rest
               }));
             this.setState({ platforms: platforms });
-            console.log(platforms)
         });
     }
     handleChange(property, event) {
@@ -110,9 +107,8 @@ class OrderForm extends Component {
         }
         if(property === "plt_id") {
             selectedPlt = event;
-            this.handlePlatformChange(event.value);
         }
-        this.setState({form: form, selectedAst: selectedAst, selectedAstData: selectedAstData, selectedPlt: selectedPlt});
+        this.setState({form: form, selectedAst: selectedAst, selectedAstData: selectedAstData, selectedPlt: selectedPlt}, () => this.handlePlatformChange(event.value));
     }
     handlePlatformChange(plt_id) {
         const { platforms, form, assets } = this.state;
@@ -145,8 +141,8 @@ class OrderForm extends Component {
         }
     }
     render() {
-        let { redirect, isCexDisplay, selectedAst, availableAssets, selectedAstData, selectedPlt, platforms } = this.state
-        let submitText = this.state.form.ord_id === undefined ? this.state.form.isBuy ? "Buy" : "Sell" : "Update";
+        let { redirect, form, isCexDisplay, selectedAst, availableAssets, selectedAstData, selectedPlt, platforms } = this.state
+        let submitText = form.ord_id === undefined ? form.isBuy ? "Buy" : "Sell" : "Update";
         return (
         <>
             <Form>
@@ -154,12 +150,12 @@ class OrderForm extends Component {
                     <Col md="6">
                         <FormGroup>
                             <Switch 
-                                checked={this.state.form.isBuy} 
+                                checked={form.isBuy} 
                                 onChange={this.handleChangeSwitch}
                                 offColor="#FF0000"/>
                                 <div 
-                                    className={this.state.form.isBuy ? "greentext switch-label" : "redtext switch-label"}>
-                                    {this.state.form.isBuy ? "Buy" : "Sell"}
+                                    className={form.isBuy ? "greentext switch-label" : "redtext switch-label"}>
+                                    {form.isBuy ? "Buy" : "Sell"}
                                 </div>
                         </FormGroup>
                     </Col>
@@ -180,15 +176,15 @@ class OrderForm extends Component {
                     {selectedAstData.ast_type !== "fix" && isCexDisplay ?
                         <Col md="2">
                             <div>
-                                <label>{this.state.selectedAstData.ast_type !== "crypto" ? "Ticker" : "Coin"}</label>
-                                <p>{this.state.selectedAstData.code}</p>
+                                <label>{selectedAstData.ast_type !== "crypto" ? "Ticker" : "Coin"}</label>
+                                <p>{selectedAstData.code}</p>
                             </div>
                         </Col> :
                         isCexDisplay ?
                             <Col md="2">
                                 <div>
                                     <label>Fixed Value</label>
-                                    <p>{this.state.selectedAstData.fix_vl}</p>
+                                    <p>{selectedAstData.fix_vl}</p>
                                 </div>
                             </Col> : ""
                     }
@@ -213,12 +209,12 @@ class OrderForm extends Component {
                 </Row>
                 <Row>
                     <Col md="4">
-                        <FormGroup key={this.state.form.execution_date}>
+                        <FormGroup key={form.execution_date}>
                             <TextField
                                 id="date"
                                 label="Execution Date"
                                 type="date"
-                                defaultValue={this.state.form.execution_date}
+                                defaultValue={form.execution_date}
                                 onChange={(evt) => this.handleChange("execution_date", evt)}
                                 InputLabelProps={{
                                     shrink: true
@@ -236,7 +232,7 @@ class OrderForm extends Component {
                                     placeholder="Quantity" 
                                     type="text" 
                                     onChange={(evt) => this.handleChange("quantity", evt)}
-                                    value={this.state.form.quantity}
+                                    value={form.quantity}
                                 />
                             </FormGroup>
                         </Col> : ""
@@ -248,7 +244,7 @@ class OrderForm extends Component {
                                 placeholder="Price" 
                                 type="text" 
                                 onChange={(evt) => this.handleChange("price", evt)}
-                                value={this.state.form.price}
+                                value={form.price}
                             />
                         </FormGroup>
                     </Col>
@@ -259,7 +255,7 @@ class OrderForm extends Component {
                                 placeholder="Fees" 
                                 type="text" 
                                 onChange={(evt) => this.handleChange("fees", evt)}
-                                value={this.state.form.fees}
+                                value={form.fees}
                             />
                         </FormGroup>
                     </Col>

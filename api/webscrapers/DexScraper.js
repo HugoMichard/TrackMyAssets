@@ -9,7 +9,6 @@ exports.getMoneyInDexWallet = function(dex_reference_name, wallet_address) {
                 'passcode': passcode
             }
         }).then((data) => {
-            console.log(data.data.positions)
             const pools = data.data.farms != undefined && data.data.farms.length > 0 ? data.data.farms 
                             : data.data.positions != undefined && data.data.positions.length > 0 ? data.data.positions
                             : data.data.projects;
