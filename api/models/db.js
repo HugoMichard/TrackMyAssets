@@ -1,12 +1,8 @@
 var mysql = require('mysql')
+const config = require("../config/database.config.js");
 
 // local mysql db connection
-var connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'root',
-  database: 'TrackMyAssets'
-})
+var connection = mysql.createConnection(config.db_config)
 
 connection.connect(function (err) {
   if (err) throw err
