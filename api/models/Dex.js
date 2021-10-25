@@ -35,7 +35,7 @@ Dex.searchPlatformDexs = function (params, result) {
 
 Dex.searchWallets = function (params, result) {
     sql.query(
-      `SELECT a.name, a.fix_vl, o.quantity, p.plt_id 
+      `SELECT a.name, a.fix_vl, a.rewards, o.quantity, p.plt_id 
         FROM platforms p
         INNER JOIN orders o ON o.plt_id = p.plt_id
         INNER JOIN assets a ON a.ast_id = o.ast_id 

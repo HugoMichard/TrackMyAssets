@@ -1,18 +1,15 @@
 import React, { Component } from "react";
 import APIService from "routers/apiservice";
-import { Link } from "react-router-dom";
 
 // reactstrap components
 import {
   Card,
   CardHeader,
   CardBody,
-  CardFooter,
   CardTitle,
   Table,
   Row,
   Col,
-  Button
 } from "reactstrap";
 
 class IndexDexs extends Component {
@@ -27,8 +24,6 @@ class IndexDexs extends Component {
         APIService.searchPlatformDexs().then(res => { 
             const dexs = res.data.dexs
             APIService.searchWallets().then(res => {
-                console.log(dexs)
-                console.log(res.data.wallets)
                 var displayDexs = []
                 dexs.forEach(d => {
                     displayDexs.push({
@@ -36,7 +31,6 @@ class IndexDexs extends Component {
                         wallets: res.data.wallets.filter(w => w.plt_id === d.plt_id)
                     })
                 })
-                console.log(displayDexs)
                 this.setState({ displayDexs: displayDexs }); 
             });
         });
@@ -44,11 +38,12 @@ class IndexDexs extends Component {
     renderTableData(wallets) {
         if(wallets) {
             return wallets.map((wlt, index) => {
-                const { name, fix_vl } = wlt
+                const { name, fix_vl, quantity, rewards } = wlt
                 return (
                     <tr key={index}>
                         <td>{name}</td>
-                        <td>{fix_vl}</td>
+                        <td>{Math.round((fix_vl - rewards) * quantity * 10) / 10}</td>
+                        <td>{Math.round(rewards * quantity * 10) / 10}</td>
                     </tr>
                 )
             })
@@ -56,23 +51,39 @@ class IndexDexs extends Component {
             return (<tr></tr>)
         }
     }
+    displayIncludingRewards(rewards) {
+        if(rewards > 0) {
+            return (
+            <span>including <strong>{rewards}</strong> in rewards</span>
+            )
+        } else {
+            return (<span></span>)
+        }
+    }
     renderWalletCards() {
         if(this.state.displayDexs) {
             return this.state.displayDexs.map((dex, index) => {
                 if(dex.detail) {
+                    const total = Math.round(dex.wallets.map(w => (w.fix_vl * w.quantity)).reduce((p,n) => p + n) * 10) / 10;
+                    const totalRewards = Math.round(dex.wallets.map(w => (w.rewards * w.quantity)).reduce((p,n) => p + n) * 10) / 10;
                     return (
                         <Row key={index}>
                             <Col md="12">
                                 <Card>
                                 <CardHeader>
                                     <CardTitle tag="h4" className="no-margin-bottom" style={{color: dex.detail.color}}>{dex.detail.name}</CardTitle>
+                                    <CardTitle tag="h7">
+                                        Total : <strong>{total}</strong> {this.displayIncludingRewards(totalRewards)}
+                                    </CardTitle> <br/>    
                                 </CardHeader>
                                 <CardBody>
+
                                     <Table responsive>
                                     <thead className="text-primary">
                                         <tr>
                                         <th>Name</th>
                                         <th>Value</th>
+                                        <th>Rewards</th>
                                         </tr>
                                     </thead>
                                     <tbody>
