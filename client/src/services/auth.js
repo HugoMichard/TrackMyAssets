@@ -5,12 +5,12 @@ class AuthService {
   login(data) {
       return APIService.login(data)
         .then((response) => {
-            if (response.accessToken) {
-                localStorage.setItem("user", JSON.stringify(response.accessToken));
+            if (response.data.accessToken) {
+                localStorage.setItem("user", JSON.stringify(response.data.accessToken));
             }
             return response;
         }).catch((error) => {
-            return error;
+            return error.response;
         });
   }
 

@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import AuthService from "services/auth";
-
+import { Redirect } from "react-router";
 
 // reactstrap components
 import {
@@ -36,10 +36,15 @@ export default class Login extends Component {
   }
 
   handleSubmit(e){
-    AuthService.login(this.state.form).then(result => {
-      if(result.authentification === "Success") { window.location = "/dashboard" }
-      else { window.location = "/login" }
-     });
+    e.preventDefault();
+    AuthService.login(this.state.form).then(res => {
+      if(res.status === 200) { 
+        this.setState({ redirectTo: "/dashboard" })
+      }
+      else { 
+        this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
+      }
+    });
   }
 
   render() {
@@ -85,6 +90,7 @@ export default class Login extends Component {
                         <Button
                           className="btn-round"
                           color="primary"
+                          type="submit"
                           onClick={this.handleSubmit}
                         >
                           Login
@@ -96,6 +102,7 @@ export default class Login extends Component {
               </Card>
             </Col>
           </Row>
+          {this.state.redirectTo ? <Redirect to={this.state.redirectTo}/> : ""}
         </div>
       </>
     );

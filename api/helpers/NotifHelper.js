@@ -5,6 +5,9 @@ exports.getNotif = function (label, values) {
 
 const notifMessage = function (values) {
     return {
+        failLogin: {text :`No user found with this email/password`, color: "danger"},
+        failRegistration: {text :`Error during user registration`, color: "danger"},
+        successRegistration: {text :`Registration successful. You can now login`, color: "success"},
         createOrderSuccess: {text :`Order created successfully`, color: "success"},
         updateOrderSuccess: {text :`Order updated successfully`, color: "success"},
         createWireSuccess: {text :`Wire created successfully`, color: "success"},

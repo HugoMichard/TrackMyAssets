@@ -2,6 +2,7 @@ import React from "react";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
 import { useLocation } from "react-router-dom";
+import NotificationAlert from "react-notification-alert";
 
 import DisconnectedNavbar from "components/navbars/DisconnectedNavbar.js";
 
@@ -36,11 +37,33 @@ function Connection(props) {
       mainPanel.current.scrollTop = 0;
       document.scrollingElement.scrollTop = 0;
     }, [location]);
+
+    const notify = React.createRef();
+    const displayNotification = (notify, message, severity) => {
+      const icon = severity === "success" ? "nc-check-2" : "nc-bell-55"
+      const options = {
+        place: "tc",
+        message: (
+          <div>
+            <div>
+              {message}
+            </div>
+          </div>
+        ),
+        type: severity,
+        icon: "nc-icon " + icon,
+        autoDismiss: 3,
+      };
+      notify.current.notificationAlert(options);
+    }
     return (
       <div className="wrapper">
         <div className="main-panel" id="full_width_main_panel" ref={mainPanel}>
           <DisconnectedNavbar {...props} />
-          <ViewComponent/>
+          <NotificationAlert ref={notify} zIndex={9999} />
+          <ViewComponent
+            notify={notify}
+            displayNotification={displayNotification}/>
         </div>
       </div>
     );

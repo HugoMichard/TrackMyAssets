@@ -28,12 +28,12 @@ class APIService {
   // auth methods
   register (data) {
     const url = `${API_URL}/auth/register`
-    return axios.post(url, data).then(res => { return res.data })
+    return axios.post(url, data).then(res => { return res })
   }
 
   login (data) {
     const url = `${API_URL}/auth/login`
-    return axios.post(url, data).then(res => { return res.data })
+    return axios.post(url, data).then(res => { return res })
   }
 
   // user methods

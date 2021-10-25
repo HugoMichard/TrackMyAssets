@@ -6,6 +6,7 @@ import {
   Card,
   CardHeader,
   CardBody,
+  CardFooter,
   CardTitle,
   Table,
   Row,
@@ -16,7 +17,6 @@ class IndexDexs extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            wallets: [],
             dexs: []
         }
     }
@@ -107,6 +107,56 @@ class IndexDexs extends Component {
         return (
         <>
             <div className="content">
+                <Row>
+                    <Col lg="3" md="6" sm="6">
+                        <Card className="card-stats">
+                            <CardBody>
+                            <Row>
+                                <Col md="7" xs="7">
+                                <div className="text-center numbers">
+                                    <CardTitle tag="p">
+                                        {Math.round(Math.abs(
+                                            this.state.displayDexs ? this.state.displayDexs.map(d => d.wallets.map(w => (w.fix_vl + w.rewards) * w.quantity).reduce((p , n) => p + n)).reduce((p , n) => p + n) : 0
+                                        ) * 100) / 100} €
+                                    </CardTitle>
+                                    <p />
+                                </div>
+                                </Col>
+                            </Row>
+                            </CardBody>
+                            <CardFooter>
+                            <hr />
+                            <div className="stats">
+                                <i className="nc-icon nc-briefcase-24" /> Total In Dex Wallets
+                            </div>
+                            </CardFooter>
+                        </Card>
+                    </Col>
+                    <Col lg="3" md="6" sm="6">
+                        <Card className="card-stats">
+                            <CardBody>
+                            <Row>
+                                <Col md="7" xs="7">
+                                <div className="text-center numbers">
+                                    <CardTitle tag="p">
+                                        {Math.round(Math.abs(
+                                            this.state.displayDexs ? this.state.displayDexs.map(d => d.wallets.map(w => w.rewards * w.quantity).reduce((p , n) => p + n)).reduce((p , n) => p + n) : 0
+                                        ) * 100) / 100} €
+                                    </CardTitle>
+                                    <p />
+                                </div>
+                                </Col>
+                            </Row>
+                            </CardBody>
+                            <CardFooter>
+                            <hr />
+                            <div className="stats">
+                                <i className="nc-icon nc-air-baloon" /> Total Rewards In Dex Wallets
+                            </div>
+                            </CardFooter>
+                        </Card>
+                    </Col>
+                </Row>
                 {this.renderWalletCards()}
             </div>
         </>

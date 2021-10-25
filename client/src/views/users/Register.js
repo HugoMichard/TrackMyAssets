@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import APIService from 'routers/apiservice'
+import { Redirect } from "react-router";
 
 // reactstrap components
 import {
@@ -38,9 +39,14 @@ class Register extends Component {
   }
 
   handleSubmit(e){
-    APIService.register(this.state.form).then(result => { 
-      if(result === "Success") { window.location = "/login" }
-      else { window.location = "/register" }
+    APIService.register(this.state.form).then(res => { 
+      if(res.status === 200) { 
+        this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
+        this.setState({redirectTo: "/login"})
+      }
+      else { 
+        this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color); 
+      }
      });
   }
 
@@ -130,6 +136,7 @@ class Register extends Component {
               </Card>
             </Col>
           </Row>
+          {this.state.redirectTo ? <Redirect to={this.state.redirectTo}/> : ""}
         </div>
       </>
     );
