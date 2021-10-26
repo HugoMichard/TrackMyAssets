@@ -112,4 +112,20 @@ User.checkUserHasAsset = function (params, result) {
   )
 }
 
+User.checkUserHasOrder = function (params, result) {
+  sql.query(
+    `SELECT * FROM orders WHERE usr_id = ${params.usr_id} AND ord_id = ${params.ord_id}`, function(err, res) {
+      result(null, res);
+    }
+  )
+}
+
+User.checkUserHasWire = function (params, result) {
+  sql.query(
+    `SELECT * FROM wires WHERE usr_id = ${params.usr_id} AND wir_id = ${params.wir_id}`, function(err, res) {
+      result(null, res);
+    }
+  )
+}
+
 module.exports = User

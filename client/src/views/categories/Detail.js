@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import APIService from "routers/apiservice";
 import CategoryForm from "components/forms/CategoryForm";
+import PageRejection from "services/PageRejection"
 
 // reactstrap components
 import {
@@ -20,7 +21,9 @@ class DetailCategory extends Component {
             category: {} }
     }
     componentDidMount() {
-        APIService.getCategory(this.state.cat_id).then(res => { this.setState({category: res.data.category });});
+        APIService.getCategory(this.state.cat_id)
+        .then(res => this.setState({category: res.data.category }))
+        .catch(err => PageRejection.reject(this.props, err.response.data.notif));
     }
     render() {
         return (

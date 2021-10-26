@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import APIService from "routers/apiservice";
 import PlatformForm from "components/forms/PlatformForm";
+import PageRejection from "services/PageRejection"
 
 // reactstrap components
 import {
@@ -20,7 +21,9 @@ class DetailPlatform extends Component {
             platform: {} }
     }
     componentDidMount() {
-        APIService.getPlatform(this.state.plt_id).then(res => { this.setState({platform: res.data.platform });});
+        APIService.getPlatform(this.state.plt_id)
+        .then(res => this.setState({ platform: res.data.platform }))
+        .catch(err => PageRejection.reject(this.props, err.response.data.notif));
     }
     render() {
         return (

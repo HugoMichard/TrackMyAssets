@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import APIService from "routers/apiservice";
 import OrderForm from "components/forms/OrderForm";
+import PageRejection from "services/PageRejection"
 
 // reactstrap components
 import {
@@ -21,7 +22,9 @@ class DetailOrder extends Component {
         }
     }
     componentDidMount() {
-        APIService.getOrder(this.state.ord_id).then(res => { this.setState({order: res.data.order });});
+        APIService.getOrder(this.state.ord_id)
+        .then(res => { this.setState({order: res.data.order}) })
+        .catch(err => PageRejection.reject(this.props, err.response.data.notif));
     }
     render() {
         return (

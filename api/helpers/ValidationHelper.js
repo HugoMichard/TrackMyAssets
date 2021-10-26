@@ -114,6 +114,16 @@ exports.checkUserAsset = function(res, usr_id, str) {
     return makePromiseToCheckIfDataIsInDB(res, User.checkUserHasAsset, {ast_id: str, usr_id: usr_id}, "You do not have this asset");
 }
 
+exports.checkUserOrder = function(res, usr_id, str) {
+    if(checkPositiveInt(res, "Order", str)) {return true;}
+    return makePromiseToCheckIfDataIsInDB(res, User.checkUserHasOrder, {ord_id: str, usr_id: usr_id}, "You do not have this order");
+}
+
+exports.checkUserWire = function(res, usr_id, str) {
+    if(checkPositiveInt(res, "Wire", str)) {return true;}
+    return makePromiseToCheckIfDataIsInDB(res, User.checkUserHasWire, {wir_id: str, usr_id: usr_id}, "You do not have this wire");
+}
+
 exports.checkDexAvailable = function(res, str) {
     if(checkPositiveInt(res, "Dex", str)) {return true;}
     return makePromiseToCheckIfDataIsInDB(res, Dex.checkDexAvailable, str, "This dex is not available");

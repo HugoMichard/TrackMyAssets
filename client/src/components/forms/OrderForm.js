@@ -113,7 +113,7 @@ class OrderForm extends Component {
     handlePlatformChange(plt_id) {
         const { platforms, form, assets } = this.state;
         const selectedPlatform = platforms.find(p => p.value === plt_id);
-        if(selectedPlatform.dex_name) {
+        if(selectedPlatform && selectedPlatform.dex_name) {
             form.quantity = 0.86;
             const availableAssets = assets.filter(a => a.plt_id === plt_id)
             this.setState({isCexDisplay: false, form: form, availableAssets: availableAssets});
@@ -128,17 +128,12 @@ class OrderForm extends Component {
     }
     
     handleSubmit(e){
-        if(this.state.form.ord_id) {
-            APIService.updateOrder(this.state.form).then(res => {
-                this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
-                this.setState({redirect: res.status === 200});
-            });
-        } else {
-            APIService.createOrder(this.state.form).then(res => {
-                this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
-                this.setState({redirect: res.status === 200});
-            });
-        }
+        const updateOrCreateOrder = this.state.form.ord_id !== undefined ? APIService.updateOrder.bind(APIService) : APIService.createOrder.bind(APIService)
+
+        updateOrCreateOrder(this.state.form).then(res => {
+            this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
+            this.setState({redirect: res.status === 200});
+        }).catch(err => this.props.displayNotification(this.props.notify, err.response.data.notif.text, err.response.data.notif.color));
     }
     render() {
         let { redirect, form, isCexDisplay, selectedAst, availableAssets, selectedAstData, selectedPlt, platforms } = this.state

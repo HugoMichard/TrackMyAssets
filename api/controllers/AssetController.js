@@ -87,13 +87,13 @@ exports.delete = function (req, res) {
   }  
   Order.deleteOrdersOfAsset(params, function (err, orders) {
       if (err) {
-          res.status(500).send({ message: err.message});
+          res.status(500).send({ message: err.message, notif: notifHelper.getNotif("deleteOrdersLinkToAssetFail")});
       } else {
         Asset.delete(params, function (err, asset) {
           if (err) {
-              res.status(500).send({ message: err.message});
+              res.status(500).send({ message: err.message, notif: notifHelper.getNotif("deleteAssetFail")});
           } else {
-              res.status(200).send({asset: asset});
+              res.status(200).send({asset: asset, notif: notifHelper.getNotif("deleteAssetSuccess")});
           }
       })
       }

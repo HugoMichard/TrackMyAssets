@@ -60,9 +60,9 @@ exports.delete = function (req, res) {
   }  
   Order.delete(params, function (err, order) {
       if (err) {
-          res.status(500).send({ message: err.message});
+          res.status(500).send({ message: err.message, notif: notifHelper.getNotif("deleteOrderFail")});
       } else {
-          res.status(200).send({order: order});
+          res.status(200).send({order: order, notif: notifHelper.getNotif("deleteOrderSuccess")});
       }
   })
 }

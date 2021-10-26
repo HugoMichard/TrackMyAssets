@@ -14,8 +14,5 @@ exports.validateAsset = async function(req, res, next) {
     if(req.body.ast_type === "ticker") {
         if(checkMinLength(res, "Ticker", req.body.coin, 3)) {return}
     }
-    if(req.params.ast_id) {
-        if(await checkUserAsset(res, req.usr_id, req.body.ast_id)) {return}
-    }
     next();
 }

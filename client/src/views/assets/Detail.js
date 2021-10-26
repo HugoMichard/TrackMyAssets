@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import APIService from "routers/apiservice";
 import AssetForm from "components/forms/AssetForm";
 import OrdersOfAssetTable from "components/tables/OrdersOfAsset";
+import PageRejection from "services/PageRejection"
 
 // reactstrap components
 import {
@@ -30,7 +31,10 @@ class DetailAsset extends Component {
         }
     }
     componentDidMount() {
-        APIService.getAsset(this.state.ast_id).then(res => { this.setState({asset: res.data.asset }); });
+        APIService.getAsset(this.state.ast_id)
+        .then(res => this.setState({asset: res.data.asset }))
+        .catch(err => PageRejection.reject(this.props, err.response.data.notif));
+    
         APIService.getBuyingQuantityOfAssetByDay(this.state.ast_id).then(res => { this.setState({orderDates: res.data.orders}); })
         this.updatePortfolioChartDataWithRange(this.state.selectedPortfolioChartRange);
     }

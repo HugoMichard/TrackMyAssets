@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import APIService from "routers/apiservice";
 import WireForm from "components/forms/WireForm";
+import PageRejection from "services/PageRejection"
 
 // reactstrap components
 import {
@@ -21,7 +22,9 @@ class DetailWire extends Component {
         }
     }
     componentDidMount() {
-        APIService.getWire(this.state.wir_id).then(res => { this.setState({ wire: res.data.wire }); });
+        APIService.getWire(this.state.wir_id)
+        .then(res => this.setState({ wire: res.data.wire }))
+        .catch(err => PageRejection.reject(this.props, err.response.data.notif));
     }
     render() {
         return (

@@ -62,7 +62,13 @@ class IndexOrders extends Component {
                     <td>
                         <i 
                             className="nc-icon nc-simple-remove" 
-                            onClick={(e) => { e.stopPropagation(); APIService.deleteOrder(ord_id).then(() => this.searchForOrders()); }} />
+                            onClick={(e) => { 
+                                e.stopPropagation(); 
+                                APIService.deleteOrder(ord_id).then(res => {
+                                    this.searchForOrders();
+                                    this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
+                                }).catch(err => this.props.displayNotification(this.props.notify, err.response.data.notif.text, err.response.data.notif.color));
+                            }} />
                     </td>
                 </tr>
             )
