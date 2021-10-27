@@ -25,7 +25,8 @@ Platform.search = function (params, result) {
     `SELECT p.plt_id, p.usr_id, p.name, p.color, d.name as dex_name, p.wallet_address
       FROM platforms p 
       LEFT JOIN dexs d ON d.dex_id = p.dex_id 
-      WHERE p.name LIKE ? AND usr_id = ?`, [
+      WHERE p.name LIKE ? AND usr_id = ?
+      ORDER BY p.dex_id, p.name`, [
       params.name,
       params.usr_id
     ], (err, res) => {

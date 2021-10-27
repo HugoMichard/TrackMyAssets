@@ -28,7 +28,9 @@ Asset.search = function (params, result) {
     `SELECT a.*, c.color as cat_color, c.name as cat_name 
       FROM assets a
       INNER JOIN categories c ON c.cat_id = a.cat_id
-      WHERE a.name LIKE ? AND a.usr_id = ?`, [
+      WHERE (a.name LIKE ? OR (a.code LIKE ? AND a.plt_id IS NULL)) AND a.usr_id = ?
+      ORDER BY ast_id DESC`, [
+      params.name,
       params.name,
       params.usr_id
     ], (err, res) => {

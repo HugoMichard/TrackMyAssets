@@ -44,7 +44,7 @@ class CategoryForm extends Component {
         this.setState({ form: form });
       };
     
-      handleSubmit(e){
+    handleSubmit(e){
         const updateOrCreateCategory = this.state.form.cat_id !== undefined ? APIService.updateCategory.bind(APIService) : APIService.createCategory.bind(APIService)
 
         updateOrCreateCategory(this.state.form).then(res => {

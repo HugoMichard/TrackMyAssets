@@ -37,7 +37,7 @@ class OrdersOfAssetTable extends Component {
                     <td className={quantity < 0 ? "redtext" : "greentext"}>{Math.abs(quantity)}</td>
                     <td>{price}</td>
                     <td>{fees}</td>
-                    <td className={quantity < 0 ? "redtext" : "greentext"}>{Math.abs(quantity * price + fees)}</td>
+                    <td className={quantity < 0 ? "redtext" : "greentext"}>{Math.round(Math.abs(quantity * price + fees) * 100) / 100}</td>
                 </tr>
             )
         })

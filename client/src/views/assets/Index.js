@@ -14,6 +14,8 @@ import {
   Button
 } from "reactstrap";
 
+import DebounceSearch from "components/custom/search"
+
 class IndexAssets extends Component {
     constructor(props) {
         super(props);
@@ -22,17 +24,18 @@ class IndexAssets extends Component {
             crypto: "Cryptocurrency",
             fix: "Fixed Price Asset"
         }
-        const searchForm = {
-            name: ""
-        }
         this.state = { 
             assets: [],
-            searchForm: searchForm,
+            searchName: "",
             typeValueToLabel: typeValueToLabel
         }
+        this.searchAssets = this.searchAssets.bind(this)
     }
     componentDidMount() {
-        APIService.searchAssets(this.state.searchForm).then(res => { this.setState({ assets: res.data.assets });});
+        this.searchAssets(this.state.searchName);
+    }
+    searchAssets(searchName) {
+        APIService.searchAssets({name: searchName}).then(res => { this.setState({ assets: res.data.assets });});
     }
     renderTableData() {
         return this.state.assets.map((ast, index) => {
@@ -72,6 +75,7 @@ class IndexAssets extends Component {
                                 Create
                         </Button>
                     </Link>
+                    <DebounceSearch searchFunction={this.searchAssets.bind(this)}/>
                     <Table responsive>
                         <thead className="text-primary">
                         <tr>
