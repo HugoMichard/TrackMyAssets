@@ -14,19 +14,21 @@ import {
   Button
 } from "reactstrap";
 
+import DebounceSearch from "components/custom/search"
+
 class IndexPlatforms extends Component {
     constructor(props) {
         super(props);
-        const searchForm = {
-            name: ""
-        }
         this.state = { 
-            platforms: [],
-            searchForm: searchForm
+            platforms: []
         }
+        this.searchPlatforms = this.searchPlatforms.bind(this)
     }
     componentDidMount() {
-        APIService.searchPlatforms(this.state.searchForm).then(res => { this.setState({platforms: res.data.platforms });});
+        this.searchPlatforms("");
+    }
+    searchPlatforms(searchName) {
+        APIService.searchPlatforms({name: searchName}).then(res => { this.setState({ platforms: res.data.platforms });});
     }
     renderTableData() {
         return this.state.platforms.map((plf, index) => {
@@ -63,6 +65,7 @@ class IndexPlatforms extends Component {
                                 Add
                         </Button>
                     </Link>
+                    <DebounceSearch searchFunction={this.searchPlatforms.bind(this)}/>
                     <Table>
                         <thead className="text-primary">
                         <tr>

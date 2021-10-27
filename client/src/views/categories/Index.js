@@ -14,19 +14,21 @@ import {
   Button
 } from "reactstrap";
 
+import DebounceSearch from "components/custom/search"
+
 class IndexCategories extends Component {
     constructor(props) {
         super(props);
-        const searchForm = {
-            name: ""
-        }
         this.state = { 
-            categories: [],
-            searchForm: searchForm
+            categories: []
         }
+        this.searchCategories = this.searchCategories.bind(this)
     }
     componentDidMount() {
-        APIService.searchCategories(this.state.searchForm).then(res => { this.setState({categories: res.data.categories });});
+        this.searchCategories("");
+    }
+    searchCategories(searchName) {
+        APIService.searchCategories({name: searchName}).then(res => { this.setState({ categories: res.data.categories });});
     }
     renderTableData() {
         return this.state.categories.map((cat, index) => {
@@ -62,6 +64,7 @@ class IndexCategories extends Component {
                                 Create
                         </Button>
                     </Link>
+                    <DebounceSearch searchFunction={this.searchCategories.bind(this)}/>
                     <Table>
                         <thead className="text-primary">
                         <tr>

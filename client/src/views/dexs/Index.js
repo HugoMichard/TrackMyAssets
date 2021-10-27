@@ -112,7 +112,7 @@ class IndexDexs extends Component {
                         <Card className="card-stats">
                             <CardBody>
                             <Row>
-                                <Col md="7" xs="7">
+                                <Col md="12" xs="12">
                                 <div className="text-center numbers">
                                     <CardTitle tag="p">
                                         {Math.round(Math.abs(
@@ -136,7 +136,7 @@ class IndexDexs extends Component {
                         <Card className="card-stats">
                             <CardBody>
                             <Row>
-                                <Col md="7" xs="7">
+                                <Col md="12" xs="12">
                                 <div className="text-center numbers">
                                     <CardTitle tag="p">
                                         {Math.round(Math.abs(

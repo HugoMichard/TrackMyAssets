@@ -33,9 +33,11 @@ Order.search = function (params, result) {
       INNER JOIN assets a ON a.ast_id = o.ast_id
       INNER JOIN categories c ON c.cat_id = a.cat_id
       INNER JOIN platforms p ON p.plt_id = o.plt_id
-      WHERE o.usr_id = ?
+      WHERE o.usr_id = ? AND (a.name LIKE ? OR (a.code LIKE ? AND a.plt_id IS NULL))
       ORDER BY o.execution_date DESC, a.name ASC`, [
-      params.usr_id
+      params.usr_id,
+      params.name,
+      params.name
     ], (err, res) => {
       if (err) {
         result(null, err)

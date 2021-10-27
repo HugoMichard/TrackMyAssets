@@ -26,13 +26,12 @@ class IndexAssets extends Component {
         }
         this.state = { 
             assets: [],
-            searchName: "",
             typeValueToLabel: typeValueToLabel
         }
         this.searchAssets = this.searchAssets.bind(this)
     }
     componentDidMount() {
-        this.searchAssets(this.state.searchName);
+        this.searchAssets("");
     }
     searchAssets(searchName) {
         APIService.searchAssets({name: searchName}).then(res => { this.setState({ assets: res.data.assets });});
