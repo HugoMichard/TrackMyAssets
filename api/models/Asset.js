@@ -29,7 +29,7 @@ Asset.search = function (params, result) {
       FROM assets a
       INNER JOIN categories c ON c.cat_id = a.cat_id
       WHERE (a.name LIKE ? OR (a.code LIKE ? AND a.plt_id IS NULL)) AND a.usr_id = ?
-      ORDER BY ast_id DESC`, [
+      ORDER BY a.name`, [
       params.name,
       params.name,
       params.usr_id
@@ -138,7 +138,8 @@ Asset.getAssetsOwned = function (usr_id, result) {
       ON current_ast_values.ast_id = owned_assets.ast_id
       INNER JOIN assets a ON a.ast_id = owned_assets.ast_id
       INNER JOIN categories c ON a.cat_id = c.cat_id 
-      WHERE owned_assets.quantity > 0`, [
+      WHERE owned_assets.quantity > 0
+      ORDER BY a.name`, [
       usr_id,
       usr_id
     ], (err, res) => {

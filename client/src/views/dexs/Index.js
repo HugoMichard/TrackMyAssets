@@ -62,7 +62,8 @@ class IndexDexs extends Component {
     }
     renderWalletCards() {
         if(this.state.displayDexs) {
-            return this.state.displayDexs.map((dex, index) => {
+            const orderedDexs = this.state.displayDexs.sort((a, b) => {return a.detail.name > b.detail.name ? 1 : -1});
+            return orderedDexs.map((dex, index) => {
                 if(dex.detail) {
                     const total = Math.round(dex.wallets.map(w => (w.fix_vl * w.quantity)).reduce((p,n) => p + n) * 10) / 10;
                     const totalRewards = Math.round(dex.wallets.map(w => (w.rewards * w.quantity)).reduce((p,n) => p + n) * 10) / 10;
@@ -77,7 +78,6 @@ class IndexDexs extends Component {
                                     </CardTitle> <br/>    
                                 </CardHeader>
                                 <CardBody>
-
                                     <Table responsive>
                                     <thead className="text-primary">
                                         <tr>
