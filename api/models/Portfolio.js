@@ -22,49 +22,47 @@ Portfolio.getPortfolioStartDate = function (params, result) {
 
 Portfolio.getPorfolioValueHistory = function (params, result) {
   sql.query(
-    `SELECT 
-      DATE_FORMAT(random_date, '%Y-%m-%d') as random_date, 
-      COALESCE(SUM(plus_value), 0) as plus_value, 
-      COALESCE(SUM(value), 0) as value
+    `WITH cumul_orders AS (
+      SELECT SUM(cast(o.quantity as decimal)) OVER(PARTITION BY a.code ORDER BY o.execution_date ASC) as quantity_sum, 
+      SUM(cast(o.quantity as decimal) * o.price + o.fees) OVER(PARTITION BY a.code ORDER BY o.execution_date ASC) as price_sum, 
+      o.execution_date, 
+      a.code,
+      a.ast_id
+      FROM orders o
+      INNER JOIN assets a ON o.ast_id = a.ast_id
+      WHERE o.usr_id = ?
+    ),
+    ast_values AS (
+      SELECT random_date, code,  first_value(vl) over (partition by code, value_partition order by random_date) as ast_vl
       FROM (
-        SELECT ord_values.random_date, ord_values.code,
-          ord_values.total_quantity * ast_values.ast_vl - ord_values.total_price as plus_value,
-          ord_values.total_quantity * ast_values.ast_vl as value
-        FROM ( 
-          SELECT random_date, code,  first_value(vl) over (partition by code, value_partition order by random_date) as ast_vl
-          FROM (
-            SELECT COALESCE(date_code_combis.fix_vl, h.vl) as vl, 
-              date_code_combis.code, 
-              random_date,
-              sum(case when vl is null then 0 else 1 end) over (partition by date_code_combis.code order by random_date) as value_partition
-            FROM histories h
-          RIGHT JOIN 
-            (SELECT DISTINCT a.code as code, d.random_date, a.fix_vl FROM dates d, assets a WHERE usr_id = ?) date_code_combis 
-          ON h.hst_date = date_code_combis.random_date AND h.code = date_code_combis.code
-          WHERE random_date BETWEEN ? - INTERVAL 5 DAY AND CURDATE() - INTERVAL 1 DAY) as vl_with_nulls
-        ) ast_values
-      INNER JOIN (
-        SELECT code, 
-          random_date, 
-          COALESCE(quantity_sum, 0) as total_quantity,
-          COALESCE(price_sum, 0) as total_price
-        FROM
-          (SELECT DISTINCT date_code_combis.code, date_code_combis.random_date, 
-            SUM(cast(o.quantity as decimal)) OVER(PARTITION BY date_code_combis.code ORDER BY date_code_combis.random_date ASC) as quantity_sum,
-            SUM(cast(o.quantity as decimal) * o.price + o.fees) OVER(PARTITION BY date_code_combis.code ORDER BY date_code_combis.random_date ASC) as price_sum
-          FROM (
-            SELECT DISTINCT a.ast_id, a.code, d.random_date, a.usr_id from assets a, dates d
-            WHERE a.ast_id IN (SELECT ast_id FROM orders WHERE usr_id = ?)) date_code_combis
-          LEFT JOIN orders o ON date_code_combis.random_date = o.execution_date AND date_code_combis.ast_id = o.ast_id AND o.usr_id = date_code_combis.usr_id) quantity_evolution
+        SELECT
+          COALESCE(date_code_combis.fix_vl, h.vl) as vl, 
+          date_code_combis.code, 
+          random_date,
+          sum(case when vl is null then 0 else 1 end) over (partition by date_code_combis.code order by random_date) as value_partition
+        FROM histories h
+        RIGHT JOIN 
+          (SELECT DISTINCT a.code as code, d.random_date, a.fix_vl FROM dates d, assets a WHERE usr_id = ?) date_code_combis 
+        ON h.hst_date = date_code_combis.random_date AND h.code = date_code_combis.code
         WHERE random_date BETWEEN ? - INTERVAL 5 DAY AND CURDATE() - INTERVAL 1 DAY
-      ) ord_values
-      ON ord_values.code = ast_values.code AND ord_values.random_date = ast_values.random_date
-    ) detailed_portfolio
-    WHERE random_date BETWEEN ? - INTERVAL 1 DAY AND CURDATE() - INTERVAL 1 DAY
-    GROUP BY random_date`,
+      ) as vl_with_nulls
+    )
+    SELECT 
+      DATE_FORMAT(daily_orders.random_date, '%Y-%m-%d') as random_date, 
+      SUM(quantity_sum * ast_vl - price_sum) as plus_value,
+      SUM(quantity_sum * ast_vl) as value
+    FROM (
+      SELECT MAX(execution_date) as last_date, code, random_date
+      FROM cumul_orders
+      INNER JOIN dates d ON execution_date <= random_date
+      GROUP BY random_date, code
+    ) as daily_orders
+    INNER JOIN cumul_orders ON last_date = execution_date AND daily_orders.code = cumul_orders.code
+    INNER JOIN ast_values vals ON vals.random_date = daily_orders.random_date AND daily_orders.code = vals.code
+    WHERE daily_orders.random_date BETWEEN ? - INTERVAL 1 DAY AND CURDATE() - INTERVAL 1 DAY
+    GROUP BY daily_orders.random_date;`,
     [
       params.usr_id,
-      params.start_date,
       params.usr_id,
       params.start_date,
       params.start_date
