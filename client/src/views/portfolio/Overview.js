@@ -18,8 +18,15 @@ import PortfolioAssetDistribution from "components/charts/PortfolioAssetDistribu
 class OverviewPortfolio extends Component {
     constructor(props) {
         super(props);
+        const typeValueToLabel = {
+            stock: "Stock",
+            crypto: "Crypto",
+            fix: "FPA",
+            dex: "DEX"
+        }
         this.state = { 
-            assetsOwned: []
+            assetsOwned: [],
+            typeValueToLabel: typeValueToLabel
         }
     }
     componentDidMount() {
@@ -32,8 +39,8 @@ class OverviewPortfolio extends Component {
           return (
             <tr key={index} onClick={() => window.location = "/assets/" + ast_id}>
               <td>{name}</td>
-              <td>{ast_type !== "fix" ? code : ""}</td>
-              <td>{ast_type}</td>
+              <td>{ast_type === "crypto" || ast_type === "stock" ? code : ""}</td>
+              <td>{this.state.typeValueToLabel[ast_type]}</td>
               <td style={{ color: cat_color }}>{cat_name}</td>
               <td>{quantity}</td>
               <td>{Math.round(price * 10) / 10}</td>
