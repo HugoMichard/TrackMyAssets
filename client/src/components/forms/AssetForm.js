@@ -204,7 +204,7 @@ class AssetForm extends Component {
                         </FormGroup>
                     </Col>
                 </Row>
-                {form.ast_type === 'fix' ?
+                {form.ast_type === 'fix' && !form.fix_vl ?
                 <Row>
                         <Col md="6">
                             <FormGroup>

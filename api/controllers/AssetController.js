@@ -1,5 +1,6 @@
 var Asset = require('../models/Asset')
 var Order = require('../models/Order')
+var History = require('../models/History')
 var history = require('../controllers/HistoryController')
 var notifHelper = require('../helpers/NotifHelper');
 var miscHelper = require('../helpers/MiscHelper');
@@ -94,8 +95,9 @@ exports.delete = function (req, res) {
               res.status(500).send({ message: err.message, notif: notifHelper.getNotif("deleteAssetFail")});
           } else {
               res.status(200).send({asset: asset, notif: notifHelper.getNotif("deleteAssetSuccess")});
+              History.deleteHistoriesWithNoAsset(function(err, res) {});
           }
-      })
+        })
       }
   })
 }

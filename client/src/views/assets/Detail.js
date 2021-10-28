@@ -93,7 +93,6 @@ class DetailAsset extends Component {
                     displayDeleteButton={false}
                     ast_id={this.state.ast_id}>
                 </OrdersOfAssetTable>
-                {this.state.asset.ast_type !== "fix" ? 
                     <Row>
                         <Col>
                         <Card>
@@ -111,8 +110,7 @@ class DetailAsset extends Component {
                             }
                         </Card>
                         </Col>
-                    </Row> : ""
-                }
+                    </Row>
             </div>
         </>
         );

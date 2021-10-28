@@ -150,5 +150,23 @@ History.updateDexAssetsHistoryOfUser = function (usr_id, result) {
     }
   )
 }
+;
+
+History.deleteHistoriesWithNoAsset = function (result) {
+  sql.query(
+    `DELETE FROM histories
+      WHERE hst_id IN 
+        (SELECT hst_id FROM
+          (SELECT hst_id FROM histories h LEFT JOIN assets a ON h.code = a.code WHERE ast_id IS NULL) AS c)`, 
+    [], 
+    function (err, res) {
+      if (err) {
+        result(null, err)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
 
 module.exports = History

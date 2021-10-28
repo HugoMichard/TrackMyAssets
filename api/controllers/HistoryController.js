@@ -107,7 +107,6 @@ function initializeFixAssetHistory(asset) {
 
 
 function updateFixAssetHistory(asset) {
-    History.modifyFixAssetVlHistory(asset, function(err, res) {});
     History.getRandomDatesFromDateUntilToday(asset.last_date, function(err, random_dates) {
         sql_histories = random_dates.map(item => (`('${asset.code}', '${item.random_date}', ${asset.fix_vl})`))
         History.addHistories(sql_histories, function (err, histories) {
