@@ -33,7 +33,7 @@ class OrderForm extends Component {
             cat_color: "",
             code: ""
         }
-        this.state = { redirect:false, isCexDisplay: true, form: form, selectedAst: null, selectedAstData: selectedAstData, selectedPlt: null }
+        this.state = { redirect:false, form: form, selectedAst: null, selectedAstData: selectedAstData, selectedPlt: null }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeSwitch = this.handleChangeSwitch.bind(this);
@@ -116,9 +116,9 @@ class OrderForm extends Component {
         if(selectedPlatform && selectedPlatform.dex_name) {
             form.quantity = 0.86;
             const availableAssets = assets.filter(a => a.plt_id === plt_id)
-            this.setState({isCexDisplay: false, form: form, availableAssets: availableAssets});
+            this.setState({form: form, availableAssets: availableAssets});
         } else {
-            this.setState({isCexDisplay: true, availableAssets: assets});
+            this.setState({availableAssets: assets});
         }
     }
     handleChangeSwitch(value) {
@@ -136,7 +136,7 @@ class OrderForm extends Component {
         }).catch(err => this.props.displayNotification(this.props.notify, err.response.data.notif.text, err.response.data.notif.color));
     }
     render() {
-        let { redirect, form, isCexDisplay, selectedAst, availableAssets, selectedAstData, selectedPlt, platforms } = this.state
+        let { redirect, form, selectedAst, availableAssets, selectedAstData, selectedPlt, platforms } = this.state
         let submitText = form.ord_id === undefined ? form.isBuy ? "Buy" : "Sell" : "Update";
         return (
         <>
@@ -168,14 +168,14 @@ class OrderForm extends Component {
                             <Select options={availableAssets} onChange={(evt) => this.handleChange("ast_id", evt)} value={selectedAst}></Select>
                         </FormGroup>
                     </Col>
-                    {selectedAstData.ast_type !== "fix" && isCexDisplay ?
+                    {selectedAstData.ast_type === "crypto" || selectedAstData.ast_type === "stock" ?
                         <Col md="2">
                             <div>
                                 <label>{selectedAstData.ast_type !== "crypto" ? "Ticker" : "Coin"}</label>
                                 <p>{selectedAstData.code}</p>
                             </div>
                         </Col> :
-                        isCexDisplay ?
+                        selectedAstData.ast_type === "fix" ?
                             <Col md="2">
                                 <div>
                                     <label>Fixed Value</label>
@@ -183,7 +183,7 @@ class OrderForm extends Component {
                                 </div>
                             </Col> : ""
                     }
-                    {isCexDisplay ?
+                    {selectedAstData.ast_type !== "dex" ?
                         <Col md="2">
                                 <label>Type</label>
                                 <p>{selectedAstData.ast_type ? 
@@ -193,7 +193,7 @@ class OrderForm extends Component {
                                     : ""}</p>
                         </Col> : ""
                     }
-                    {isCexDisplay ?
+                    {selectedAstData.ast_type !== "dex" ?
                         <Col md="2">
                                 <label>Category</label>
                                 <p style={{
@@ -219,7 +219,7 @@ class OrderForm extends Component {
                     </Col>
                 </Row>
                 <Row>
-                    {isCexDisplay ?
+                    {selectedAstData.ast_type !== "dex" ?
                         <Col md="4">
                             <FormGroup>
                                 <label>Quantity</label>
@@ -234,7 +234,7 @@ class OrderForm extends Component {
                     }
                     <Col md="4">
                         <FormGroup>
-                            <label>{isCexDisplay ? "Unit Price" : "Price"}</label>
+                            <label>{selectedAstData.ast_type !== "dex" ? "Unit Price" : "Price"}</label>
                             <Input 
                                 placeholder="Price" 
                                 type="text" 

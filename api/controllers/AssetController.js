@@ -7,7 +7,7 @@ var miscHelper = require('../helpers/MiscHelper');
 
 
 exports.create = function (req, res) {
-  if(req.body.ast_type === "fix") {
+  if(req.body.ast_type === "fix" || req.body.ast_type === "dex") {
     const random_code = miscHelper.generateRandomVarchar(30);
     req.body.coin = random_code
     req.body.ticker = random_code

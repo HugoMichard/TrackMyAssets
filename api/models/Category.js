@@ -119,7 +119,7 @@ Category.getPortfolioValueForeachType = function (usr_id, result) {
               SELECT COALESCE(date_code_combis.fix_vl, h.vl) as vl, 
                 date_code_combis.code, 
                 ast_id,
-                CASE WHEN plt_id IS NOT NULL THEN 'dex' ELSE ast_type END AS ast_type,
+                ast_type,
                 random_date,
                 sum(case when vl is null then 0 else 1 end) over (partition by date_code_combis.code order by random_date) as value_partition
               FROM histories h

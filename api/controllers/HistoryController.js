@@ -28,7 +28,7 @@ exports.getAssetHistory = function (req, res) {
 
 var initializeAssetHistory = exports.initializeAssetHistory = function (asset) {
     console.log("initializing asset history");
-    if(asset.ast_type === "fix") {
+    if(asset.ast_type === "fix" || asset.ast_type === "dex") {
         initializeFixAssetHistory(asset)
     } else {
         checkHistoryWithCodeExists(asset.code).then(lastHistory => {
@@ -66,7 +66,7 @@ exports.updateAssetHistory = function (asset) {
             from_date.setDate(from_date.getDate() + 1);
             from_date = from_date.toISOString().slice(0, 10).replace('T', ' ');
             asset.last_date = from_date
-            if(asset.ast_type === "fix") {
+            if(asset.ast_type === "fix" || asset.ast_type === "dex") {
                 updateFixAssetHistory(asset)
             } else {
                 getDataOfAsset = asset.ast_type === "stock" ? scraperHelper.getDataOfTicker : scraperHelper.getDataOfCoin;

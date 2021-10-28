@@ -68,7 +68,7 @@ History.getLastHistoryOfUserCexAssets = function (params, result) {
       RIGHT JOIN assets a ON a.code = h.code
       LEFT JOIN orders o ON o.ast_id = a.ast_id
       LEFT JOIN platforms p ON p.plt_id = o.plt_id 
-      WHERE a.usr_id = ? AND p.dex_id IS NULL
+      WHERE a.usr_id = ? AND a.ast_type != 'dex'
       GROUP BY a.ast_type, a.code`, [
         params.usr_id
       ], function (err, res) {

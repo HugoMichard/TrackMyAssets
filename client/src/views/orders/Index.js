@@ -22,7 +22,8 @@ class IndexOrders extends Component {
         const typeValueToLabel = {
             stock: "Stock Asset",
             crypto: "Cryptocurrency",
-            fix: "Fixed Price Asset"
+            fix: "Fixed Price Asset",
+            dex: "DEX"
         }
         this.state = { 
             orders: [],
@@ -44,7 +45,7 @@ class IndexOrders extends Component {
                     <td>{execution_date}</td>
                     <td className={quantity < 0 ? "redtext" : "greentext"}>{quantity < 0 ? "Sell" : "Buy"}</td>
                     <td>{ast_name}</td>
-                    <td>{ast_type !== "fix" ? ast_code : ""}</td>
+                    <td>{ast_type === "crypto" || ast_type === "stock" ? ast_code : ""}</td>
                     <td>{this.state.typeValueToLabel[ast_type]}</td>
                     <td style={{
                         color: cat_color

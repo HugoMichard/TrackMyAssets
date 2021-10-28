@@ -21,7 +21,7 @@ class PortfolioCategoryDistribution extends Component {
           stock: "Stock Asset",
           crypto: "Cryptocurrency",
           fix: "Fixed Price Asset",
-          dex: "Dex"
+          dex: "DEX"
       }
         this.state = {
             portfolioChartData: PortfolioTypeDistributionChartData.data,

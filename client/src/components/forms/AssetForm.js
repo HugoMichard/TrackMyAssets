@@ -26,7 +26,8 @@ class AssetForm extends Component {
         const typeOptions = [
             { value: 'stock', label: 'Stock Asset' },
             { value: 'crypto', label: 'Cryptocurrency' },
-            { value: 'fix', label: 'Fixed Price Asset' }
+            { value: 'fix', label: 'Fixed Price Asset' },
+            { value: 'dex', label: 'DEX LP Token' }
         ]
         this.state = { redirect: false, form: form, categories: {}, selectedType: null, selectedCat: null, typeOptions: typeOptions, selectedPlt: null, platforms: {} }
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -44,7 +45,10 @@ class AssetForm extends Component {
             plt_id: nextProps.plt_id,
             fix_vl: nextProps.fix_vl
         }
-        const selectedType = form.ast_type === "stock" ? typeOptions[0] : form.ast_type === "crypto" ? typeOptions[1] : typeOptions[2];
+        const selectedType = form.ast_type === "stock" ? typeOptions[0] 
+            : form.ast_type === "crypto" ? typeOptions[1] 
+            : form.ast_type === "fix" ? typeOptions[2]
+            : typeOptions[3];
         var selectedCat = {}
         for(var i in categories){
             if(categories[i].value === form.cat_id){
@@ -85,8 +89,6 @@ class AssetForm extends Component {
                 label,
                 ...rest
             }));
-            platforms.unshift({value: null, label: 'Not on a DEX platform'});
-
             this.setState({ platforms: platforms });
         });
     }
@@ -104,7 +106,7 @@ class AssetForm extends Component {
             form.fix_vl = 0;
         }
 
-        if(form.ast_type !== "fix") {
+        if(form.ast_type !== "dex") {
             selectedPlt = null;
             form.plt_id = null;
         }
@@ -147,8 +149,12 @@ class AssetForm extends Component {
                     </div>
                 );
             } else {
-                if(this.state.form.plt_id) {
-                    return (<div></div>)
+                if(this.state.form.ast_type === "dex") {
+                    return (
+                    <div>
+                        <label>Platform</label>
+                         <Select options={this.state.platforms} onChange={(evt) => this.handleChange("plt_id", evt)} value={this.state.selectedPlt}></Select>
+                    </div>)
                 } else {
                     return (
                         <div>                            
@@ -166,7 +172,7 @@ class AssetForm extends Component {
         }
     }
     render() {
-        let { typeOptions, selectedType, selectedCat, categories, form, platforms, selectedPlt } = this.state
+        let { typeOptions, selectedType, selectedCat, categories, form } = this.state
         let submitText = form.ast_id === undefined ? "Create" : "Update"; 
         return (
         <>
@@ -204,16 +210,6 @@ class AssetForm extends Component {
                         </FormGroup>
                     </Col>
                 </Row>
-                {form.ast_type === 'fix' && !form.fix_vl ?
-                <Row>
-                        <Col md="6">
-                            <FormGroup>
-                                <label>Platform</label>
-                                <Select options={platforms} onChange={(evt) => this.handleChange("plt_id", evt)} value={selectedPlt}></Select>
-                            </FormGroup>
-                        </Col>
-                    </Row> : ""
-                }
                 {this.props.noSubmitButton ? "" :
                     <Row>
                         <div className="update ml-auto mr-auto">

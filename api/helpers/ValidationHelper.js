@@ -94,7 +94,7 @@ exports.checkBoolean = function(res, bool) {
 }
 
 exports.checkAssetType = function(res, ast_type) {
-    if(ast_type !== "crypto" && ast_type !== "stock" && ast_type !== "fix") {
+    if(ast_type !== "crypto" && ast_type !== "stock" && ast_type !== "fix" && ast_type !== "dex") {
         return raiseValidationError(res, "Invalid asset type")
     }
 }
