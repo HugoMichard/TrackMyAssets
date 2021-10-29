@@ -37,11 +37,11 @@ class CategoriesPortfolio extends Component {
   renderTableData(astData) {
     if(astData) {
       return astData.map((ast, index) => {
-        const { ast_id, ast_value, ast_type, name, code, perf, perf100, price, quantity } = ast
+        const { ast_id, ast_value, ast_type, name, code, perf, perf100, price, quantity, duplicate_nbr } = ast
         return (
             <tr key={index} onClick={() => window.location = "/assets/" + ast_id}>
                 <td>{name}</td>
-                <td>{ast_type === "crypto" || ast_type === "stock" ? code : ""}</td>
+                <td>{ast_type === "stock" ? code : ast_type === "crypto" ? code.slice(0, -duplicate_nbr.toString().length) : ""}</td>
                 <td>{quantity}</td>
                 <td>{Math.round(price * 100) / 100}</td>
                 <td>{Math.round(ast_value * 100) / 100}</td>

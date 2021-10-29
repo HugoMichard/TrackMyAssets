@@ -12,17 +12,21 @@ exports.create = function (req, res) {
     req.body.coin = random_code
     req.body.ticker = random_code
   }
+  if(req.body.ast_type === "crypto") {
+    req.body.coin = req.body.coin + req.body.duplicate_nbr
+  }
   var newAsset = new Asset(req.body)
   newAsset.usr_id = req.usr_id;
   newAsset.code = req.body.coin || req.body.ticker;
-
+  
   Asset.create(newAsset, function (err, asset) {
     if (err) {
       res.status(500).send(err)
     }
     res.status(200).send({ast_id: asset.insertId, notif: notifHelper.getNotif("createAssetSuccess", [newAsset.name])});
     newAsset.ast_id = asset.insertId
-    if(!newAsset.plt_id) {
+    newAsset.cmc_official_id = req.body.cmc_official_id
+    if(newAsset.ast_type !== "dex") {
       history.initializeAssetHistory(newAsset);
     }
   })
@@ -64,7 +68,8 @@ exports.update = function (req, res) {
           res.status(500).send({ message: err.message});
       } else {
           res.status(200).send({asset: updateAsset, notif: notifHelper.getNotif("updateAssetSuccess", [updateAsset.name])});
-          if(!updateAsset.plt_id) {
+          if(updateAsset.ast_type !== "dex") {
+            updateAsset.cmc_official_id = req.body.cmc_official_id;
             history.updateAssetHistory(updateAsset);
           }
       }
@@ -100,4 +105,13 @@ exports.delete = function (req, res) {
         })
       }
   })
+}
+
+exports.getCoins = function(req, res) {
+  const params = {
+    name: req.query.name === undefined ? "%" : "%" + req.query.name + "%"
+  } 
+  Asset.getCMCCoins(params, function(err, coins) {
+    res.status(200).send({coins: coins});
+  });
 }

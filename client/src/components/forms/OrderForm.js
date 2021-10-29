@@ -73,7 +73,7 @@ class OrderForm extends Component {
     }
     componentDidMount() {
         APIService.searchAssets({}).then(res => { 
-            const assets = res.data.assets.map(({
+            var assets = res.data.assets.map(({
                 ast_id: value,
                 name: label,
                 ...rest
@@ -82,6 +82,11 @@ class OrderForm extends Component {
                 label,
                 ...rest
               }));
+            assets = assets.map(a => {
+                a.code = a.ast_type === "crypto" ? a.code.slice(0, -a.duplicate_nbr.toString().length) : a.code;
+                return a
+            })
+            console.log(assets);
             this.setState({ assets: assets, availableAssets: assets });
         });
 

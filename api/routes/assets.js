@@ -10,6 +10,7 @@ router.get("/getAssetsOwned", asset.getAssetsOwned);
 
 router.post("/", assetValidator.validateAsset, asset.create);
 router.get('/', asset.search);
+router.get('/coins', asset.getCoins);
 
 router.get("/:ast_id", userPropertyValidator.validateUserAsset, asset.getDetail);
 router.post("/:ast_id", [userPropertyValidator.validateUserAsset, assetValidator.validateAsset], asset.update);

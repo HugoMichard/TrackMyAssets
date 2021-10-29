@@ -8,6 +8,8 @@ var Asset = function (asset) {
   this.fix_vl = asset.fix_vl
   this.cat_id = asset.cat_id
   this.plt_id = asset.plt_id
+  this.cmc_id = asset.cmc_id
+  this.duplicate_nbr = asset.duplicate_nbr
   this.created_at = new Date()
 }
 
@@ -63,7 +65,7 @@ Asset.getDetail = function (params, result) {
 Asset.update = function (params, result) {
   sql.query(
     `UPDATE assets 
-      SET name = ?, code = ?, cat_id = ?, ast_type = ?, fix_vl = ?, plt_id = ?
+      SET name = ?, code = ?, cat_id = ?, ast_type = ?, fix_vl = ?, plt_id = ?, duplicate_nbr = ?, cmc_id = ?
       WHERE ast_id = ? AND usr_id = ?`, [
         params.name,
         params.code,
@@ -71,6 +73,8 @@ Asset.update = function (params, result) {
         params.ast_type,
         params.fix_vl,
         params.plt_id,
+        params.duplicate_nbr,
+        params.cmc_id,
         params.ast_id,
         params.usr_id
     ], (err, res) => {
@@ -106,6 +110,7 @@ Asset.getAssetsOwned = function (usr_id, result) {
         a.name, 
         a.code,
         a.ast_type,
+        a.duplicate_nbr,
         owned_assets.quantity, 
         owned_assets.price,
         (current_ast_values.ast_vl - owned_assets.price)  * owned_assets.quantity as perf,
@@ -148,6 +153,50 @@ Asset.getAssetsOwned = function (usr_id, result) {
       } else {
         result(null, res)
       }
+    }
+  )
+}
+
+Asset.getCMCCoinList = function(result) {
+  sql.query(
+    'SELECT * FROM cmc_coins', [], (err, res) => {
+      result(null, res)
+    }
+  )
+}
+
+Asset.addCMCCoins = function(newCoins, result) {
+  sql.query(
+    `INSERT INTO cmc_coins (cmc_official_id, name, symbol, slug, duplicate_nbr) values ${newCoins}`, function (err, res) {
+      if (err) {
+        result(null, err)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
+
+Asset.getCMCCoins = function(params, result) {
+  sql.query(
+    `SELECT * FROM cmc_coins WHERE name LIKE '${params.name}' OR symbol LIKE '${params.name}' ORDER BY cmc_id LIMIT 100`, function (err, res) {
+      if (err) {
+        result(null, err)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
+
+Asset.checkCoin = function (params, result) {
+  sql.query(
+    `SELECT * FROM cmc_coins 
+      WHERE cmc_id = ${params.cmc_id} 
+      AND cmc_official_id = ${params.cmc_official_id}
+      AND symbol = ${params.coin}
+      AND duplicate_nbr = ${params.duplicate_nbr}`, function(err, res) {
+      result(null, res);
     }
   )
 }

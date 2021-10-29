@@ -26,7 +26,7 @@ Order.search = function (params, result) {
   sql.query(
     `SELECT o.ord_id, o.usr_id, o.ast_id, o.price, o.quantity, o.fees, 
       DATE_FORMAT(o.execution_date, '%m/%d/%Y') as execution_date, 
-      a.name as ast_name, a.code as ast_code, a.ast_type as ast_type,
+      a.name as ast_name, a.code as ast_code, a.ast_type as ast_type, a.duplicate_nbr as ast_duplicate_nbr,
       c.color as cat_color, c.name as cat_name,
       p.color as plt_color, p.name as plt_name
       FROM orders o

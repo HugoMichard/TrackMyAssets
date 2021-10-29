@@ -38,11 +38,11 @@ var initializeAssetHistory = exports.initializeAssetHistory = function (asset) {
                 ytd = new Date(ytd).toISOString().slice(0, 10).replace('T', ' ');
     
                 getDataOfAsset = asset.ast_type === "stock" ? scraperHelper.getDataOfTicker : scraperHelper.getDataOfCoin 
-            
-                getDataOfAsset(asset.code, ytd).then(ytd_data => {
+                const identifier = asset.ast_type === "stock" ? asset.code : asset.cmc_official_id;
+                getDataOfAsset(identifier, ytd).then(ytd_data => {
                     if(ytd_data.length > 0) {
                         ytd_data.map(item => {
-                            item.date = new Date(item.date * 1000).toISOString().slice(0, 10).replace('T', ' ');
+                            item.date = new Date(item.date).toISOString().slice(0, 10).replace('T', ' ');
                             return item;
                         });
                         sql_histories = ytd_data.map(item => (`('${asset.code}', '${item.date}', ${item.close})`))
@@ -70,10 +70,11 @@ exports.updateAssetHistory = function (asset) {
                 updateFixAssetHistory(asset)
             } else {
                 getDataOfAsset = asset.ast_type === "stock" ? scraperHelper.getDataOfTicker : scraperHelper.getDataOfCoin;
-                getDataOfAsset(asset.code, asset.last_date).then(data => {
+                const identifier = asset.ast_type === "stock" ? asset.code : asset.cmc_official_id;
+                getDataOfAsset(identifier, asset.last_date).then(data => {
                     if(data.length > 0) {
                         data.map(item => {
-                            item.date = new Date(item.date * 1000).toISOString().slice(0, 10).replace('T', ' ');
+                            item.date = new Date(item.date).toISOString().slice(0, 10).replace('T', ' ');
                             return item;
                         });
                         sql_histories = data.map(item => (`('${asset.code}', '${item.date}', ${item.close})`))

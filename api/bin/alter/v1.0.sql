@@ -35,11 +35,24 @@ CREATE TABLE platforms
   FOREIGN KEY     (usr_id) REFERENCES users(usr_id)
 );
 
+CREATE TABLE cmc_coins
+(
+  cmc_id          INT unsigned NOT NULL AUTO_INCREMENT,
+  cmc_official_id INT unsigned NOT NULL,
+  name            VARCHAR(70),
+  symbol		      VARCHAR(70),
+  slug            VARCHAR(70),
+  duplicate_nbr   INT NOT NULL,
+  PRIMARY KEY     (cmc_id)                                      
+);
+
 CREATE TABLE assets
 (
   ast_id          INT unsigned NOT NULL AUTO_INCREMENT,
   usr_id          INT unsigned NOT NULL,
   cat_id          INT unsigned NOT NULL,
+  cmc_id          INT unsigned,
+  duplicate_nbr   INT,
   name            VARCHAR(150) NOT NULL,
   ast_type        VARCHAR(150) NOT NULL,
   code            VARCHAR(30),
@@ -47,7 +60,8 @@ CREATE TABLE assets
   created_at      DATE,
   PRIMARY KEY     (ast_id),
   FOREIGN KEY     (usr_id) REFERENCES users(usr_id),
-  FOREIGN KEY     (cat_id) REFERENCES categories(cat_id)                                            
+  FOREIGN KEY     (cat_id) REFERENCES categories(cat_id),
+  FOREIGN KEY     (cmc_id) REFERENCES cmc_coins(cmc_id)                                                                                        
 );
 
 CREATE TABLE orders

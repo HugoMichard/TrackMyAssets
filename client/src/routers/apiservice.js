@@ -274,6 +274,13 @@ class APIService {
       return axios.get(url, this.getUserHeader())
     }
 
+    // cmc coins methods
+    searchCoins(data) {
+      const url = `${API_URL}/assets/coins`
+      const search = this.formatSearch(data)
+      return axios.get(url + search, this.getUserHeader())
+    }
+
 }
 
 export default new APIService();

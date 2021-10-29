@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Dex = require("../models/Dex");
+const Asset = require("../models/Asset");
 
 
 function raiseValidationError(res, message) {
@@ -127,4 +128,17 @@ exports.checkUserWire = function(res, usr_id, str) {
 exports.checkDexAvailable = function(res, str) {
     if(checkPositiveInt(res, "Dex", str)) {return true;}
     return makePromiseToCheckIfDataIsInDB(res, Dex.checkDexAvailable, str, "This dex is not available");
+}
+
+exports.checkCoin = function(res, coin, cmc_id, duplicate_nbr, cmc_official_id) {
+    if(checkPositiveInt(res, "Coin", cmc_id)) {return true;}
+    if(checkPositiveInt(res, "Coin", duplicate_nbr)) {return true;}
+    if(checkPositiveInt(res, "Coin", cmc_official_id)) {return true;}
+    const params = {
+        coin: coin,
+        cmc_id: cmc_id,
+        duplicate_nbr: duplicate_nbr,
+        cmc_official_id: cmc_official_id
+    }
+    return makePromiseToCheckIfDataIsInDB(res, Asset.checkCoin, params, "Error in the selected coin");
 }

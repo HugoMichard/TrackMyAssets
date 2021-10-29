@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import APIService from "routers/apiservice";
 import AssetForm from "components/forms/AssetForm";
 import OrdersOfAssetTable from "components/tables/OrdersOfAsset";
+import { Redirect } from "react-router";
 
 // reactstrap components
 import {
@@ -20,7 +21,8 @@ class DeleteAsset extends Component {
         this.state = { 
             ast_id: this.props.match.params.ast_id,
             asset: {},
-            orders: []
+            orders: [],
+            redirect: false
         }
     this.handleDelete = this.handleDelete.bind(this);
     }
@@ -31,7 +33,8 @@ class DeleteAsset extends Component {
     handleDelete(){
         if(this.state.ast_id) {
             APIService.deleteAsset(this.state.ast_id).then(res => {
-                if(res.status === 200) { window.location = "/assets" }
+                this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
+                this.setState({redirect: res.status === 200});
             });
         }
     }
@@ -69,6 +72,9 @@ class DeleteAsset extends Component {
                                     ast_type={this.state.asset.ast_type}
                                     ast_id={this.state.asset.ast_id}
                                     cat_id={this.state.asset.cat_id}
+                                    cmc_id={this.state.asset.cmc_id}
+                                    plt_id={this.state.asset.plt_id}
+                                    duplicate_nbr={this.state.asset.duplicate_nbr}
                                     noSubmitButton={true}>
                                 </AssetForm>
                             </CardBody>
@@ -81,6 +87,7 @@ class DeleteAsset extends Component {
                     handleDelete={this.handleDelete}
                     ast_id={this.state.ast_id}>
                 </OrdersOfAssetTable>
+                {this.state.redirect ? <Redirect to="/assets"/> : ""}
             </div>
         </>
         );

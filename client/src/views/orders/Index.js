@@ -38,14 +38,15 @@ class IndexOrders extends Component {
         this.searchForOrders("")
     }
     renderTableData() {
+        console.log(this.state.orders);
         return this.state.orders.map((ord, index) => {
-            const { ord_id, ast_name, cat_name, cat_color, ast_code, ast_type, quantity, fees, price, execution_date, plt_color, plt_name } = ord
+            const { ord_id, ast_name, cat_name, cat_color, ast_code, ast_type, quantity, fees, price, execution_date, plt_color, plt_name, ast_duplicate_nbr } = ord
             return (
                 <tr key={index} onClick={() => window.location = "/orders/" + ord_id}>
                     <td>{execution_date}</td>
                     <td className={quantity < 0 ? "redtext" : "greentext"}>{quantity < 0 ? "Sell" : "Buy"}</td>
                     <td>{ast_name}</td>
-                    <td>{ast_type === "crypto" || ast_type === "stock" ? ast_code : ""}</td>
+                    <td>{ast_type === "stock" ? ast_code : ast_type === "crypto" ? ast_code.slice(0, -ast_duplicate_nbr.toString().length) : ""}</td>
                     <td>{this.state.typeValueToLabel[ast_type]}</td>
                     <td style={{
                         color: cat_color

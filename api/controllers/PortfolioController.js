@@ -3,6 +3,7 @@ var History = require('../models/History')
 var Dex = require('../models/Dex')
 var history = require('./HistoryController')
 var dateHelper = require('../helpers/DateHelper');
+var scraperHelper = require('../helpers/ScraperHelper');
 const User = require('../models/User');
 
 
@@ -19,6 +20,7 @@ function getPortfolioStartDate(usr_id) {
 exports.getPortfolioStartDate = getPortfolioStartDate;
 
 exports.refresh = async function(req, res) {
+  const updateCoinList = await scraperHelper.updateCoinList();
   
   const assets = await new Promise(function(resolve, reject) {
     History.getLastHistoryOfUserCexAssets({usr_id: req.usr_id}, function (err, assets) {
@@ -39,6 +41,7 @@ exports.refresh = async function(req, res) {
   history.updateDexAssetsHistory(dexAssets, req.usr_id);
   res.status(200).send({state: "Success"});
   User.updateRefresh(req.usr_id);
+  
 }
 
 function getPlusValueHistoryPromise(usr_id, start_date) {

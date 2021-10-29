@@ -35,11 +35,11 @@ class PlatformsPortfolio extends Component {
   renderTableData(astData) {
     if(astData) {
       return astData.map((ast, index) => {
-        const { ast_id, ast_value, name, cat_color, cat_name, code, perf, perf100, price, quantity } = ast
+        const { ast_id, ast_value, ast_type, duplicate_nbr, name, cat_color, cat_name, code, perf, perf100, price, quantity } = ast
         return (
             <tr key={index} onClick={() => window.location = "/assets/" + ast_id}>
                 <td>{name}</td>
-                <td>{code.length > 29 ? "" : code}</td>
+                <td>{ast_type === "stock" ? code : ast_type === "crypto" ? code.slice(0, -duplicate_nbr.toString().length) : ""}</td>
                 <td style={{ color: cat_color }}>{cat_name}</td>
                 <td>{quantity}</td>
                 <td>{Math.round(price * 100) / 100}</td>

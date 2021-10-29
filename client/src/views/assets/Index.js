@@ -22,7 +22,8 @@ class IndexAssets extends Component {
         const typeValueToLabel = {
             stock: "Stock Asset",
             crypto: "Cryptocurrency",
-            fix: "Fixed Price Asset"
+            fix: "Fixed Price Asset",
+            dex: "DEX"
         }
         this.state = { 
             assets: [],
@@ -38,12 +39,12 @@ class IndexAssets extends Component {
     }
     renderTableData() {
         return this.state.assets.map((ast, index) => {
-            const { ast_id, name, cat_name, cat_color, code, ast_type } = ast
+            const { ast_id, name, cat_name, cat_color, code, ast_type, duplicate_nbr } = ast
             return (
                 <tr key={index} onClick={() => window.location = "/assets/" + ast_id}>
                     <td>{name}</td>
                     <td>{this.state.typeValueToLabel[ast_type]}</td>
-                    <td>{ast_type !== "fix" ? code : ""}</td>
+                    <td>{ast_type === "stock" ? code : ast_type === "crypto" ? code.slice(0, -duplicate_nbr.toString().length) : ""}</td>
                     <td style={{
                         color: cat_color
                         }}>{cat_name}</td>
