@@ -192,10 +192,15 @@ Asset.getCMCCoins = function(params, result) {
 Asset.checkCoin = function (params, result) {
   sql.query(
     `SELECT * FROM cmc_coins 
-      WHERE cmc_id = ${params.cmc_id} 
-      AND cmc_official_id = ${params.cmc_official_id}
-      AND symbol = ${params.coin}
-      AND duplicate_nbr = ${params.duplicate_nbr}`, function(err, res) {
+      WHERE cmc_id = ?
+      AND cmc_official_id = ?
+      AND symbol = ?
+      AND duplicate_nbr = ?`, [
+        params.cmc_id,
+        params.cmc_official_id,
+        params.coin,
+        params.duplicate_nbr
+      ], function(err, res) {
       result(null, res);
     }
   )

@@ -56,6 +56,17 @@ exports.checkPasswordsMatch = function(res, password, password_confirmation) {
     }
 }
 
+function checkInt(res, field, int) {
+    const parsed = parseInt(int);
+    if(isNaN(parsed)) {
+        return raiseValidationError(res, `${field} is invalid`);
+    }
+    if(parsed !== parseFloat(int)) {
+        return raiseValidationError(res, `${field} is invalid`);
+    }
+}
+exports.checkInt = checkInt;
+
 function checkPositiveInt(res, field, int) {
     const parsed = parseInt(int);
     if(isNaN(parsed)) {
@@ -132,7 +143,7 @@ exports.checkDexAvailable = function(res, str) {
 
 exports.checkCoin = function(res, coin, cmc_id, duplicate_nbr, cmc_official_id) {
     if(checkPositiveInt(res, "Coin", cmc_id)) {return true;}
-    if(checkPositiveInt(res, "Coin", duplicate_nbr)) {return true;}
+    if(checkInt(res, "Coin", duplicate_nbr)) {return true;}
     if(checkPositiveInt(res, "Coin", cmc_official_id)) {return true;}
     const params = {
         coin: coin,
