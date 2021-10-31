@@ -8,10 +8,11 @@ exports.getMoneyInDexWallet = function(dex_reference_name, wallet_address) {
             headers: {
                 'passcode': passcode
             }
-        }).then((data) => {
-            const pools = data.data.farms != undefined && data.data.farms.length > 0 ? data.data.farms 
-                            : data.data.positions != undefined && data.data.positions.length > 0 ? data.data.positions
-                            : data.data.projects;
+        }).then((scraped_data) => {
+            const data = scraped_data.data ? scraped_data.data : scraped_data; 
+            const pools = data.farms != undefined && data.farms.length > 0 ? data.farms 
+                            : data.positions != undefined && data.positions.length > 0 ? data.positions
+                            : data.projects;
             const farms = [];
             pools.forEach(farm => {
                 const token_price = farm.tokens.map(t => t.price * t.balance).reduce((p, n) => p + n);

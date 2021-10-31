@@ -133,9 +133,6 @@ exports.updateDexAssetsHistory = function(assets, usr_id) {
 }
 
 function updateVlOfAssetsInDexWallet(dexWallet, assets) {
-    console.log("Updating this dex wallet")
-    console.log(dexWallet)
-    console.log(assets);
     // Get asset prices in dex wallet
     return new Promise((resolve, reject) => {
         dexScraper.getMoneyInDexWallet(dexWallet.dex_reference, dexWallet.wallet_address).then(res => {
@@ -149,8 +146,6 @@ function updateVlOfAssetsInDexWallet(dexWallet, assets) {
                     uniqueLps.push(lp);
                 }
             });
-            console.log("unique lps");
-            console.log(uniqueLps);
             Promise.all(
                 uniqueLps.map(lp => {
                     const assetsWithName = 
@@ -170,7 +165,6 @@ function updateVlOfAssetsInDexWallet(dexWallet, assets) {
 function updateDexAsset(assetToUpdate) {
     return new Promise((resolve, reject) => {
         Dex.updateDexAssetVl(assetToUpdate, function(err, asset) {
-            console.log(asset);
             resolve()
         })
     })

@@ -41,7 +41,6 @@ exports.refresh = async function(req, res) {
   history.updateDexAssetsHistory(dexAssets, req.usr_id);
   res.status(200).send({state: "Success"});
   User.updateRefresh(req.usr_id);
-  
 }
 
 function getPlusValueHistoryPromise(usr_id, start_date) {
