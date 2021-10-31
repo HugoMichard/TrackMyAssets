@@ -80,6 +80,14 @@ User.getLastRefresh = function (usrId, result) {
   )
 }
 
+User.getUserWithEmail = function(email, result) {
+  sql.query(
+    `SELECT * FROM users WHERE email = ?`, [email], function(err, res) {
+      result(null, res)
+    }
+  )
+}
+
 User.checkEmailExists = function (email, result) {
   sql.query(
     `SELECT * FROM users WHERE email = '${email}'`, function(err, res) {
