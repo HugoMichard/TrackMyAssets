@@ -8,7 +8,7 @@ exports.getPricesFromYahooFinance = function(code, from_date) {
         const price_with_dates = prices.map(p => {
             return {
                 date: p.date * 1000,
-                price: p.close
+                close: p.close
             }
         })
         const filter_prices_dates = price_with_dates.filter(p => 

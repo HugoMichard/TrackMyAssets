@@ -13,6 +13,9 @@ exports.getMoneyInDexWallet = function(dex_reference_name, wallet_address) {
             const pools = data.farms != undefined && data.farms.length > 0 ? data.farms 
                             : data.positions != undefined && data.positions.length > 0 ? data.positions
                             : data.projects;
+            if(!pools) {
+                return [];
+            }
             const farms = [];
             pools.forEach(farm => {
                 const token_price = farm.tokens.map(t => t.price * t.balance).reduce((p, n) => p + n);

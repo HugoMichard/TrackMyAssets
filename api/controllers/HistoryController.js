@@ -136,6 +136,7 @@ function updateVlOfAssetsInDexWallet(dexWallet, assets) {
     // Get asset prices in dex wallet
     return new Promise((resolve, reject) => {
         dexScraper.getMoneyInDexWallet(dexWallet.dex_reference, dexWallet.wallet_address).then(res => {
+            if(!res || res.length < 1) { resolve(); }
             const uniqueLps = [];
             res.forEach(lp => {
                 const existingLpIdx = uniqueLps.findIndex(uLp => lp.symbol1 + lp.symbol2 === uLp.symbol1 + uLp.symbol2 || lp.symbol2 + lp.symbol1 === uLp.symbol1 + uLp.symbol2)
@@ -153,9 +154,11 @@ function updateVlOfAssetsInDexWallet(dexWallet, assets) {
                         : assets.filter(a => a.plt_id === dexWallet.plt_id && a.name.toLowerCase() === lp.symbol1.toLowerCase());
                     console.log("assets with name");
                     console.log(assetsWithName)
-                    const toUpdate = {code: assetsWithName[0].code, fix_vl: lp.value, rewards:lp.rewards, plt_id: dexWallet.plt_id}
-                    console.log(toUpdate);
-                    updateDexAsset(toUpdate);
+                    if(assetsWithName.length > 0) {
+                        const toUpdate = {code: assetsWithName[0].code, fix_vl: lp.value, rewards:lp.rewards, plt_id: dexWallet.plt_id}
+                        console.log(toUpdate);
+                        updateDexAsset(toUpdate);
+                    }
                 })
             ).then(() => resolve());
         });
