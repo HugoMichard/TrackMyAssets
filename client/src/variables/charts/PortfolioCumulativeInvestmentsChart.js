@@ -7,7 +7,15 @@ import { ResponsiveLine } from '@nivo/line'
 
 export const PortfolioCumulativeInvestmentsChartData = [
   {
-    "id": "portfolio_price",
+    "id": "Investments",
+    "data": [
+      {
+        "x": "04/24/2000",
+        "y": 1
+      }]
+  },
+  {
+    "id": "Plus-Value",
     "data": [
       {
         "x": "04/24/2000",
@@ -17,18 +25,29 @@ export const PortfolioCumulativeInvestmentsChartData = [
 ];
 
 export function PortfolioCumulativeInvestmentsChart(data) {
-
+  const values = data[0].data;
+  const plus_values = data[1].data;
+  const ordered_values = values.map(v => v.y).sort((a, b) => a - b);
+  const cumul_values = values.map((v, i) => {
+    const extra_value = plus_values[i] ? plus_values[i].y : 0;
+    return v.y + extra_value
+  }).sort((a, b) => a - b);
+  const y_max = Math.max(cumul_values[cumul_values.length - 1], ordered_values[ordered_values.length - 1]);
+  const y_min = Math.min(cumul_values[0], ordered_values[0]);
+  const step = (y_max - y_min) / 6;
+  const yRange = [y_min, y_min + step, y_min + 2 * step, y_min + 3 * step, y_min + 4 * step, y_min + 5 * step, y_min + 6 * step];
   return (
     <ResponsiveLine
         data={data}
         margin={{ top: 50, right: 160, bottom: 50, left: 60 }}
         xScale={{ type: 'time', format: "%m/%d/%Y"}}
-        yScale={{ type: 'linear', stacked: true }}
+        yScale={{ type: 'linear', stacked: true, min: y_min, max: y_max }}
         yFormat=" >-.2f"
         xFormat="time:%d/%m/%Y"
         curve="monotoneX"
         axisTop={null}
         axisRight={{
+            tickValues: yRange,
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
@@ -47,6 +66,7 @@ export function PortfolioCumulativeInvestmentsChart(data) {
             legendPosition: 'middle'
         }}
         axisLeft={{
+            tickValues: yRange,
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
@@ -55,6 +75,8 @@ export function PortfolioCumulativeInvestmentsChart(data) {
             legendOffset: -40,
             legendPosition: 'middle'
         }}
+        areaBaselineValue={y_min}
+        gridYValues={yRange}
         enableGridX={false}
         enableArea={true}
         colors={{ scheme: 'category10' }}
