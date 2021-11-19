@@ -56,7 +56,7 @@ class IndexOrders extends Component {
                         color: plt_color
                         }}>{plt_name}
                     </td>
-                    <td className={quantity < 0 ? "redtext" : "greentext"}>{Math.abs(quantity)}</td>
+                    <td className={quantity < 0 ? "redtext" : "greentext"}>{Math.round(Math.abs(quantity) * 100) / 100}</td>
                     <td>{price}</td>
                     <td>{fees}</td>
                     <td className={quantity < 0 ? "redtext" : "greentext"}>{Math.round(Math.abs(quantity * price + fees) * 10) / 10}</td>

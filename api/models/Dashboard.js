@@ -8,7 +8,7 @@ Dashboard.valuesKDaysAgo = function (params, result) {
   sql.query(
     `SELECT SUM(o.cum_quantity * h.vl) as value
       FROM (
-      SELECT SUM(o.quantity) as cum_quantity, a.code
+      SELECT SUM(cast(o.quantity as double precision)) as cum_quantity, a.code
             FROM orders o
             INNER JOIN assets a ON a.ast_id = o.ast_id
             WHERE o.usr_id = ? AND o.execution_date <= CURDATE() - INTERVAL ? DAY
@@ -37,7 +37,7 @@ Dashboard.valuesKDaysAgo = function (params, result) {
 
 Dashboard.getCumulativeInvestments = function (params, result) {
   sql.query(
-    `SELECT o.execution_date, SUM(o.price * o.quantity + o.fees) 
+    `SELECT o.execution_date, SUM(o.price * cast(o.quantity as double precision) + o.fees) 
     OVER(ORDER BY execution_date ASC) as cum_sum
       FROM orders o
       INNER JOIN assets a ON a.ast_id = o.ast_id
@@ -58,7 +58,7 @@ Dashboard.getCumulativeInvestments = function (params, result) {
 
 Dashboard.getPortfolioAssetEvolution = function (params, result) {
   sql.query(
-    `SELECT a.code, o.execution_date, SUM(o.quantity) OVER(PARTITION BY code ORDER BY execution_date ASC) as quantity_sum
+    `SELECT a.code, o.execution_date, SUM(cast(o.quantity as double precision)) OVER(PARTITION BY code ORDER BY execution_date ASC) as quantity_sum
     FROM assets a 
     INNER JOIN orders o ON a.ast_id = o.ast_id ORDER BY o.execution_date
     WHERE o.usr_id = ?`,
@@ -83,8 +83,8 @@ Dashboard.getPortfolioEvolutionBetweenDates = function (params, result) {
       COALESCE(price_sum, 0) as total_price
     FROM
       (SELECT DISTINCT date_code_combis.code, date_code_combis.random_date, 
-        SUM(o.quantity) OVER(PARTITION BY date_code_combis.code ORDER BY date_code_combis.random_date ASC) as quantity_sum,
-        SUM(o.quantity * o.price + o.fees) OVER(PARTITION BY date_code_combis.code ORDER BY date_code_combis.random_date ASC) as price_sum
+        SUM(cast(o.quantity as double precision)) OVER(PARTITION BY date_code_combis.code ORDER BY date_code_combis.random_date ASC) as quantity_sum,
+        SUM(cast(o.quantity as double precision) * o.price + o.fees) OVER(PARTITION BY date_code_combis.code ORDER BY date_code_combis.random_date ASC) as price_sum
     FROM (
       SELECT DISTINCT a.ast_id, a.code, d.random_date, a.usr_id from assets a, dates d
         WHERE a.ast_id IN (SELECT ast_id FROM orders WHERE usr_id = ?)) date_code_combis
@@ -154,12 +154,12 @@ Dashboard.getDetailedPorfolioValueBetweenDates = function (params, result) {
     INNER JOIN (
       SELECT code, 
         random_date, 
-        COALESCE(quantity_sum, 0) as total_quantity,
-        COALESCE(price_sum, 0) as total_price
+        COALESCE(cast(quantity_sum as double precision), 0) as total_quantity,
+        COALESCE(cast(price_sum as double precision), 0) as total_price
       FROM
         (SELECT DISTINCT date_code_combis.code, date_code_combis.random_date, 
-          SUM(o.quantity) OVER(PARTITION BY date_code_combis.code ORDER BY date_code_combis.random_date ASC) as quantity_sum,
-          SUM(o.quantity * o.price + o.fees) OVER(PARTITION BY date_code_combis.code ORDER BY date_code_combis.random_date ASC) as price_sum
+          SUM(cast(o.quantity as double precision)) OVER(PARTITION BY date_code_combis.code ORDER BY date_code_combis.random_date ASC) as quantity_sum,
+          SUM(cast(o.quantity as double precision) * o.price + o.fees) OVER(PARTITION BY date_code_combis.code ORDER BY date_code_combis.random_date ASC) as price_sum
         FROM (
           SELECT DISTINCT a.ast_id, a.code, d.random_date, a.usr_id from assets a, dates d
           WHERE a.ast_id IN (SELECT ast_id FROM orders WHERE usr_id = ?)) date_code_combis

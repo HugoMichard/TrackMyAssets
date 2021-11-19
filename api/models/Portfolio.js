@@ -23,8 +23,8 @@ Portfolio.getPortfolioStartDate = function (params, result) {
 Portfolio.getPorfolioValueHistory = function (params, result) {
   sql.query(
     `WITH cumul_orders AS (
-      SELECT SUM(cast(o.quantity as decimal)) OVER(PARTITION BY a.code ORDER BY o.execution_date ASC) as quantity_sum, 
-      SUM(cast(o.quantity as decimal) * o.price + o.fees) OVER(PARTITION BY a.code ORDER BY o.execution_date ASC) as price_sum, 
+      SELECT SUM(cast(o.quantity as double precision)) OVER(PARTITION BY a.code ORDER BY o.execution_date ASC) as quantity_sum, 
+      SUM(cast(o.quantity as double precision) * o.price + o.fees) OVER(PARTITION BY a.code ORDER BY o.execution_date ASC) as price_sum, 
       o.execution_date, 
       a.code,
       a.ast_id
@@ -81,7 +81,7 @@ Portfolio.getInvestments = function (params, result) {
   sql.query(
     `SELECT 
         DATE_FORMAT(date_cat_combis.random_date, ?) as execution_date, 
-        SUM(o.price * cast(o.quantity as decimal) + o.fees) as investment, 
+        SUM(o.price * cast(o.quantity as double precision) + o.fees) as investment, 
         c.name as cat_name, 
         c.color as cat_color
       FROM orders o
@@ -119,7 +119,7 @@ Portfolio.getCumulativeInvestments = function (params, result) {
           DATE_FORMAT(random_date, '%Y-%m-%d') as random_date, 
           COALESCE(SUM(day_sum) OVER(ORDER BY random_date ASC), 0) as cum_sum
           FROM (
-            SELECT SUM(price * cast(quantity as decimal) + fees) as day_sum, execution_date
+            SELECT SUM(price * cast(quantity as double precision) + fees) as day_sum, execution_date
             FROM orders WHERE usr_id = ? AND execution_date <= CURDATE() - INTERVAL 1 DAY
             GROUP BY execution_date
           ) o
@@ -142,7 +142,7 @@ Portfolio.getCumulativeInvestments = function (params, result) {
 
 Portfolio.getTotalInvestments = function (params, result) {
   sql.query(
-    `SELECT SUM(cast(quantity as decimal) * price + fees) as investment FROM orders WHERE usr_id = ? GROUP BY quantity > 0 ORDER BY investment DESC`,
+    `SELECT SUM(cast(quantity as double precision) * price + fees) as investment FROM orders WHERE usr_id = ? GROUP BY quantity > 0 ORDER BY investment DESC`,
     [
       params.usr_id
     ], 
@@ -159,7 +159,7 @@ Portfolio.getTotalInvestments = function (params, result) {
 Portfolio.getCurrentPortfolioValue = function (params, result) {
   sql.query(
     `SELECT 
-      SUM(cast(quantity as decimal) * ast_prices.vl) as value
+      SUM(cast(quantity as double precision) * ast_prices.vl) as value
     FROM orders 
     INNER JOIN (
       SELECT ast.ast_id, hst.vl
