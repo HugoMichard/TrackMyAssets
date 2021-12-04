@@ -98,7 +98,7 @@ Platform.getPortfolioValueForeachPlt = function (usr_id, result) {
         WHERE random_date = CURDATE() - INTERVAL 1 DAY
       )	current_ast_values
       INNER JOIN (
-        SELECT ast_id, plt_id, SUM(cast(quantity as double precision)) as quantity FROM orders WHERE usr_id = ? GROUP BY ast_id, plt_id
+        SELECT ast_id, plt_id, SUM(quantity) as quantity FROM orders WHERE usr_id = ? GROUP BY ast_id, plt_id
       ) owned_assets
       ON current_ast_values.ast_id = owned_assets.ast_id
       INNER JOIN platforms p ON owned_assets.plt_id = p.plt_id 
@@ -151,13 +151,21 @@ Platform.getUserAssetsWithPlatformDetails = function (usr_id, result) {
       WHERE random_date = CURDATE() - INTERVAL 1 DAY
       )	current_ast_values
       INNER JOIN (
-        SELECT ast_id, plt_id, SUM(cast(quantity as double precision)) as quantity, SUM(cast(quantity as double precision) * price + fees) / SUM(cast(quantity as double precision)) as price FROM orders WHERE usr_id = ? GROUP BY ast_id, plt_id
+        SELECT o.ast_id, o.plt_id, SUM(o.quantity * o.price + o.fees) / SUM(o.quantity) as price, owned_quantity.quantity
+        FROM orders o
+        INNER JOIN (
+        	SELECT ast_id, plt_id, SUM(quantity) as quantity FROM orders WHERE usr_id = ? GROUP BY ast_id, plt_id
+        ) as owned_quantity 
+        ON o.ast_id = owned_quantity.ast_id  AND o.plt_id = owned_quantity.plt_id
+        WHERE usr_id = ? AND o.quantity > 0 GROUP BY ast_id, plt_id
       ) owned_assets
       ON current_ast_values.ast_id = owned_assets.ast_id
       INNER JOIN platforms p ON owned_assets.plt_id = p.plt_id 
       INNER JOIN assets a ON a.ast_id = owned_assets.ast_id
       INNER JOIN categories c ON a.cat_id = c.cat_id 
-      WHERE owned_assets.quantity > 0`, [
+      WHERE owned_assets.quantity > 0
+      ORDER BY p.name`, [
+      usr_id,
       usr_id,
       usr_id
     ], (err, res) => {

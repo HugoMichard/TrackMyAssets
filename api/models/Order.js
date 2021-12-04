@@ -24,7 +24,7 @@ Order.create = function (newOrder, result) {
 
 Order.search = function (params, result) {
   sql.query(
-    `SELECT o.ord_id, o.usr_id, o.ast_id, o.price, cast(o.quantity as double precision) as quantity, o.fees, 
+    `SELECT o.ord_id, o.usr_id, o.ast_id, o.price, o.quantity as quantity, o.fees, 
       DATE_FORMAT(o.execution_date, '%m/%d/%Y') as execution_date, 
       a.name as ast_name, a.code as ast_code, a.ast_type as ast_type, a.duplicate_nbr as ast_duplicate_nbr,
       c.color as cat_color, c.name as cat_name,
@@ -50,7 +50,7 @@ Order.search = function (params, result) {
 
 Order.getDetail = function (params, result) {
   sql.query(
-    `SELECT o.ord_id, o.usr_id, o.ast_id, o.price, cast(o.quantity as double precision) as quantity, o.fees, 
+    `SELECT o.ord_id, o.usr_id, o.ast_id, o.price, o.quantity as quantity, o.fees, 
       DATE_FORMAT(o.execution_date, '%Y-%m-%d') as execution_date,
       a.name as ast_name, a.code as ast_coin, a.ast_type as ast_type,
       c.color as cat_color, c.name as cat_name, c.cat_id as cat_id,
@@ -131,7 +131,7 @@ Order.getOrdersOfAsset = function (params, result) {
       o.ord_id, 
       DATE_FORMAT(o.execution_date, '%Y-%m-%d') as execution_date,
       o.price, 
-      cast(o.quantity as double precision) as quantity, 
+      o.quantity as quantity, 
       o.fees, 
       p.name as plt_name, p.color as plt_color
       FROM orders o
@@ -155,7 +155,7 @@ Order.getBuyingQuantityOfAssetByDay = function (params, result) {
   sql.query(
     `SELECT 
       DATE_FORMAT(execution_date, '%Y-%m-%d') as execution_date,
-      SUM(cast(quantity as double precision)) as quantity
+      SUM(quantity) as quantity
       FROM orders
       WHERE usr_id = ? AND ast_id = ?
       GROUP BY execution_date

@@ -91,7 +91,7 @@ Category.getPortfolioValueForeachCat = function (usr_id, result) {
           WHERE random_date = CURDATE() - INTERVAL 1 DAY
         )	current_ast_values
         INNER JOIN (
-          SELECT ast_id, SUM(cast(quantity as double precision)) as quantity FROM orders WHERE usr_id = ? GROUP BY ast_id 
+          SELECT ast_id, SUM(quantity) as quantity FROM orders WHERE usr_id = ? GROUP BY ast_id 
         ) owned_assets
         ON current_ast_values.ast_id = owned_assets.ast_id
         INNER JOIN categories c ON c.cat_id = current_ast_values.cat_id
@@ -133,7 +133,7 @@ Category.getPortfolioValueForeachType = function (usr_id, result) {
         WHERE random_date = CURDATE() - INTERVAL 1 DAY
       )	current_ast_values
       INNER JOIN (
-        SELECT ast_id, SUM(cast(quantity as double precision)) as quantity FROM orders WHERE usr_id = ? GROUP BY ast_id 
+        SELECT ast_id, SUM(quantity) as quantity FROM orders WHERE usr_id = ? GROUP BY ast_id 
       ) owned_assets
       ON current_ast_values.ast_id = owned_assets.ast_id
       WHERE owned_assets.quantity > 0
@@ -185,16 +185,22 @@ Category.getUserAssetsWithCategoryDetails = function (usr_id, result) {
       WHERE random_date = CURDATE() - INTERVAL 1 DAY
       )	current_ast_values
       INNER JOIN (
-        SELECT o2.ast_id, a2.cat_id, SUM(cast(quantity as double precision)) as quantity, SUM(cast(quantity as double precision) * price + fees) / SUM(cast(quantity as double precision)) as price 
+        SELECT o2.ast_id, a2.cat_id, owned_quantity.quantity, SUM(o2.quantity * price + fees) / SUM(o2.quantity) as price 
         FROM orders o2
         INNER JOIN assets a2 ON a2.ast_id = o2.ast_id 
-        WHERE a2.usr_id = ?
+	    	INNER JOIN (
+        	SELECT o3.ast_id, cat_id, SUM(o3.quantity) as quantity FROM orders o3 INNER JOIN assets a3 ON o3.ast_id = a3.ast_id WHERE o3.usr_id = 33 GROUP BY o3.ast_id, cat_id
+        ) as owned_quantity
+        ON o2.ast_id = owned_quantity.ast_id AND a2.cat_id = owned_quantity.cat_id
+        WHERE a2.usr_id = 33 AND o2.quantity > 0
         GROUP BY ast_id, cat_id
       ) owned_assets
       ON current_ast_values.ast_id = owned_assets.ast_id
       INNER JOIN assets a ON a.ast_id = owned_assets.ast_id
       INNER JOIN categories c ON a.cat_id = c.cat_id 
-      WHERE owned_assets.quantity > 0`, [
+      WHERE owned_assets.quantity > 0
+      ORDER BY c.name`, [
+      usr_id,
       usr_id,
       usr_id
     ], (err, res) => {

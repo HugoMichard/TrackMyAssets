@@ -42,7 +42,7 @@ class CategoriesPortfolio extends Component {
             <tr key={index} onClick={() => window.location = "/assets/" + ast_id}>
                 <td>{name}</td>
                 <td>{ast_type === "stock" ? code : ast_type === "crypto" ? code.slice(0, -duplicate_nbr.toString().length) : ""}</td>
-                <td>{quantity}</td>
+                <td>{Math.round(quantity * 1000) / 1000}</td>
                 <td>{Math.round(price * 100) / 100}</td>
                 <td>{Math.round(ast_value * 100) / 100}</td>
                 <td className={`${perf >= 0 ? "greentext" : "redtext"}`}>

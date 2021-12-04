@@ -42,7 +42,7 @@ class OverviewPortfolio extends Component {
               <td>{ast_type === "stock" ? code : ast_type === "crypto" ? code.slice(0, -duplicate_nbr.toString().length) : ""}</td>
               <td>{this.state.typeValueToLabel[ast_type]}</td>
               <td style={{ color: cat_color }}>{cat_name}</td>
-              <td>{quantity}</td>
+              <td>{Math.round(quantity * 1000) / 1000}</td>
               <td>{Math.round(price * 10) / 10}</td>
               <td>{Math.round(ast_value * 10) / 10}</td>
               <td className={`${perf >= 0 ? "greentext" : "redtext"}`}>

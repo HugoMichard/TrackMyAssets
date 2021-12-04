@@ -15,7 +15,7 @@ exports.validateAsset = async function(req, res, next) {
         if(await checkCoin(res, req.body.coin, req.body.cmc_id, req.body.duplicate_nbr, req.body.cmc_official_id)) {return}
     }
     if(req.body.ast_type === "stock") {
-        if(checkMinLength(res, "Ticker", req.body.coin, 3)) {return}
+        if(checkMinLength(res, "Ticker", req.body.ticker, 3)) {return}
     }
     next();
 }
