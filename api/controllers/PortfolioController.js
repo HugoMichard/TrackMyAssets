@@ -135,3 +135,12 @@ exports.getInvestmentsSummary = async function(req, res) {
     res.status(200).send({totalInvested: values[0][0].investment, totalWithdrawn: values[0][1].investment, totalPortfolioValue: values[1][0].value});
   });
 }
+
+exports.getProfitsRealised = function(req, res) {
+  Portfolio.getProfitsRealised(req.usr_id, function (err, profits) {
+    if (err) {
+        res.status(500).send({message: err.message});
+    }
+    res.status(200).send({state: "Success", profits: profits});
+});
+}

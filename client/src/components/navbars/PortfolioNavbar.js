@@ -34,6 +34,7 @@ class PortfolioNavbar extends Component {
                       {this.renderPortfolioNavButton("Investments", "investments", "warning")}
                       {this.renderPortfolioNavButton("Categories", "categories", "info")}
                       {this.renderPortfolioNavButton("Platforms", "platforms", "success")}
+                      {this.renderPortfolioNavButton("Realised", "realised", "primary")}
                     </div>
                 </CardBody>
               </Card>

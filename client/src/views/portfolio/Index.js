@@ -5,6 +5,7 @@ import OverviewPortfolio from "views/portfolio/Overview";
 import InvestmentsPortfolio from "views/portfolio/Investments";
 import CategoriesPortfolio from "views/portfolio/Categories";
 import PlatformsPortfolio from "views/portfolio/Platforms";
+import RealisedPortfolio from "views/portfolio/Realised";
 
 class IndexPortfolio extends Component {
   constructor(props) {
@@ -34,7 +35,9 @@ class IndexPortfolio extends Component {
           ? <InvestmentsPortfolio></InvestmentsPortfolio>
           : portfolioPage === "categories"
           ? <CategoriesPortfolio></CategoriesPortfolio>
-          : <PlatformsPortfolio></PlatformsPortfolio>
+          : portfolioPage === "platforms"
+          ? <PlatformsPortfolio></PlatformsPortfolio>
+          : <RealisedPortfolio></RealisedPortfolio>
       }
         </div>
       </>

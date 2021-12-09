@@ -195,6 +195,11 @@ class APIService {
     return axios.get(url, this.getUserHeader())
   }
 
+  getProfitsRealised() {
+    const url = `${API_URL}/portfolio/getProfitsRealised`
+    return axios.get(url, this.getUserHeader())
+  }
+
   // platforms methods
   createPlatform (data) {
     const url = `${API_URL}/platforms`

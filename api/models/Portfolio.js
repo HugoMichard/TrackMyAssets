@@ -183,4 +183,48 @@ Portfolio.getCurrentPortfolioValue = function (params, result) {
   )
 }
 
+Portfolio.getProfitsRealised = function (usr_id, result) {
+  sql.query(
+    `SELECT 
+      a.ast_id,
+      a.cat_id,
+      a.duplicate_nbr,
+      a.name,
+      a.code,
+      a.ast_type,
+      c.name as cat_name,
+      c.color as cat_color,
+      transactions.quantity,
+      transactions.buy_price,
+      transactions.sell_price,
+      (transactions.sell_price - transactions.buy_price) * transactions.quantity as perf,
+      (transactions.sell_price - transactions.buy_price) * 100 / transactions.buy_price as perf100
+    FROM (
+      SELECT
+        o.ast_id,
+        SUM(ABS(CASE WHEN o.quantity < 0 THEN o.quantity END)) as quantity,
+        SUM(CASE WHEN o.quantity < 0 THEN 0 ELSE o.quantity * o.price + o.fees END) / SUM(ABS(CASE WHEN o.quantity < 0 THEN 0 ELSE o.quantity END)) as buy_price,
+        SUM(ABS(CASE WHEN o.quantity > 0 THEN 0 ELSE o.quantity * o.price + o.fees END)) / SUM(ABS(CASE WHEN o.quantity > 0 THEN 0 ELSE o.quantity END)) as sell_price
+      FROM (
+        SELECT ast_id, MAX(execution_date) as last_selling FROM orders WHERE usr_id = ? AND orders.quantity < 0 GROUP BY ast_id
+      ) last_sold
+      INNER JOIN orders o ON o.ast_id = last_sold.ast_id
+      WHERE o.execution_date <= last_sold.last_selling
+      GROUP BY o.ast_id 
+    ) as transactions
+    INNER JOIN assets a ON a.ast_id = transactions.ast_id
+    INNER JOIN categories c ON c.cat_id = a.cat_id`,
+    [
+      usr_id
+    ], 
+    function (err, res) {
+      if (err) {
+        result(null, err)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
+
 module.exports = Portfolio
