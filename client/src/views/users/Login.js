@@ -39,7 +39,7 @@ export default class Login extends Component {
     e.preventDefault();
     AuthService.login(this.state.form).then(res => {
       if(res.status === 200) { 
-        this.setState({ redirectTo: "/dashboard" })
+        this.setState({ redirectTo: "/app/dashboard" })
       }
       else { 
         this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);

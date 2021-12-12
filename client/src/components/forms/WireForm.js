@@ -129,7 +129,7 @@ class WireForm extends Component {
                         </Button>
                     </div>
                 </Row>
-                {this.state.redirect ? <Redirect to="/wires"/> : ""}
+                {this.state.redirect ? <Redirect to="/app/wires"/> : ""}
             </Form>
         </>
         );

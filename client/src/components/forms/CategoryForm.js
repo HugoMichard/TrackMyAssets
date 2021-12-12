@@ -89,7 +89,7 @@ class CategoryForm extends Component {
                         </Button>
                     </div>
                 </Row>
-                {this.state.redirect ? <Redirect to="/categories"/> : ""}
+                {this.state.redirect ? <Redirect to="/app/categories"/> : ""}
             </Form>
         </>
         );

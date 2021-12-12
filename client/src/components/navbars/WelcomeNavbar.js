@@ -28,10 +28,10 @@ function Header(props) {
     <Navbar
       color="transparent"
       expand="lg"
-      className={"navbar-absolute fixed-top navbar-transparent "}
+      className={"navbar-absolute fixed-top navbar-transparent welcome-navbar"}
     >
       <Container fluid>
-        <div className="navbar-wrapper">
+      <div className="navbar-wrapper">
           <NavbarBrand href="/">{getBrand()}</NavbarBrand>
         </div>
         <div>

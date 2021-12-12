@@ -1,0 +1,106 @@
+.contact-main-content {
+    background-color: white;
+  }
+  
+.contact-main-content img {
+    background-color: black;
+}
+  
+.contact-section .section-title {
+    color: black;
+}
+
+.contact-row {
+    margin: -20px 0;
+  }
+  .contact-row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  .contact-row .contact-col {
+    padding: 0 20px;
+    float: left;
+    box-sizing: border-box;
+  }
+  .contact-row .contact-col.x-50 {
+    width: 50%;
+  }
+  .contact-row .contact-col.x-100 {
+    width: 100%;
+  }
+  
+  .content-wrapper {
+    min-height: 100%;
+    position: relative;
+  }
+  
+  .contact-section {
+    max-width: 1024px;
+    margin: 0 auto;
+  }
+  
+  .contact-form .contact-form-field {
+    position: relative;
+    margin: 32px 0;
+  }
+  .contact-form .contact-input-text {
+    display: block;
+    width: 100%;
+    height: 36px;
+    border-width: 0 0 2px 0;
+    border-color: #000;
+    font-family: Lusitana, serif;
+    font-size: 18px;
+    line-height: 26px;
+    font-weight: 400;
+  }
+  .contact-form .contact-input-text:focus {
+    outline: none;
+  }
+  .contact-form .contact-input-text:focus + .contact-label, .contact-form .contact-input-text.not-empty + .contact-label {
+    transform: translateY(-24px);
+  }
+  .contact-form .contact-label {
+    position: absolute;
+    left: 20px;
+    bottom: 11px;
+    font-family: Lusitana, serif;
+    font-size: 18px;
+    line-height: 26px;
+    font-weight: 400;
+    color: #888;
+    cursor: text;
+    transition: transform 0.2s ease-in-out;
+  }
+  .contact-form .contact-submit-btn {
+    display: inline-block;
+    background-color: #000;
+    color: #fff;
+    font-family: Raleway, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 16px;
+    line-height: 24px;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .contact-note {
+    position: absolute;
+    left: 0;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    font-family: Lusitana, serif;
+    font-size: 16px;
+    line-height: 21px;
+  }
+  .contact-note .contact-link {
+    color: #888;
+    text-decoration: none;
+  }
+  .contact-note .contact-link:hover {
+    text-decoration: underline;
+  }

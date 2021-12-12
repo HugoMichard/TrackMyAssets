@@ -51,3 +51,10 @@
 .max-width-200 {
     max-width: 200px;
 }
+
+a:link {
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: none;
+}

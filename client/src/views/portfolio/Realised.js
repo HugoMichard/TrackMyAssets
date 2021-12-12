@@ -35,7 +35,7 @@ class RealisedPortfolio extends Component {
         return this.state.profitsRealised.map((ast, index) => {
           const { ast_id, name, ast_type, sell_price, quantity, buy_price, perf, perf100, cat_color, cat_name, code, duplicate_nbr } = ast
           return (
-            <tr key={index} onClick={() => window.location = "/assets/" + ast_id}>
+            <tr key={index} onClick={() => window.location = "/app/assets/" + ast_id}>
               <td>{name}</td>
               <td>{ast_type === "stock" ? code : ast_type === "crypto" ? code.slice(0, -duplicate_nbr.toString().length) : ""}</td>
               <td>{this.state.typeValueToLabel[ast_type]}</td>

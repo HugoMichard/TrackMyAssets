@@ -42,7 +42,7 @@ class IndexOrders extends Component {
         return this.state.orders.map((ord, index) => {
             const { ord_id, ast_name, cat_name, cat_color, ast_code, ast_type, quantity, fees, price, execution_date, plt_color, plt_name, ast_duplicate_nbr } = ord
             return (
-                <tr key={index} onClick={() => window.location = "/orders/" + ord_id}>
+                <tr key={index} onClick={() => window.location = "/app/orders/" + ord_id}>
                     <td>{execution_date}</td>
                     <td className={quantity < 0 ? "redtext" : "greentext"}>{quantity < 0 ? "Sell" : "Buy"}</td>
                     <td>{ast_name}</td>

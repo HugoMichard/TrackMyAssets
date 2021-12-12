@@ -14,6 +14,7 @@ function checkActiveRoute(pathname, toCheck) { return pathname.includes(toCheck)
 function Sidebar(props) {
   const sidebar = React.useRef();
   const pathname = props.location.pathname;
+  console.log(pathname);
   // TO DO : use if on const dict to generate the list of links
   //const routes = "coucou";
   React.useEffect(() => {
@@ -37,7 +38,7 @@ function Sidebar(props) {
     >
       <div className="logo">
         <a
-          href="/dashboard"
+          href="/app/dashboard"
           className="simple-text logo-mini"
         >
           <div className="logo-img">
@@ -45,7 +46,7 @@ function Sidebar(props) {
           </div>
         </a>
         <a
-          href="/dashboard"
+          href="/app/dashboard"
           className="simple-text logo-normal"
         >
           Track My Assets
@@ -55,7 +56,7 @@ function Sidebar(props) {
         <Nav>
             <li className={checkActiveRoute(pathname, "dashboard") ? "active" : ""}>
                 <NavLink
-                    to={"/dashboard"}
+                    to={"/app/dashboard"}
                     className="nav-link"
                     activeClassName={checkActiveRoute(pathname, "dashboard") ? "active" : ""}
                     >
@@ -65,7 +66,7 @@ function Sidebar(props) {
             </li>
             <li className={checkActiveRoute(pathname, "portfolio") ? "active" : ""}>
                 <NavLink
-                    to={"/portfolio"}
+                    to={"/app/portfolio"}
                     className="nav-link"
                     activeClassName={checkActiveRoute(pathname, "portfolio") ? "active" : ""}
                     >
@@ -75,7 +76,7 @@ function Sidebar(props) {
             </li>
             <li className={checkActiveRoute(pathname, "orders") ? "active" : ""}>
                 <NavLink
-                    to={"/orders"}
+                    to={"/app/orders"}
                     className="nav-link"
                     activeClassName={checkActiveRoute(pathname, "orders") ? "active" : ""}
                     >
@@ -85,7 +86,7 @@ function Sidebar(props) {
             </li>
             <li className={checkActiveRoute(pathname, "assets") ? "active" : ""}>
                 <NavLink
-                    to={"/assets"}
+                    to={"/app/assets"}
                     className="nav-link"
                     activeClassName={checkActiveRoute(pathname, "assets") ? "active" : ""}
                     >
@@ -95,7 +96,7 @@ function Sidebar(props) {
             </li>
             <li className={checkActiveRoute(pathname, "dexs") ? "active" : ""}>
                 <NavLink
-                    to={"/dexs"}
+                    to={"/app/dexs"}
                     className="nav-link"
                     activeClassName={checkActiveRoute(pathname, "dexs") ? "active" : ""}
                     >
@@ -105,7 +106,7 @@ function Sidebar(props) {
             </li>
             <li className={checkActiveRoute(pathname, "wires") ? "active" : ""}>
                 <NavLink
-                    to={"/wires"}
+                    to={"/app/wires"}
                     className="nav-link"
                     activeClassName={checkActiveRoute(pathname, "wires") ? "active" : ""}
                     >
@@ -115,7 +116,7 @@ function Sidebar(props) {
             </li>
             <li className={checkActiveRoute(pathname, "categories") ? "active" : ""}>
                 <NavLink
-                    to={"/categories"}
+                    to={"/app/categories"}
                     className="nav-link"
                     activeClassName={checkActiveRoute(pathname, "categories") ? "active" : ""}
                     >
@@ -125,7 +126,7 @@ function Sidebar(props) {
             </li>
             <li className={checkActiveRoute(pathname, "platforms") ? "active" : ""}>
                 <NavLink
-                    to={"/platforms"}
+                    to={"/app/platforms"}
                     className="nav-link"
                     activeClassName={checkActiveRoute(pathname, "platforms") ? "active" : ""}
                     >

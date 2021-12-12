@@ -42,7 +42,7 @@ class DeleteAsset extends Component {
         return this.state.orders.map((ord, index) => {
             const { ord_id, execution_date, price, quantity, fees, plt_name, plt_color } = ord
             return (
-                <tr key={index} onClick={() => window.location = "/orders/" + ord_id}>
+                <tr key={index} onClick={() => window.location = "/app/orders/" + ord_id}>
                     <td>{execution_date}</td>
                     <td style={{ color: plt_color }}>
                         {plt_name}
@@ -87,7 +87,7 @@ class DeleteAsset extends Component {
                     handleDelete={this.handleDelete}
                     ast_id={this.state.ast_id}>
                 </OrdersOfAssetTable>
-                {this.state.redirect ? <Redirect to="/assets"/> : ""}
+                {this.state.redirect ? <Redirect to="/app/assets"/> : ""}
             </div>
         </>
         );

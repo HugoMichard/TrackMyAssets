@@ -2,6 +2,7 @@ import Dashboard from "views/dashboard/Dashboard.js";
 
 import Login from "views/users/Login.js";
 import Register from "views/users/Register.js";
+import Welcome from "views/users/Welcome.js";
 
 import IndexAssets from "views/assets/Index.js";
 import CreateAsset from "views/assets/Create.js";
@@ -29,44 +30,40 @@ import IndexDexs from "views/dexs/Index.js";
 import IndexPortfolio from "views/portfolio/Index.js";
 
 var routes = {
-  "/users": {
-    "/login": Login,
-    "/register": Register
-  },
-  "/dashboard": {
+  "/app/dashboard": {
     "/": Dashboard
   },
-  "/orders": {
+  "/app/orders": {
     "/create": CreateOrder,
     "/:ord_id": DetailOrder,
     "/": IndexOrders
   },
-  "/assets": {
+  "/app/assets": {
     "/create": CreateAsset,
     "/delete/:ast_id": DeleteAsset,
     "/:ast_id": DetailAsset,
     "/": IndexAssets
   },
-  "/categories": {
+  "/app/categories": {
     "/create": CreateCategory,
     "/:cat_id": DetailCategory,
     "/": IndexCategories
   },
-  "/portfolio": {
+  "/app/portfolio": {
     "/": IndexPortfolio
   },
-  "/platforms": {
+  "/app/platforms": {
     "/create": CreatePlatform,
     "/:plt_id": DetailPlatform,
     "/": IndexPlatforms
   },
-  "/wires": {
+  "/app/wires": {
     "/create": CreateWire,
     "/:wir_id": DetailWire,
     "/": IndexWires
   },
-  "/dexs": {
+  "/app/dexs": {
     "/": IndexDexs
-  },
+  }
 }
 export default routes;

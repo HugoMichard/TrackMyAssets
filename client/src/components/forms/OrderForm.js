@@ -271,7 +271,7 @@ class OrderForm extends Component {
                         </Button>
                     </div>
                 </Row>
-                {redirect ? <Redirect to="/orders"/> : ""}
+                {redirect ? <Redirect to="/app/orders"/> : ""}
             </Form>
         </>
         );

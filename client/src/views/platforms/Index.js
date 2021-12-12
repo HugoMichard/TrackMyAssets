@@ -34,7 +34,7 @@ class IndexPlatforms extends Component {
         return this.state.platforms.map((plf, index) => {
             const { plt_id, name, color, dex_name } = plf
             return (
-                <tr key={index} onClick={() => window.location = "/platforms/" + plt_id}>
+                <tr key={index} onClick={() => window.location = "/app/platforms/" + plt_id}>
                     <td>{name}</td>
                     <td>{dex_name}</td>
                     <td style={{
@@ -58,7 +58,7 @@ class IndexPlatforms extends Component {
                         <CardTitle tag="h4" className="no-margin-bottom">Platforms</CardTitle>
                     </CardHeader>
                     <CardBody>
-                    <Link to="/platforms/create">
+                    <Link to="/app/platforms/create">
                         <Button
                             className="btn-round justify-content-end no-margin-top"
                             color="primary">

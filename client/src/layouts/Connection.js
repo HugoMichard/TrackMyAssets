@@ -5,20 +5,36 @@ import { useLocation } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 
 import DisconnectedNavbar from "components/navbars/DisconnectedNavbar.js";
+import WelcomeNavbar from "components/navbars/WelcomeNavbar.js";
 
 import Login from "views/users/Login.js"
 import Register from "views/users/Register.js"
+import Welcome from "views/users/Welcome.js"
 
 
 var ps;
 
 function getRequestedViewComponent(pathname) {
   if(pathname === "/login") {return Login}
-  else{return Register;}
+  else{
+    if(pathname === "/register") {return Register}
+    else {return Welcome}
+  }
+}
+
+function getNavbarToDisplay(pathname) {
+  console.log(pathname)
+  if(pathname === "/login" || pathname === "/register") {
+    return DisconnectedNavbar
+  }
+  else {
+    return WelcomeNavbar
+  }
 }
 
 function Connection(props) {
     const ViewComponent = getRequestedViewComponent(props.location.pathname);
+    const DisplayedNavbar = getNavbarToDisplay(props.location.pathname);
     const mainPanel = React.useRef();
     const location = useLocation();
     React.useEffect(() => {
@@ -59,7 +75,7 @@ function Connection(props) {
     return (
       <div className="wrapper">
         <div className="main-panel" id="full_width_main_panel" ref={mainPanel}>
-          <DisconnectedNavbar {...props} />
+          <DisplayedNavbar {...props} />
           <NotificationAlert ref={notify} zIndex={9999} />
           <ViewComponent
             notify={notify}

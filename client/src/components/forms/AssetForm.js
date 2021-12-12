@@ -295,7 +295,7 @@ class AssetForm extends Component {
                         </div>
                     </Row>
                 }
-            {this.state.redirect ? <Redirect to="/assets"/> : ""}
+            {this.state.redirect ? <Redirect to="/app/assets"/> : ""}
             </Form>
         </>
         );

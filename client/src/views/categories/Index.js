@@ -34,7 +34,7 @@ class IndexCategories extends Component {
         return this.state.categories.map((cat, index) => {
             const { cat_id, name, color } = cat
             return (
-                <tr key={index} onClick={() => window.location = "/categories/" + cat_id}>
+                <tr key={index} onClick={() => window.location = "/app/categories/" + cat_id}>
                     <td>{name}</td>
                     <td style={{
                         color: color,
@@ -57,7 +57,7 @@ class IndexCategories extends Component {
                         <CardTitle tag="h4" className="no-margin-bottom">Categories</CardTitle>
                     </CardHeader>
                     <CardBody>
-                    <Link to="/categories/create">
+                    <Link to="/app/categories/create">
                         <Button
                             className="btn-round justify-content-end no-margin-top"
                             color="primary">

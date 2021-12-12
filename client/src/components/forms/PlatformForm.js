@@ -144,7 +144,7 @@ class PlatformForm extends Component {
                         </Button>
                     </div>
                 </Row>
-                {redirect ? <Redirect to="/platforms"/> : ""}
+                {redirect ? <Redirect to="/app/platforms"/> : ""}
             </Form>
         </>
         );

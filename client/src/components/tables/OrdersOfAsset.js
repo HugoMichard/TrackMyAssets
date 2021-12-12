@@ -28,7 +28,7 @@ class OrdersOfAssetTable extends Component {
         return this.state.orders.map((ord, index) => {
             const { ord_id, execution_date, price, quantity, fees, plt_name, plt_color } = ord
             return (
-                <tr key={index} onClick={() => window.location = "/orders/" + ord_id}>
+                <tr key={index} onClick={() => window.location = "/app/orders/" + ord_id}>
                     <td>{execution_date}</td>
                     <td className={quantity < 0 ? "redtext" : "greentext"}>{quantity < 0 ? "Sell" : "Buy"}</td>
                     <td style={{ color: plt_color }}>
@@ -78,7 +78,7 @@ class OrdersOfAssetTable extends Component {
                                     </Button>
                                     <Button                             
                                         className="btn-round justify-content-end no-margin-top"
-                                        onClick={() => window.location = "/assets"}
+                                        onClick={() => window.location = "/app/assets"}
                                         color="primary">
                                         Cancel
                                     </Button> </div>: <div></div>

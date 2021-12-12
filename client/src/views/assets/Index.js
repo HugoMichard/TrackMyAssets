@@ -41,7 +41,7 @@ class IndexAssets extends Component {
         return this.state.assets.map((ast, index) => {
             const { ast_id, name, cat_name, cat_color, code, ast_type, duplicate_nbr } = ast
             return (
-                <tr key={index} onClick={() => window.location = "/assets/" + ast_id}>
+                <tr key={index} onClick={() => window.location = "/app/assets/" + ast_id}>
                     <td>{name}</td>
                     <td>{this.state.typeValueToLabel[ast_type]}</td>
                     <td>{ast_type === "stock" ? code : ast_type === "crypto" ? code.slice(0, -duplicate_nbr.toString().length) : ""}</td>
@@ -51,7 +51,7 @@ class IndexAssets extends Component {
                     <td>
                         <i 
                             className="nc-icon nc-simple-remove" 
-                            onClick={(e) => { e.stopPropagation(); window.location = "/assets/delete/" + ast_id }} />
+                            onClick={(e) => { e.stopPropagation(); window.location = "/app/assets/delete/" + ast_id }} />
                     </td>
                 </tr>
             )
@@ -68,7 +68,7 @@ class IndexAssets extends Component {
                         <CardTitle tag="h4" className="no-margin-bottom">Assets</CardTitle>
                     </CardHeader>
                     <CardBody>
-                    <Link to="/assets/create">
+                    <Link to="/app/assets/create">
                         <Button
                             className="btn-round justify-content-end no-margin-top"
                             color="primary">

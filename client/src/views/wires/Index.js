@@ -34,7 +34,7 @@ class IndexWires extends Component {
         return this.state.wires.map((wir, index) => {
             const { wir_id, execution_date, amount, target } = wir
             return (
-                <tr key={index} onClick={() => window.location = "/wires/" + wir_id}>
+                <tr key={index} onClick={() => window.location = "/app/wires/" + wir_id}>
                     <td>{execution_date}</td>
                     <td className={amount < 0 ? "redtext" : "greentext"}>{amount < 0 ? "Sent" : "Received"}</td>
                     <td className={amount < 0 ? "redtext" : "greentext"}>{amount}</td>
@@ -85,7 +85,7 @@ class IndexWires extends Component {
                         <CardTitle tag="h4" className="no-margin-bottom">Wires</CardTitle>
                     </CardHeader>
                     <CardBody>
-                    <Link to="/wires/create">
+                    <Link to="/app/wires/create">
                         <Button
                             className="btn-round justify-content-end no-margin-top"
                             color="primary">

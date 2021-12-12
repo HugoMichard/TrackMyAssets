@@ -22,7 +22,6 @@ exports.login = async function (req, res) {
     if (err) {
         res.status(500).send({ message: err.message, notif: notifHelper.getNotif("failLogin")});
     } else {
-      console.log(users);
       if(users.length === 1) {
         const user = users[0];
         const validPassword = await bcrypt.compare(req.body.password, user.password);
