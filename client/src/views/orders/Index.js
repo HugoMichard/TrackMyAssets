@@ -86,7 +86,7 @@ class IndexOrders extends Component {
                         <CardTitle tag="h4" className="no-margin-bottom">Orders</CardTitle>
                     </CardHeader>
                     <CardBody>
-                    <Link to="/orders/create">
+                    <Link to="/app/orders/create">
                         <Button
                             className="btn-round justify-content-end no-margin-top"
                             color="primary">
