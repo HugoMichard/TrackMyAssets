@@ -23,7 +23,6 @@ function getRequestedViewComponent(pathname) {
 }
 
 function getNavbarToDisplay(pathname) {
-  console.log(pathname)
   if(pathname === "/login" || pathname === "/register") {
     return DisconnectedNavbar
   }

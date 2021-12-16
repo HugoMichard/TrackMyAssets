@@ -38,7 +38,6 @@ class IndexOrders extends Component {
         this.searchForOrders("")
     }
     renderTableData() {
-        console.log(this.state.orders);
         return this.state.orders.map((ord, index) => {
             const { ord_id, ast_name, cat_name, cat_color, ast_code, ast_type, quantity, fees, price, execution_date, plt_color, plt_name, ast_duplicate_nbr } = ord
             return (

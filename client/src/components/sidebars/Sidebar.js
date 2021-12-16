@@ -14,7 +14,6 @@ function checkActiveRoute(pathname, toCheck) { return pathname.includes(toCheck)
 function Sidebar(props) {
   const sidebar = React.useRef();
   const pathname = props.location.pathname;
-  console.log(pathname);
   // TO DO : use if on const dict to generate the list of links
   //const routes = "coucou";
   React.useEffect(() => {

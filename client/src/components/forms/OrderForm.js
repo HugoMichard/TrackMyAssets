@@ -86,7 +86,6 @@ class OrderForm extends Component {
                 a.code = a.ast_type === "crypto" ? a.code.slice(0, -a.duplicate_nbr.toString().length) : a.code;
                 return a
             })
-            console.log(assets);
             this.setState({ assets: assets, availableAssets: assets });
         });
 

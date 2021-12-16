@@ -64,6 +64,8 @@ class PlatformsPortfolio extends Component {
     if(this.state.userPltIds && this.state.platforms) {
       return this.state.userPltIds.map((plt_id, index) => {
         const pltDetails = this.state.platforms[this.state.platforms.findIndex(plt => plt.plt_id === plt_id)];
+        const assetsInPlt = this.state.assetsInPlatforms[plt_id]
+        const total = Math.round(assetsInPlt.map(c => (c.ast_value * c.quantity)).reduce((p,n) => p + n) * 10) / 10;
         if(pltDetails) {
           return (
             <Row key={index}>
@@ -71,6 +73,9 @@ class PlatformsPortfolio extends Component {
                 <Card>
                   <CardHeader>
                     <CardTitle tag="h4" className="no-margin-bottom" style={{color: pltDetails.color}}>{pltDetails.name}</CardTitle>
+                    <CardTitle tag="h7">
+                      Total : <strong>{total}</strong>
+                    </CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Table responsive>
@@ -87,7 +92,7 @@ class PlatformsPortfolio extends Component {
                         </tr>
                       </thead>
                       <tbody>
-                        {this.renderTableData(this.state.assetsInPlatforms[plt_id])}
+                        {this.renderTableData(assetsInPlt)}
                       </tbody>
                     </Table>
                   </CardBody>

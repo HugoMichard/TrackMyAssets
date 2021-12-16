@@ -66,12 +66,17 @@ class CategoriesPortfolio extends Component {
       return this.state.userCatIds.map((cat_id, index) => {
         const catDetails = this.state.categories[this.state.categories.findIndex(cat => cat.cat_id === cat_id)];
         if(catDetails) {
+          const assetsInCat = this.state.assetsInCategories[cat_id]
+          const total = Math.round(assetsInCat.map(c => (c.ast_value * c.quantity)).reduce((p,n) => p + n) * 10) / 10;
           return (
             <Row key={index}>
               <Col md="12">
                 <Card>
                   <CardHeader>
                     <CardTitle tag="h4" className="no-margin-bottom" style={{color: catDetails.color}}>{catDetails.name}</CardTitle>
+                    <CardTitle tag="h7">
+                      Total : <strong>{total}</strong>
+                    </CardTitle>
                   </CardHeader>
                   <CardBody>
                     <Table responsive>
@@ -87,7 +92,7 @@ class CategoriesPortfolio extends Component {
                         </tr>
                       </thead>
                       <tbody>
-                        {this.renderTableData(this.state.assetsInCategories[cat_id])}
+                        {this.renderTableData(assetsInCat)}
                       </tbody>
                     </Table>
                   </CardBody>
