@@ -7,7 +7,7 @@ This project allows users to track their assets accross different platforms and 
 Prerequisites :
 - Have npm installed
 - Create a MySQL database
-- Create a gmail account with low security activated (Optional) 
+- Create a gmail account with "less secure app access" activated (Optional) 
 
 Install the project by running the following commands in your terminal :
 ```
@@ -40,13 +40,14 @@ module.exports = {
 };
 ```
 
-- one optional js file named mail.config.js and insert your gmail configurations. Here is an example of the format:
+- one optional js file named mail.config.js and insert your gmail configurations (it will be the sending account). Also add the mail you wish to receive the messages on. Here is an example of the format:
 ```yaml
 module.exports = {
     mail_config: {
-        user: "yourgmailaccount@gmail.com",
-        pass: "yourgmailpassword"
-    }
+        user: "adevmailsender@gmail.com",
+        pass: "@DevMa1lSender"
+    },
+    receiver_mail: "hugomichard@yahoo.com"
 };
 ```
 

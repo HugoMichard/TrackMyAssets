@@ -25,7 +25,7 @@ exports.sendContactMail = function (req, res) {
 
   const mailData = {
     from: config.mail_config.user,  // sender address
-    to: req.body.email,   // receiver address
+    to: config.receiver_mail,   // receiver address
     subject: `TrackMyAssets - Mail From ${req.body.name} at ${req.body.email}`,
     text: req.body.message,
     html: req.body.message
