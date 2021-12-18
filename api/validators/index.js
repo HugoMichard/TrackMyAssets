@@ -6,10 +6,12 @@ const categoryValidator = require("./CategoryValidator");
 const platformValidator = require("./PlatformValidator");
 const wireValidator = require("./WireValidator");
 const orderValidator = require("./OrderValidator");
+const contactMailValidator = require("./ContactMailValidator");
 
 module.exports = {
     assetValidator,
     categoryValidator,
+    contactMailValidator,
     loginValidator,
     orderValidator,
     platformValidator,

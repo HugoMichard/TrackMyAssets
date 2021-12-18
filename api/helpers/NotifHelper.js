@@ -23,6 +23,7 @@ const notifMessage = function (values) {
         createCategorySuccess: {text :`Category ${values[0]} created successfully`, color: "success"},
         updateCategorySuccess: {text :`Category ${values[0]} updated successfully`, color: "success"},
         createPlatformSuccess: {text :`Platform ${values[0]} created successfully`, color: "success"},
-        updatePlatformSuccess: {text :`Platform ${values[0]} updated successfully`,  color: "success"}
+        updatePlatformSuccess: {text :`Platform ${values[0]} updated successfully`,  color: "success"},
+        sendContactMailSuccess: {text :`Email sent successfully. We'll reach back to you soon !`,  color: "success"}
     }
 }

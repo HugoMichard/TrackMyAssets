@@ -1,4 +1,4 @@
-const { checkMinLength, checkEmail} = require("../helpers/ValidationHelper")
+const { checkMinLength, checkEmail } = require("../helpers/ValidationHelper")
 
 exports.validateLogin = async function(req, res, next) {
     if(checkEmail(res, req.body.email)) {return};

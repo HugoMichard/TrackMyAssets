@@ -25,7 +25,7 @@ class APIService {
     return search
   }
 
-  // auth methods
+  // deconnected methods
   register (data) {
     const url = `${API_URL}/auth/register`
     return axios.post(url, data)
@@ -33,6 +33,11 @@ class APIService {
 
   login (data) {
     const url = `${API_URL}/auth/login`
+    return axios.post(url, data)
+  }
+
+  sendContactMail(data) {
+    const url = `${API_URL}/users/sendContactMail`
     return axios.post(url, data)
   }
 
@@ -232,59 +237,59 @@ class APIService {
     return axios.get(url, this.getUserHeader())
   }
 
-    // wire methods
-    createWire (data) {
-      const url = `${API_URL}/wires`
-      return axios.post(url, data, this.getUserHeader())
-    }
+  // wire methods
+  createWire (data) {
+    const url = `${API_URL}/wires`
+    return axios.post(url, data, this.getUserHeader())
+  }
   
-    updateWire (data) {
-      const url = `${API_URL}/wires/${data.wir_id}`
-      return axios.post(url, data, this.getUserHeader())
-    }
+  updateWire (data) {
+    const url = `${API_URL}/wires/${data.wir_id}`
+    return axios.post(url, data, this.getUserHeader())
+  }
   
-    searchWires () {
-      const url = `${API_URL}/wires`
-      return axios.get(url, this.getUserHeader())
-    }
+  searchWires () {
+    const url = `${API_URL}/wires`
+    return axios.get(url, this.getUserHeader())
+  }
   
-    getWire (wirId) {
-      const url = `${API_URL}/wires/` + wirId
-      return axios.get(url, this.getUserHeader())
-    }
+  getWire (wirId) {
+    const url = `${API_URL}/wires/` + wirId
+    return axios.get(url, this.getUserHeader())
+  }
 
-    deleteWire (wirId) {
-      const url = `${API_URL}/wires/` + wirId
-      return axios.delete(url, this.getUserHeader(), wirId)
-    }
+  deleteWire (wirId) {
+    const url = `${API_URL}/wires/` + wirId
+    return axios.delete(url, this.getUserHeader(), wirId)
+  }
 
-    getWireSummary () {
-      const url = `${API_URL}/wires/getSummary`
-      return axios.get(url, this.getUserHeader())
-    }
+  getWireSummary () {
+    const url = `${API_URL}/wires/getSummary`
+    return axios.get(url, this.getUserHeader())
+  }
 
-    // dex methods
-    searchDexs() {
-      const url = `${API_URL}/dexs`
-      return axios.get(url, this.getUserHeader())
-    }
+  // dex methods
+  searchDexs() {
+    const url = `${API_URL}/dexs`
+    return axios.get(url, this.getUserHeader())
+  }
 
-    searchWallets() {
-      const url = `${API_URL}/dexs/wallets`
-      return axios.get(url, this.getUserHeader())
-    }
+  searchWallets() {
+    const url = `${API_URL}/dexs/wallets`
+    return axios.get(url, this.getUserHeader())
+  }
 
-    searchPlatformDexs() {
-      const url = `${API_URL}/dexs/platforms`
-      return axios.get(url, this.getUserHeader())
-    }
+  searchPlatformDexs() {
+    const url = `${API_URL}/dexs/platforms`
+    return axios.get(url, this.getUserHeader())
+  }
 
-    // cmc coins methods
-    searchCoins(data) {
-      const url = `${API_URL}/assets/coins`
-      const search = this.formatSearch(data)
-      return axios.get(url + search, this.getUserHeader())
-    }
+  // cmc coins methods
+  searchCoins(data) {
+    const url = `${API_URL}/assets/coins`
+    const search = this.formatSearch(data)
+    return axios.get(url + search, this.getUserHeader())
+  }
 
 }
 

@@ -1,23 +1,15 @@
 import React, {Component} from "react";
-import AuthService from "services/auth";
-import { Redirect } from "react-router";
-
-// reactstrap components
-import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardTitle,
-  FormGroup,
-  Form,
-  Input,
-  Row,
-  Col,
-} from "reactstrap";
+import APIService from "routers/apiservice";
 
 
 export default class Welcome extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            processingMailToBeSent: false
+        }
+        this.sendContactMail = this.sendContactMail.bind(this);
+    }
     launchApp(e) {
         e.preventDefault();
         window.location = "/login"
@@ -26,8 +18,28 @@ export default class Welcome extends Component {
         e.preventDefault();
         window.location = "/documentation"
     }
+    sendContactMail(e) {
+        e.preventDefault();
+        if(!this.state.processingMailToBeSent) {
+            this.setState({processingMailToBeSent: true})
+            const data = {
+                email: document.getElementById('email').value,
+                name: document.getElementById('name').value,
+                message: document.getElementById('message').value
+            }
+            APIService.sendContactMail(data)
+            .then(res => {
+                this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
+                this.setState({processingMailToBeSent: false})
+            }).catch(err => {
+                this.props.displayNotification(this.props.notify, err.response.data.notif.text, err.response.data.notif.color);
+                this.setState({processingMailToBeSent: false})
+            });
+        }
+    }
 
   render() {
+      console.log(this.props)
     return (
       <>
       <div className="main-landing">
@@ -206,7 +218,7 @@ export default class Welcome extends Component {
                         </div>
                     </div>
                     </div>
-                    <button className="fill-in" onClick={this.gotoDoc}>Checkout the Details</button>
+                    <button className="fill-in" onClick={this.gotoDoc}>Checkout the details here</button>
                 </div>
             </div>
         </div>
@@ -233,7 +245,7 @@ export default class Welcome extends Component {
                         <label class="contact-label" for="message">Message</label>
                     </div>
                     <div class="contact-form-field contact-col x-100 align-center">
-                        <input class="contact-submit-btn" type="submit" value="Send"/>
+                        <input class="contact-submit-btn" value="Send" type="submit" onClick={this.sendContactMail}/>
                     </div>
                 </form>
             </section>

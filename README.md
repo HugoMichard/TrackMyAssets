@@ -6,7 +6,8 @@ This project allows users to track their assets accross different platforms and 
 
 Prerequisites :
 - Have npm installed
-- Create a MySQL database 
+- Create a MySQL database
+- Create a gmail account with low security activated (Optional) 
 
 Install the project by running the following commands in your terminal :
 ```
@@ -18,7 +19,7 @@ npm install
 mkdir ./config
 ```
 
-In the config directory that has been created, create two files :
+In the config directory that has been created, create three files :
 
 - one js file named auth.config.js and insert your secret key configurations. Here is an example of the format:
 ```yaml
@@ -35,6 +36,16 @@ module.exports = {
         user: 'root',
         password: 'root',
         database: 'TrackMyAssets'
+    }
+};
+```
+
+- one optional js file named mail.config.js and insert your gmail configurations. Here is an example of the format:
+```yaml
+module.exports = {
+    mail_config: {
+        user: "yourgmailaccount@gmail.com",
+        pass: "yourgmailpassword"
     }
 };
 ```
