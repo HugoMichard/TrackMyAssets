@@ -31,20 +31,22 @@ class PortfolioCategoryDistribution extends Component {
     }
     componentDidMount() {
       APIService.getPortfolioValueForeachType().then(res => {
-        const totalValue = res.data.values.map(v => v.value).reduce((a, b) => a + b);
+        if(res.data && res.data.values && res.data.values.length > 0) {
+          const totalValue = res.data.values.map(v => v.value).reduce((a, b) => a + b);
 
-        var keys = []
-        var data = []
-        res.data.values.forEach(v => {
-          keys.push(this.state.typeValueToLabel[v.ast_type]);
-          data.push({
-            id: this.state.typeValueToLabel[v.ast_type],
-            label: this.state.typeValueToLabel[v.ast_type],
-            value: v.value / totalValue,
-            tooltipValue: v.value
+          var keys = []
+          var data = []
+          res.data.values.forEach(v => {
+            keys.push(this.state.typeValueToLabel[v.ast_type]);
+            data.push({
+              id: this.state.typeValueToLabel[v.ast_type],
+              label: this.state.typeValueToLabel[v.ast_type],
+              value: v.value / totalValue,
+              tooltipValue: v.value
+            });
           });
-        });
-        this.setState({ portfolioChartData: data, portfolioChartKeys: keys });
+          this.setState({ portfolioChartData: data, portfolioChartKeys: keys });
+        }
       });
     }
     render() {

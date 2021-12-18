@@ -13,7 +13,11 @@ function getPortfolioStartDate(usr_id) {
         if (err) {
           reject(err)
         }
-        resolve(start_date[0].start_date)
+        if(start_date.length > 0) {
+          resolve(start_date[0].start_date)
+        } else {
+          resolve("2020-01-01")
+        }
       })
     });
   }

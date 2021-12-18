@@ -22,7 +22,7 @@ class PortfolioAssetDistribution extends Component {
         }
     }
     componentWillReceiveProps(nextProps) {
-        if(nextProps.assetsOwned) {
+        if(nextProps.assetsOwned && nextProps.assetsOwned.length > 0) {
             const totalValue = nextProps.assetsOwned.map(v => v.quantity * v.ast_value).reduce((a, b) => a + b);
  
             var keys = []

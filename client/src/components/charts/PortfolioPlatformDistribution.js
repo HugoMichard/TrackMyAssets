@@ -26,22 +26,24 @@ class PortfolioCategoryDistribution extends Component {
     }
     componentDidMount() {
       APIService.getPortfolioValueForeachPlt().then(res => {
-        const totalValue = res.data.values.map(v => v.value).reduce((a, b) => a + b);
- 
-        var colors = {}
-        var keys = []
-        var data = []
-        res.data.values.forEach(v => {
-          colors[v.plt_id] = v.color;
-          keys.push(v.plt_id);
-          data.push({
-            id: v.plt_id,
-            label: v.name,
-            value: v.value / totalValue,
-            tooltipValue: v.value
+        if(res.data && res.data.values && res.data.values.length > 0) {
+          const totalValue = res.data.values.map(v => v.value).reduce((a, b) => a + b);
+  
+          var colors = {}
+          var keys = []
+          var data = []
+          res.data.values.forEach(v => {
+            colors[v.plt_id] = v.color;
+            keys.push(v.plt_id);
+            data.push({
+              id: v.plt_id,
+              label: v.name,
+              value: v.value / totalValue,
+              tooltipValue: v.value
+            });
           });
-        });
-        this.setState({ portfolioChartData: data, portfolioChartKeys: keys, portfolioChartColors: colors });
+          this.setState({ portfolioChartData: data, portfolioChartKeys: keys, portfolioChartColors: colors });
+        }
       });
     }
     getPieColor(pie) {

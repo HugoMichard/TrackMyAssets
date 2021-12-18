@@ -104,6 +104,28 @@ class IndexDexs extends Component {
         }
     }
     render() {
+        if(!this.state.displayDexs || this.state.displayDexs.length === 0) {
+            return (
+                <div className="content">
+                    <Row>
+                        <Col lg="3" md="6" sm="6">
+                            <Card className="card-stats">
+                                <CardBody>
+                                    <Row>
+                                        <Col md="12" xs="12">
+                                            <CardTitle>
+                                                You do not have any dex wallets yet
+                                            </CardTitle>
+                                        </Col>
+                                    </Row>
+                                </CardBody>
+                            </Card>
+
+                        </Col>
+                    </Row>
+                </div>
+            )
+        }
         return (
         <>
             <div className="content">
