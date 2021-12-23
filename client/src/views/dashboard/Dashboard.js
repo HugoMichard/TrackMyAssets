@@ -64,16 +64,21 @@ class Dashboard extends Component {
         <Card className="card-stats">
           <CardBody>
             <Row className={`${value >= 0 ? "text-success" : "text-danger"}`}>
-              <Col md="7" xs="7">
-              <div className="text-center numbers">
-                <CardTitle tag="p">
-                  {value > 0 ? "+ " : value < 0 ? "- " : ""}
-                  {Math.round(Math.abs(percentage) * 10) / 10} %
-                </CardTitle>
-                <p />
-              </div>
-              </Col>
-              <Col md="5" xs="5">
+              {percentage !== Infinity ? 
+                <Col md="6" xs="6">
+                  <div className="text-center numbers">
+                    <CardTitle tag="p">
+                    {console.log(percentage === undefined)}
+                    {console.log(percentage === Infinity)}
+                    {console.log(percentage)}
+                      {value > 0 ? "+ " : value < 0 ? "- " : ""}
+                      {Math.round(Math.abs(percentage) * 10) / 10} %
+                    </CardTitle>
+                    <p />
+                  </div>
+                </Col> : ""
+              }
+              <Col md="6" xs="6">
                 <div className="numbers">
                   <CardTitle tag="p">
                     {value > 0 ? "+ " : value < 0 ? "- " : ""}

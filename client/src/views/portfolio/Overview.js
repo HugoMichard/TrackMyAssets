@@ -89,10 +89,10 @@ class OverviewPortfolio extends Component {
                         <th>Ticker / Coin</th>
                         <th>Type</th>
                         <th>Category</th>
-                        <th>Current Quantity</th>
-                        <th>Average Buying Price</th>
-                        <th>Current value</th>
-                        <th>Performance</th>
+                        <th>Quantity</th>
+                        <th>Buying Price</th>
+                        <th>Value</th>
+                        <th>Perf</th>
                         <th>RoI</th>
                       </tr>
                     </thead>

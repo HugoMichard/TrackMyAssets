@@ -39,7 +39,6 @@ export default class Welcome extends Component {
     }
 
   render() {
-      console.log(this.props)
     return (
       <>
       <div className="main-landing">

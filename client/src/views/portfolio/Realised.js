@@ -78,8 +78,8 @@ class RealisedPortfolio extends Component {
                         <th>Type</th>
                         <th>Category</th>
                         <th>Quantity</th>
-                        <th>Average Buying Price</th>
-                        <th>Average Selling Price</th>
+                        <th>Buying Price</th>
+                        <th>Selling Price</th>
                         <th>Performance</th>
                         <th>RoI</th>
                       </tr>

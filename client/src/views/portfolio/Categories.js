@@ -84,9 +84,9 @@ class CategoriesPortfolio extends Component {
                         <tr>
                           <th>Name</th>
                           <th>Ticker / Coin</th>
-                          <th>Current Quantity</th>
-                          <th>Average Buying Price</th>
-                          <th>Current Value</th>
+                          <th>Quantity</th>
+                          <th>Buying Price</th>
+                          <th>Value</th>
                           <th>Performance</th>
                           <th>RoI</th>
                         </tr>
