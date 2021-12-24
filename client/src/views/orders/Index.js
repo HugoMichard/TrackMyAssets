@@ -22,7 +22,7 @@ class IndexOrders extends Component {
         const typeValueToLabel = {
             stock: "Stock Asset",
             crypto: "Cryptocurrency",
-            fix: "Fixed Price Asset",
+            fix: "Fixed Price",
             dex: "DEX"
         }
         this.state = { 

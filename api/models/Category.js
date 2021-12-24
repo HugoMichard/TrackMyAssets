@@ -85,13 +85,13 @@ Category.getPortfolioValueForeachCat = function (usr_id, result) {
                     SELECT DISTINCT a.code as code, d.random_date, a.ast_id, a.cat_id, a.fix_vl FROM dates d, assets a WHERE usr_id = ?
                   ) date_code_combis 
                   ON h.hst_date = date_code_combis.random_date AND h.code = date_code_combis.code
-                  WHERE random_date BETWEEN CURDATE() - INTERVAL 5 DAY AND CURDATE() - INTERVAL 1 DAY
+                  WHERE random_date BETWEEN CURDATE() - INTERVAL 8 DAY AND CURDATE() - INTERVAL 1 DAY
               ) as vl_with_no_nulls
           ) ast_values 
           WHERE random_date = CURDATE() - INTERVAL 1 DAY
         )	current_ast_values
         INNER JOIN (
-          SELECT ast_id, SUM(quantity) as quantity FROM orders WHERE usr_id = ? GROUP BY ast_id 
+          SELECT ast_id, SUM(quantity) as quantity FROM orders WHERE usr_id = ? GROUP BY ast_id
         ) owned_assets
         ON current_ast_values.ast_id = owned_assets.ast_id
         INNER JOIN categories c ON c.cat_id = current_ast_values.cat_id
@@ -127,7 +127,7 @@ Category.getPortfolioValueForeachType = function (usr_id, result) {
                   SELECT DISTINCT a.code as code, a.plt_id, d.random_date, a.ast_id, a.ast_type, a.fix_vl FROM dates d, assets a WHERE usr_id = ?
                 ) date_code_combis 
                 ON h.hst_date = date_code_combis.random_date AND h.code = date_code_combis.code
-                WHERE random_date BETWEEN CURDATE() - INTERVAL 5 DAY AND CURDATE() - INTERVAL 1 DAY
+                WHERE random_date BETWEEN CURDATE() - INTERVAL 8 DAY AND CURDATE() - INTERVAL 1 DAY
             ) as vl_with_no_nulls
         ) ast_values 
         WHERE random_date = CURDATE() - INTERVAL 1 DAY
@@ -179,7 +179,7 @@ Category.getUserAssetsWithCategoryDetails = function (usr_id, result) {
               SELECT DISTINCT a.code as code, d.random_date, a.ast_id, a.fix_vl FROM dates d, assets a WHERE usr_id = ?
             ) date_code_combis
             ON h.hst_date = date_code_combis.random_date AND h.code = date_code_combis.code
-            WHERE random_date BETWEEN CURDATE() - INTERVAL 5 DAY AND CURDATE() - INTERVAL 1 DAY
+            WHERE random_date BETWEEN CURDATE() - INTERVAL 8 DAY AND CURDATE() - INTERVAL 1 DAY
           ) as vl_with_no_nulls
         ) ast_values 
       WHERE random_date = CURDATE() - INTERVAL 1 DAY
@@ -199,7 +199,7 @@ Category.getUserAssetsWithCategoryDetails = function (usr_id, result) {
       INNER JOIN assets a ON a.ast_id = owned_assets.ast_id
       INNER JOIN categories c ON a.cat_id = c.cat_id 
       WHERE owned_assets.quantity > 0
-      ORDER BY c.name`, [
+      ORDER BY c.name, a.name`, [
       usr_id,
       usr_id,
       usr_id

@@ -44,7 +44,7 @@ Portfolio.getPorfolioValueHistory = function (params, result) {
         RIGHT JOIN 
           (SELECT DISTINCT a.code as code, d.random_date, a.fix_vl FROM dates d, assets a WHERE usr_id = ?) date_code_combis 
         ON h.hst_date = date_code_combis.random_date AND h.code = date_code_combis.code
-        WHERE random_date BETWEEN ? - INTERVAL 5 DAY AND CURDATE() - INTERVAL 1 DAY
+        WHERE random_date BETWEEN ? - INTERVAL 8 DAY AND CURDATE() - INTERVAL 1 DAY
       ) as vl_with_nulls
     )
     SELECT 
