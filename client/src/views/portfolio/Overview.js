@@ -26,11 +26,20 @@ class OverviewPortfolio extends Component {
         }
         this.state = { 
             assetsOwned: [],
-            typeValueToLabel: typeValueToLabel
+            typeValueToLabel: typeValueToLabel,
+            perfAssets: 0,
+            perf100Assets: 0,
+            totalAssets: 0
         }
     }
     componentDidMount() {
-        APIService.getAssetsOwned().then(res => { this.setState({assetsOwned: res.data.assets}); })
+        APIService.getAssetsOwned().then(res => {
+          const assets = res.data.assets;
+          const total = Math.round(assets.map(c => (c.ast_value * c.quantity)).reduce((p,n) => p + n) * 10) / 10;
+          const perf = Math.round(assets.map(c => c.perf).reduce((p,n) => p + n) * 10) / 10;
+          const perf100 = Math.round((perf / total) * 100 * 10 / 10);
+          this.setState({assetsOwned: assets, totalAssets: total, perfAssets: perf, perf100Assets: perf100});
+        })
     }
     renderTableData() {
       if(this.state.assetsOwned) {
@@ -62,6 +71,7 @@ class OverviewPortfolio extends Component {
         
     }
   render() {
+    const { totalAssets, perfAssets, perf100Assets } = this.state
     return (
       <>
         <div>
@@ -80,6 +90,15 @@ class OverviewPortfolio extends Component {
               <Card>
                 <CardHeader>
                   <CardTitle tag="h4" className="no-margin-bottom">Assets owned</CardTitle>
+                  <CardTitle tag="h7">
+                    Total : <strong>{totalAssets}</strong>
+                  </CardTitle><br/>
+                  <CardTitle tag="h7">
+                    RoI : 
+                    <strong className={`${perfAssets >= 0 ? "greentext" : "redtext"}`}> {perfAssets < 0 ? "- " : "+ "} {Math.abs(perfAssets)} </strong>
+                    / 
+                    <strong className={`${perfAssets >= 0 ? "greentext" : "redtext"}`}> {perfAssets < 0 ? "- " : "+ "} {Math.abs(perf100Assets)} %</strong>
+                  </CardTitle>
                 </CardHeader>
                 <CardBody>
                   <Table responsive>
