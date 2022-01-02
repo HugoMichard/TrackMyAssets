@@ -42,14 +42,40 @@ class DetailAsset extends Component {
         this.setState({selectedPortfolioChartRange: value});
         this.updatePortfolioChartDataWithRange(value)
     }
+    addMissingOrderDates(data) {
+        // Check if order dates that are in the selected range are in the data
+        // Return the updated data
+        const orderDates = this.state.orderDates;
+        var updatedData = data;
+        if(orderDates) {
+          const oldest_date = new Date(data[0].x)
+          orderDates.forEach(d => {
+            const price = d.price
+            const order_date = new Date(d.execution_date);
+            const order_date_string = order_date.toLocaleDateString();
+            if(order_date > oldest_date && updatedData.map(v => v.x).findIndex(x => x === order_date_string) === -1) {
+              // if not, add the order date to the data displayed
+              const value_dates = updatedData.map(v => new Date(v.x));
+              const index_to_insert = value_dates.findIndex(x => new Date(x) - order_date > 0)
+              const order_to_insert = {
+                "x": order_date,
+                "y": price
+              }
+              updatedData.splice(index_to_insert, 0, order_to_insert);
+            };
+          })
+        }
+        return updatedData;
+      }
     updatePortfolioChartDataWithRange(range) {
         APIService.getAssetHistory({ast_id: this.state.ast_id, start_date: range}).then(res => { 
-            const data = res.data.histories.map(h => {
+            var data = res.data.histories.map(h => {
                 return {
                     "x": new Date(h.hst_date).toLocaleDateString(),
                     "y": h.vl
                 }
             });
+            data = this.addMissingOrderDates(data);
             this.setState({histories: res.data.histories, chart_data: [{data: data, id: 'asset_value'}] });
         });
     }
