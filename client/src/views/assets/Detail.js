@@ -47,7 +47,7 @@ class DetailAsset extends Component {
         // Return the updated data
         const orderDates = this.state.orderDates;
         var updatedData = data;
-        if(orderDates) {
+        if(orderDates && data.length > 0) {
           const oldest_date = new Date(data[0].x)
           orderDates.forEach(d => {
             const price = d.price

@@ -63,14 +63,14 @@ History.getAssetHistory = function (params, result) {
 
 History.getLastHistoryOfUserCexAssets = function (params, result) {
   sql.query(
-    `SELECT a.ast_type, a.code, cmc.cmc_official_id, DATE_FORMAT(MAX(h.hst_date), '%Y-%m-%d') as last_date
+    `SELECT a.ast_type, a.code, cmc.cmc_official_id, DATE_FORMAT(MAX(h.hst_date), '%Y-%m-%d') as last_date, a.fix_vl
       FROM histories h
       RIGHT JOIN assets a ON a.code = h.code
       LEFT JOIN orders o ON o.ast_id = a.ast_id
       LEFT JOIN platforms p ON p.plt_id = o.plt_id
       LEFT JOIN cmc_coins cmc ON cmc.cmc_id = a.cmc_id
       WHERE a.usr_id = ? AND a.ast_type != 'dex'
-      GROUP BY a.ast_type, a.code, cmc.cmc_official_id`, [
+      GROUP BY a.ast_type, a.code, cmc.cmc_official_id, a.fix_vl`, [
         params.usr_id
       ], function (err, res) {
       if (err) {
