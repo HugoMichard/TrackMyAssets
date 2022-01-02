@@ -155,7 +155,8 @@ Order.getBuyingQuantityOfAssetByDay = function (params, result) {
   sql.query(
     `SELECT 
       DATE_FORMAT(execution_date, '%Y-%m-%d') as execution_date,
-      SUM(quantity) as quantity
+      SUM(quantity) as quantity,
+      AVG(quantity * price) / SUM(quantity) as price
       FROM orders
       WHERE usr_id = ? AND ast_id = ?
       GROUP BY execution_date
