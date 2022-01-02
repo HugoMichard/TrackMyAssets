@@ -10,8 +10,6 @@ import WelcomeNavbar from "components/navbars/WelcomeNavbar.js";
 import Login from "views/users/Login.js"
 import Register from "views/users/Register.js"
 import Welcome from "views/users/Welcome.js"
-import Documentation from "views/users/Documentation.js"
-
 
 var ps;
 
@@ -20,16 +18,13 @@ function getRequestedViewComponent(pathname) {
   else{
     if(pathname === "/register") {return Register}
     else {
-      if(pathname === "/documentation") {return Documentation}
-      else{
-        return Welcome
-      }
+      return Welcome
     }
   }
 }
 
 function getNavbarToDisplay(pathname) {
-  if(pathname === "/login" || pathname === "/register" || pathname === "/documentation") {
+  if(pathname === "/login" || pathname === "/register") {
     return DisconnectedNavbar
   }
   else {

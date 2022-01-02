@@ -14,12 +14,14 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 
 import AdminLayout from "layouts/Admin.js";
 import ConnectionLayout from "layouts/Connection.js";
+import DocumentationLayout from "layouts/Documentation.js";
 
 ReactDOM.render(
   <BrowserRouter>
     <Switch>
       <Route path="/login" render={(props) => <ConnectionLayout {...props} />} />
       <Route path="/register" render={(props) => <ConnectionLayout {...props} />} />
+      <Route path="/docs" render={(props) => <DocumentationLayout {...props} />} />
       <Route path="/app" render={(props) => <AdminLayout {...props} />} />
       <Route path="/" render={(props) => <ConnectionLayout {...props} />} />
     </Switch>

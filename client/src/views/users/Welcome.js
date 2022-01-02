@@ -16,7 +16,7 @@ export default class Welcome extends Component {
     }
     gotoDoc(e) {
         e.preventDefault();
-        window.location = "/documentation"
+        window.location = "/docs/overview"
     }
     sendContactMail(e) {
         e.preventDefault();

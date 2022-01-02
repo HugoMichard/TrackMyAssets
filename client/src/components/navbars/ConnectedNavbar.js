@@ -17,12 +17,23 @@ import {
 import APIService from "routers/apiservice";
 import AuthService from "services/auth";
 
+const navbarTitle = {
+  "dashboard": "Dashboard",
+  "portfolio": "Portfolio",
+  "orders": "Orders",
+  "assets": "Assets",
+  "dexs": "Dexs",
+  "wires": "Wires",
+  "categories": "Categories",
+  "platforms": "Platforms"
+}
 
 function Header(props) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [color, setColor] = React.useState("transparent");
   const sidebarToggle = React.useRef();
   const location = useLocation();
+  const pathname = props.location.pathname;
   const toggle = () => {
     if (isOpen) {
       setColor("transparent");
@@ -32,7 +43,11 @@ function Header(props) {
     setIsOpen(!isOpen);
   };
   const getBrand = () => {
-    return "TrackMyAssets";
+    return navbarTitle[Object.keys(navbarTitle).find(k => pathname.includes(k))];
+  };
+  const getBrandLink = () => {
+    const key = Object.keys(navbarTitle).find(k => pathname.includes(k));
+    return "/app/" + key;
   };
   const openSidebar = () => {
     document.documentElement.classList.toggle("nav-open");
@@ -108,7 +123,7 @@ function Header(props) {
               <span className="navbar-toggler-bar bar3" />
             </button>
           </div>
-          <NavbarBrand href="/app/dashboard">{getBrand()}</NavbarBrand>
+          <NavbarBrand href={getBrandLink()}>{getBrand()}</NavbarBrand>
         </div>
         <NavbarToggler onClick={toggle}>
           <span className="navbar-toggler-bar navbar-kebab" />

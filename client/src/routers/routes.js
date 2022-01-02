@@ -1,9 +1,5 @@
 import Dashboard from "views/dashboard/Dashboard.js";
 
-import Login from "views/users/Login.js";
-import Register from "views/users/Register.js";
-import Welcome from "views/users/Welcome.js";
-
 import IndexAssets from "views/assets/Index.js";
 import CreateAsset from "views/assets/Create.js";
 import DetailAsset from "views/assets/Detail.js";
@@ -28,6 +24,10 @@ import DetailWire from "views/wires/Detail.js";
 import IndexDexs from "views/dexs/Index.js";
 
 import IndexPortfolio from "views/portfolio/Index.js";
+
+import DocOverview from "views/docs/Overview.js";
+import DocGettingStarted from "views/docs/GettingStarted.js";
+
 
 var routes = {
   "/app/dashboard": {
@@ -64,6 +64,11 @@ var routes = {
   },
   "/app/dexs": {
     "/": IndexDexs
-  }
+  },
+  "/docs": {
+    "/overview": DocOverview,
+    "/getting-started": DocGettingStarted,
+    "/": DocOverview
+  },
 }
 export default routes;
