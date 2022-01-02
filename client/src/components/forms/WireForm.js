@@ -54,6 +54,7 @@ class WireForm extends Component {
     }
     
     handleSubmit(e){
+        e.preventDefault();
         const updateOrCreatePlatform = this.state.form.wir_id !== undefined ? APIService.updateWire.bind(APIService) : APIService.createWire.bind(APIService)
 
         updateOrCreatePlatform(this.state.form).then(res => {
@@ -123,6 +124,7 @@ class WireForm extends Component {
                         <Button
                             className="btn-round"
                             color="primary"
+                            type="submit"
                             onClick={this.handleSubmit}
                         >
                             {submitText}

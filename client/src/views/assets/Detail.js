@@ -119,7 +119,9 @@ class DetailAsset extends Component {
                 <OrdersOfAssetTable
                     title="Orders"
                     displayDeleteButton={false}
-                    ast_id={this.state.ast_id}>
+                    ast_id={this.state.ast_id}
+                    notify={this.props.notify}
+                    displayNotification={this.props.displayNotification}>
                 </OrdersOfAssetTable>
                     <Row>
                         <Col>

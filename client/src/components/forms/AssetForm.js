@@ -151,6 +151,7 @@ class AssetForm extends Component {
     }
     
     handleSubmit(e){
+        e.preventDefault();
         const updateOrCreateAsset = this.state.form.ast_id !== undefined ? APIService.updateAsset.bind(APIService) : APIService.createAsset.bind(APIService)
 
         updateOrCreateAsset(this.state.form).then(res => {
@@ -288,6 +289,7 @@ class AssetForm extends Component {
                             <Button
                                 className="btn-round"
                                 color="primary"
+                                type="submit"
                                 onClick={this.handleSubmit}
                             >
                                 {submitText}

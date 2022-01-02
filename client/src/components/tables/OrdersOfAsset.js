@@ -20,8 +20,12 @@ class OrdersOfAssetTable extends Component {
         this.state = { 
             orders: []
         }
+        this.getOrdersOfAsset = this.getOrdersOfAsset.bind(this)
     }
     componentDidMount() {
+        this.getOrdersOfAsset();
+    }
+    getOrdersOfAsset() {
         APIService.getOrdersOfAsset(this.props.ast_id).then(res => { this.setState({ orders: res.data.orders });});
     }
     renderTableData() {
@@ -38,6 +42,17 @@ class OrdersOfAssetTable extends Component {
                     <td>{price}</td>
                     <td>{fees}</td>
                     <td className={quantity < 0 ? "redtext" : "greentext"}>{Math.round(Math.abs(quantity * price + fees) * 100) / 100}</td>
+                    <td>
+                        <i 
+                            className="nc-icon nc-simple-remove" 
+                            onClick={(e) => { 
+                                e.stopPropagation(); 
+                                APIService.deleteOrder(ord_id).then(res => {
+                                    this.getOrdersOfAsset();
+                                    this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
+                                }).catch(err => this.props.displayNotification(this.props.notify, err.response.data.notif.text, err.response.data.notif.color));
+                            }} />
+                    </td>
                 </tr>
             )
         })
@@ -63,6 +78,7 @@ class OrdersOfAssetTable extends Component {
                                             <th>Unit Price</th>
                                             <th>Fees</th>
                                             <th>Total Price</th>
+                                            <th>Delete</th>
                                         </tr>
                                     </thead>
                                     <tbody>

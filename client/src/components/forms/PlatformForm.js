@@ -78,6 +78,7 @@ class PlatformForm extends Component {
     }
     
     handleSubmit(e){
+        e.preventDefault();
         const updateOrCreatePlatform = this.state.form.plt_id !== undefined ? APIService.updatePlatform.bind(APIService) : APIService.createPlatform.bind(APIService)
 
         updateOrCreatePlatform(this.state.form).then(res => {
@@ -138,6 +139,7 @@ class PlatformForm extends Component {
                         <Button
                             className="btn-round"
                             color="primary"
+                            type="submit"
                             onClick={this.handleSubmit}
                         >
                             {submitText}

@@ -132,6 +132,7 @@ class OrderForm extends Component {
     }
     
     handleSubmit(e){
+        e.preventDefault();
         const updateOrCreateOrder = this.state.form.ord_id !== undefined ? APIService.updateOrder.bind(APIService) : APIService.createOrder.bind(APIService)
 
         updateOrCreateOrder(this.state.form).then(res => {
@@ -264,6 +265,7 @@ class OrderForm extends Component {
                         <Button
                             className="btn-round"
                             color="primary"
+                            type="submit"
                             onClick={this.handleSubmit}
                         >
                             {submitText}

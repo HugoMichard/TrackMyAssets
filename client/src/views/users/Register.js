@@ -39,6 +39,7 @@ class Register extends Component {
   }
 
   handleSubmit(e){
+    e.preventDefault();
     APIService.register(this.state.form).then(res => { 
       if(res.status === 200) { 
         this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
@@ -125,6 +126,7 @@ class Register extends Component {
                         <Button
                           className="btn-round"
                           color="primary"
+                          type="submit"
                           onClick={this.handleSubmit}
                         >
                           Register

@@ -45,6 +45,7 @@ class CategoryForm extends Component {
       };
     
     handleSubmit(e){
+        e.preventDefault();
         const updateOrCreateCategory = this.state.form.cat_id !== undefined ? APIService.updateCategory.bind(APIService) : APIService.createCategory.bind(APIService)
 
         updateOrCreateCategory(this.state.form).then(res => {
@@ -83,6 +84,7 @@ class CategoryForm extends Component {
                         <Button
                             className="btn-round"
                             color="primary"
+                            type="submit"
                             onClick={this.handleSubmit}
                         >
                             {submitText}
