@@ -66,6 +66,8 @@ class PlatformsPortfolio extends Component {
         const pltDetails = this.state.platforms[this.state.platforms.findIndex(plt => plt.plt_id === plt_id)];
         const assetsInPlt = this.state.assetsInPlatforms[plt_id]
         const total = Math.round(assetsInPlt.map(c => (c.ast_value * c.quantity)).reduce((p,n) => p + n) * 10) / 10;
+        const perf = Math.round(assetsInPlt.map(c => c.perf).reduce((p,n) => p + n) * 10) / 10;
+        const perf100 = Math.round((perf / total) * 100 * 10 / 10);
         if(pltDetails) {
           return (
             <Row key={index}>
@@ -75,6 +77,12 @@ class PlatformsPortfolio extends Component {
                     <CardTitle tag="h4" className="no-margin-bottom" style={{color: pltDetails.color}}>{pltDetails.name}</CardTitle>
                     <CardTitle tag="h7">
                       Total : <strong>{total}</strong>
+                    </CardTitle><br/>
+                    <CardTitle tag="h7">
+                      RoI : 
+                      <strong className={`${perf >= 0 ? "greentext" : "redtext"}`}> {perf < 0 ? "- " : "+ "} {Math.abs(perf)} </strong>
+                       / 
+                      <strong className={`${perf >= 0 ? "greentext" : "redtext"}`}> {perf < 0 ? "- " : "+ "} {Math.abs(perf100)} %</strong>
                     </CardTitle>
                   </CardHeader>
                   <CardBody>

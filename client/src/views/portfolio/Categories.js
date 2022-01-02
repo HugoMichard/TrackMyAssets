@@ -68,14 +68,22 @@ class CategoriesPortfolio extends Component {
         if(catDetails) {
           const assetsInCat = this.state.assetsInCategories[cat_id]
           const total = Math.round(assetsInCat.map(c => (c.ast_value * c.quantity)).reduce((p,n) => p + n) * 10) / 10;
+          const perf = Math.round(assetsInCat.map(c => c.perf).reduce((p,n) => p + n) * 10) / 10;
+          const perf100 = Math.round((perf / total) * 100 * 10 / 10);
           return (
             <Row key={index}>
               <Col md="12">
                 <Card>
                   <CardHeader>
                     <CardTitle tag="h4" className="no-margin-bottom" style={{color: catDetails.color}}>{catDetails.name}</CardTitle>
-                    <CardTitle tag="h7">
+                    <CardTitle tag="h7" className="no-margin-bottom">
                       Total : <strong>{total}</strong>
+                    </CardTitle><br/>
+                    <CardTitle tag="h7">
+                      RoI : 
+                      <strong className={`${perf >= 0 ? "greentext" : "redtext"}`}> {perf < 0 ? "- " : "+ "} {Math.abs(perf)} </strong>
+                       / 
+                      <strong className={`${perf >= 0 ? "greentext" : "redtext"}`}> {perf < 0 ? "- " : "+ "} {Math.abs(perf100)} %</strong>
                     </CardTitle>
                   </CardHeader>
                   <CardBody>
