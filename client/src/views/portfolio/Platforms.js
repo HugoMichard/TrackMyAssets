@@ -75,15 +75,15 @@ class PlatformsPortfolio extends Component {
                 <Card>
                   <CardHeader>
                     <CardTitle tag="h4" className="no-margin-bottom" style={{color: pltDetails.color}}>{pltDetails.name}</CardTitle>
-                    <CardTitle tag="h7">
+                    <span className="card-title">
                       Total : <strong>{total}</strong>
-                    </CardTitle><br/>
-                    <CardTitle tag="h7">
+                    </span><br/>
+                    <span className="card-title">
                       RoI : 
                       <strong className={`${perf >= 0 ? "greentext" : "redtext"}`}> {perf < 0 ? "- " : "+ "} {Math.abs(perf)} </strong>
                        / 
                       <strong className={`${perf >= 0 ? "greentext" : "redtext"}`}> {perf < 0 ? "- " : "+ "} {Math.abs(perf100)} %</strong>
-                    </CardTitle>
+                    </span>
                   </CardHeader>
                   <CardBody>
                     <Table responsive>

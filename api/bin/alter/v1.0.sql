@@ -133,6 +133,7 @@ INSERT INTO dexs (name, reference_name)
 VALUES  ('PancakeSwapBSC', 'pancakeswapBsc'),
         ('YieldYakAvax', 'yieldyakAvax'),
         ('BeefyFantom', 'beefyFantom'),
+        ('BeefyAvax', 'beefyAvax'),
         ('OsmosisCosmos', 'osmosisCosmos'), 
         ('PylonTerra', 'pylonTerra');
 

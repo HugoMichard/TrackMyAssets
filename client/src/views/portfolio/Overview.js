@@ -90,15 +90,15 @@ class OverviewPortfolio extends Component {
               <Card>
                 <CardHeader>
                   <CardTitle tag="h4" className="no-margin-bottom">Assets owned</CardTitle>
-                  <CardTitle tag="h7">
+                  <span className="card-title">
                     Total : <strong>{totalAssets}</strong>
-                  </CardTitle><br/>
-                  <CardTitle tag="h7">
+                  </span><br/>
+                  <span className="card-title">
                     RoI : 
                     <strong className={`${perfAssets >= 0 ? "greentext" : "redtext"}`}> {perfAssets < 0 ? "- " : "+ "} {Math.abs(perfAssets)} </strong>
                     / 
                     <strong className={`${perfAssets >= 0 ? "greentext" : "redtext"}`}> {perfAssets < 0 ? "- " : "+ "} {Math.abs(perf100Assets)} %</strong>
-                  </CardTitle>
+                  </span>
                 </CardHeader>
                 <CardBody>
                   <Table responsive>

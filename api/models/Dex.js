@@ -35,11 +35,16 @@ Dex.searchPlatformDexs = function (params, result) {
 
 Dex.searchWallets = function (params, result) {
     sql.query(
-      `SELECT a.name, a.fix_vl, a.rewards, o.quantity as quantity, p.plt_id 
-        FROM platforms p
-        INNER JOIN orders o ON o.plt_id = p.plt_id
-        INNER JOIN assets a ON a.ast_id = o.ast_id 
-        WHERE p.dex_id IS NOT NULL AND p.usr_id = ?`, [params.usr_id], (err, res) => {
+      `SELECT *
+        FROM(
+          SELECT a.name, SUM(a.fix_vl) as fix_vl, SUM(a.rewards) as rewards, SUM(o.quantity) as quantity, p.plt_id 
+            FROM platforms p
+            INNER JOIN orders o ON o.plt_id = p.plt_id
+            INNER JOIN assets a ON a.ast_id = o.ast_id 
+            WHERE p.dex_id IS NOT NULL AND p.usr_id = ?
+            GROUP BY a.name, p.plt_id 
+        ) dex_assets
+        WHERE quantity > 0`, [params.usr_id], (err, res) => {
         if (err) {
           result(null, err)
         } else {

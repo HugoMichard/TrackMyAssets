@@ -26,7 +26,7 @@ Platform.search = function (params, result) {
       FROM platforms p 
       LEFT JOIN dexs d ON d.dex_id = p.dex_id 
       WHERE p.name LIKE ? AND usr_id = ?
-      ORDER BY p.dex_id, p.name`, [
+      ORDER BY p.name`, [
       params.name,
       params.usr_id
     ], (err, res) => {

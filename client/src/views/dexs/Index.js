@@ -31,6 +31,7 @@ class IndexDexs extends Component {
                         wallets: res.data.wallets.filter(w => w.plt_id === d.plt_id)
                     })
                 })
+                displayDexs = displayDexs.filter(d => d.wallets.length > 0);
                 this.setState({ displayDexs: displayDexs }); 
             });
         });
@@ -73,9 +74,9 @@ class IndexDexs extends Component {
                                 <Card>
                                 <CardHeader>
                                     <CardTitle tag="h4" className="no-margin-bottom" style={{color: dex.detail.color}}>{dex.detail.name}</CardTitle>
-                                    <CardTitle tag="h7">
+                                    <span className="card-title">
                                         Total : <strong>{total}</strong> {this.displayIncludingRewards(totalRewards)}
-                                    </CardTitle> <br/>    
+                                    </span> <br/>    
                                 </CardHeader>
                                 <CardBody>
                                     <Table responsive>
