@@ -3,12 +3,9 @@ import React, {Component} from "react";
 // reactstrap components
 import {
     Card,
-    CardHeader,
     CardBody,
-    CardTitle,
     Row,
-    Col,
-    Button
+    Col
   } from "reactstrap";
 
 export default class DocOverview extends Component {
