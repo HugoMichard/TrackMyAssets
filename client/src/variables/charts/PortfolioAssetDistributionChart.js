@@ -23,7 +23,7 @@ export function PortfolioAssetDistributionChart(data, keys) {
         margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
         startAngle={-180}
         activeOuterRadiusOffset={8}
-        valueFormat=" >-p"
+        valueFormat=" >-.1p"
         colors={{scheme: 'category10'}}
         keys={keys}
         borderWidth={1}

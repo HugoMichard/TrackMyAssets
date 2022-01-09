@@ -68,9 +68,6 @@ class Dashboard extends Component {
                 <Col md="6" xs="6">
                   <div className="text-center numbers">
                     <CardTitle tag="p">
-                    {console.log(percentage === undefined)}
-                    {console.log(percentage === Infinity)}
-                    {console.log(percentage)}
                       {value > 0 ? "+ " : value < 0 ? "- " : ""}
                       {Math.round(Math.abs(percentage) * 10) / 10} %
                     </CardTitle>

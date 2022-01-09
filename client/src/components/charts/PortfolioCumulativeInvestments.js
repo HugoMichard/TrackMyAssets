@@ -20,8 +20,7 @@ class PortfolioPriceHistory extends Component {
         super(props);
         this.state = {
             portfolioChartData: PortfolioCumulativeInvestmentsChartData,
-            selectedPortfolioChartRange: "year",
-            cumulative_values: [1000000000000000]
+            selectedPortfolioChartRange: "year"
         }
     }
     componentDidMount() {
@@ -55,17 +54,18 @@ class PortfolioPriceHistory extends Component {
             total_values.push(v.y + plus_value_that_day);
             total_values.push(v.y);
           })
-          var portfolioChartData = [
-            {
-              id: "Investments",
-              data: investmentHistory
-            },
-            {
-              id: "Plus-Value",
-              data: plusValueHistory
-            }
-          ]
-          this.setState({portfolioChartData: portfolioChartData, cumulative_values: total_values });
+          var portfolioChartData = {
+            chart_data: [{
+                id: "Investments",
+                data: investmentHistory
+              },
+              {
+                id: "Plus-Value",
+                data: plusValueHistory
+              }],
+            cumulative_values: total_values
+          }
+          this.setState({portfolioChartData: portfolioChartData});
         })
     }
     renderPortfolioRangeButton(text, range, color) {
@@ -90,7 +90,7 @@ class PortfolioPriceHistory extends Component {
                   {this.renderPortfolioRangeButton("All", "all", "success")}
                 </CardHeader>
                 <CardBody style={ { height: 500 } }>
-                  {PortfolioCumulativeInvestmentsChart(this.state.portfolioChartData, this.state.cumulative_values)}
+                  {PortfolioCumulativeInvestmentsChart(this.state.portfolioChartData)}
                 </CardBody>
             </Card>
         </>

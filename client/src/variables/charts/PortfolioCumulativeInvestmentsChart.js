@@ -5,33 +5,35 @@ import { ResponsiveLine } from '@nivo/line'
 // website examples showcase many properties,
 // you'll often use just a few of them.
 
-export const PortfolioCumulativeInvestmentsChartData = [
-  {
-    "id": "Investments",
-    "data": [
-      {
-        "x": "04/24/2000",
-        "y": 1
-      }]
-  },
-  {
-    "id": "Plus-Value",
-    "data": [
-      {
-        "x": "04/24/2000",
-        "y": 1
-      }]
-  }
-];
+export const PortfolioCumulativeInvestmentsChartData = {
+  "chart_data": [
+    {
+      "id": "Investments",
+      "data": [
+        {
+          "x": "04/24/2000",
+          "y": 1
+        }]
+    },
+    {
+      "id": "Plus-Value",
+      "data": [
+        {
+          "x": "04/24/2000",
+          "y": 1
+        }]
+    }],
+  "cumulative_values": [0, 1]
+  };
 
-export function PortfolioCumulativeInvestmentsChart(data, cumulative_values) {
-  const y_max = Math.max(...cumulative_values);
-  const y_min = Math.min(...cumulative_values);
+export function PortfolioCumulativeInvestmentsChart(data) {
+  const y_max = Math.max(...data.cumulative_values);
+  const y_min = Math.min(...data.cumulative_values);
   const step = (y_max - y_min) / 6;
   const yRange = [y_min, y_min + step, y_min + 2 * step, y_min + 3 * step, y_min + 4 * step, y_min + 5 * step, y_min + 6 * step];
   return (
     <ResponsiveLine
-        data={data}
+        data={data.chart_data}
         margin={{ top: 50, right: 160, bottom: 50, left: 60 }}
         xScale={{ type: 'time', format: "%m/%d/%Y"}}
         yScale={{ type: 'linear', stacked: true, min: y_min, max: y_max }}

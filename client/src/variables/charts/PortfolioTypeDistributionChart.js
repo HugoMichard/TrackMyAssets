@@ -26,7 +26,7 @@ export function PortfolioTypeDistributionChart(data, keys) {
         keys={keys}
         borderWidth={1}
         tooltip={basicTooltip}
-        valueFormat=" >-p"
+        valueFormat=" >-.1p"
         borderColor={{ from: 'color', modifiers: [ [ 'darker', 0.2 ] ] }}
         arcLinkLabelsSkipAngle={10}
         arcLinkLabelsTextColor="#333333"
