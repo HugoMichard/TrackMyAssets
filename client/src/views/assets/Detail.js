@@ -110,7 +110,8 @@ class DetailAsset extends Component {
                                 plt_id={this.state.asset.plt_id}
                                 fix_vl={this.state.asset.fix_vl}
                                 cmc_id={this.state.asset.cmc_id}
-                                duplicate_nbr={this.state.asset.duplicate_nbr}>
+                                duplicate_nbr={this.state.asset.duplicate_nbr}
+                                cmc_official_id={this.state.asset.cmc_official_id}>
                             </AssetForm>
                         </CardBody>
                     </Card>

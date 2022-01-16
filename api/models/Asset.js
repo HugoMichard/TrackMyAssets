@@ -47,8 +47,9 @@ Asset.search = function (params, result) {
 
 Asset.getDetail = function (params, result) {
   sql.query(
-    `SELECT a.*, c.color as cat_color, c.name as cat_name FROM assets a
+    `SELECT a.*, cmc.cmc_official_id, c.color as cat_color, c.name as cat_name FROM assets a
       INNER JOIN categories c on a.cat_id = c.cat_id
+      LEFT JOIN cmc_coins cmc on a.cmc_id = cmc.cmc_id
       WHERE a.ast_id = ? AND a.usr_id = ?`, [
         params.ast_id,
         params.usr_id

@@ -59,7 +59,8 @@ class AssetForm extends Component {
             plt_id: nextProps.plt_id,
             fix_vl: nextProps.fix_vl,
             cmc_id: nextProps.cmc_id,
-            duplicate_nbr: nextProps.duplicate_nbr
+            duplicate_nbr: nextProps.duplicate_nbr,
+            cmc_official_id: nextProps.cmc_official_id
         }
         const selectedType = form.ast_type === "stock" ? typeOptions[0] 
             : form.ast_type === "crypto" ? typeOptions[1] 
