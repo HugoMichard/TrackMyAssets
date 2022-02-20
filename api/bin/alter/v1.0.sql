@@ -3,16 +3,12 @@ CREATE TABLE users
   usr_id              INT unsigned NOT NULL AUTO_INCREMENT,# Unique ID for the user
   firstname           VARCHAR(150) NOT NULL,               # First Name of the user
   lastname            VARCHAR(150) NOT NULL,               # Last Name of the user
-  email               VARCHAR(150) NOT NULL,               # Email of the user
+  email               VARCHAR(150) UNIQUE NOT NULL,               # Email of the user
   password            VARCHAR(150) NOT NULL,               # Password of the user
   created_at          DATE,
   refresh_date        DATE,
   PRIMARY KEY     (usr_id)                                  
 );
-
-
-ALTER TABLE users
-ADD UNIQUE (email);
 
 
 CREATE TABLE categories
@@ -46,22 +42,26 @@ CREATE TABLE cmc_coins
   PRIMARY KEY     (cmc_id)                                      
 );
 
+
 CREATE TABLE assets
 (
   ast_id          INT unsigned NOT NULL AUTO_INCREMENT,
   usr_id          INT unsigned NOT NULL,
   cat_id          INT unsigned NOT NULL,
+  plt_id          INT unsigned,
   cmc_id          INT unsigned,
   duplicate_nbr   INT,
   name            VARCHAR(150) NOT NULL,
   ast_type        VARCHAR(150) NOT NULL,
   code            VARCHAR(30),
   fix_vl          FLOAT,
+  rewards         FLOAT,
   created_at      DATE,
   PRIMARY KEY     (ast_id),
   FOREIGN KEY     (usr_id) REFERENCES users(usr_id),
   FOREIGN KEY     (cat_id) REFERENCES categories(cat_id),
-  FOREIGN KEY     (cmc_id) REFERENCES cmc_coins(cmc_id)                                                                                        
+  FOREIGN KEY     (cmc_id) REFERENCES cmc_coins(cmc_id),
+  FOREIGN KEY     (plt_id) REFERENCES platforms(plt_id)
 );
 
 CREATE TABLE orders
@@ -69,6 +69,7 @@ CREATE TABLE orders
   ord_id          INT unsigned NOT NULL AUTO_INCREMENT,
   usr_id          INT unsigned NOT NULL,
   ast_id          INT unsigned NOT NULL,
+  gtg_ast_id      INT unsigned,
   plt_id          INT unsigned NOT NULL,
   execution_date  DATE NOT NULL,
   price           FLOAT NOT NULL,
@@ -77,7 +78,8 @@ CREATE TABLE orders
   PRIMARY KEY     (ord_id),
   FOREIGN KEY     (usr_id) REFERENCES users(usr_id),
   FOREIGN KEY     (plt_id) REFERENCES platforms(plt_id),
-  FOREIGN KEY     (ast_id) REFERENCES assets(ast_id)                                            
+  FOREIGN KEY     (ast_id) REFERENCES assets(ast_id),
+  FOREIGN KEY     (gtg_ast_id) REFERENCES assets(ast_id)
 );
 
 CREATE TABLE histories
@@ -134,12 +136,7 @@ VALUES  ('PancakeSwapBSC', 'pancakeswapBsc'),
         ('YieldYakAvax', 'yieldyakAvax'),
         ('BeefyFantom', 'beefyFantom'),
         ('BeefyAvax', 'beefyAvax'),
+        ('AnchorTerra', 'anchorTerra'),
+        ('RaydiumSolana', 'raydiumSolana'),
         ('OsmosisCosmos', 'osmosisCosmos'), 
         ('PylonTerra', 'pylonTerra');
-
-ALTER TABLE assets
-  ADD COLUMN plt_id INT unsigned,
-  ADD CONSTRAINT plt_id FOREIGN KEY (plt_id) REFERENCES platforms(plt_id);
-
-ALTER TABLE assets
-  ADD COLUMN rewards FLOAT;

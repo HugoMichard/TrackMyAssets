@@ -18,6 +18,29 @@ History.addHistories = function (newHistories, result) {
   )
 }
 
+History.getAssetHistoryAtDate = function (params, date, result) {
+  sql.query(
+    `SELECT 
+      hst.hst_id, 
+      hst.vl, 
+      hst.code, 
+      DATE_FORMAT(hst.hst_date, '%Y-%m-%d') as hst_date 
+      FROM histories hst
+      INNER JOIN assets ast ON ast.code = hst.code 
+      WHERE ast.ast_id = ? AND hst.hst_date <= ? 
+      ORDER BY hst_date DESC LIMIT 1`, [
+        params.ast_id,
+        date
+      ], function (err, res) {
+      if (err) {
+        result(null, err)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
+
 History.getHistoryByCode = function (code, result) {
   sql.query(
     `SELECT hst_id, vl, code, DATE_FORMAT(hst_date, '%Y-%m-%d') as hst_date FROM histories WHERE code = ? ORDER BY hst_date DESC LIMIT 1`, [

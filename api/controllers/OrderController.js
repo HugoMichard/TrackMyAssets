@@ -1,11 +1,24 @@
 var Order = require('../models/Order')
+var History = require('../models/History')
 var notifHelper = require('../helpers/NotifHelper');
+var dateHelper = require('../helpers/DateHelper');
 
 
-exports.create = function (req, res) {
-  req.body.quantity = req.body.isBuy ? req.body.quantity : -req.body.quantity;
+exports.create = async function (req, res) {
+  req.body.quantity = isNaN(req.body.gtg_ast_id) && !req.body.isBuy ? -req.body.quantity : req.body.quantity;
   var newOrder = new Order(req.body)
   newOrder.usr_id = req.usr_id
+  if (!isNaN(newOrder.gtg_ast_id)) {
+    newOrder.fees = 0;
+    if (isNaN(newOrder.price)) {
+      const h = await new Promise((resolve, reject) => {
+        History.getAssetHistoryAtDate(newOrder, dateHelper.dateToStringDate(newOrder.execution_date), function(err, result) {
+          resolve(result);
+        })
+      });
+      newOrder.price = h[0].vl
+    }
+  }
   Order.create(newOrder, function (err, order) {
     if (err) {
       res.status(500).send(err)
@@ -40,11 +53,23 @@ exports.getDetail = function (req, res) {
   })
 }
 
-exports.update = function (req, res) {
-  req.body.quantity = req.body.isBuy ? req.body.quantity : -req.body.quantity;
+exports.update = async function (req, res) {
+  req.body.quantity = isNaN(req.body.gtg_ast_id) && !req.body.isBuy ? -req.body.quantity : req.body.quantity;
   var updatedOrder = new Order(req.body)
   updatedOrder.ord_id = parseInt(req.params.ord_id);
   updatedOrder.usr_id = req.usr_id
+  if (!isNaN(updatedOrder.gtg_ast_id)) {
+    updatedOrder.fees = 0;
+    if (isNaN(updatedOrder.price)) {
+      const h = await new Promise((resolve, reject) => {
+        History.getAssetHistoryAtDate(updatedOrder, dateHelper.dateToStringDate(updatedOrder.execution_date), function(err, result) {
+          resolve(result);
+        })
+      });
+      updatedOrder.price = h[0].vl
+    }
+  }
+  console.log(updatedOrder)
   Order.update(updatedOrder, function (err, order) {
       if (err) {
           res.status(500).send({ message: err.message});

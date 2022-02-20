@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const passcode = '5a102a34f60fa7ec9d643a8a0e72cab9';
+const passcode = 'A63uGa877SNe89vvqADwKYGayceXAxmHL';
 
 exports.getMoneyInDexWallet = function(dex_reference_name, wallet_address) {
     console.log(`https://api.apeboard.finance/${dex_reference_name}/${wallet_address}`);
@@ -12,11 +12,12 @@ exports.getMoneyInDexWallet = function(dex_reference_name, wallet_address) {
             const data = scraped_data.data ? scraped_data.data : scraped_data; 
             const pools = data.farms != undefined && data.farms.length > 0 ? data.farms 
                             : data.positions != undefined && data.positions.length > 0 ? data.positions
-                            : data.projects;
+                            : data.projects != undefined && data.projects.length > 0 ? data.projects
+                            : data.savings;
             if(!pools) {
                 return [];
             }
-            const farms = [];
+            var farms = [];
             pools.forEach(farm => {
                 const token_price = farm.tokens.map(t => t.price * t.balance).reduce((p, n) => p + n);
                 const rewards = farm.rewards ? farm.rewards.map(r => r.balance * r.price).reduce((p,n) => p + n) : 0;

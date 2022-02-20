@@ -3,6 +3,7 @@ var sql = require('./db.js')
 var Order = function (order) {
   this.execution_date = order.execution_date
   this.ast_id = parseInt(order.ast_id)
+  this.gtg_ast_id = parseInt(order.gtg_ast_id)
   this.plt_id = parseInt(order.plt_id)
   this.usr_id = order.usr_id
   this.fees = parseFloat(order.fees)
@@ -24,7 +25,7 @@ Order.create = function (newOrder, result) {
 
 Order.search = function (params, result) {
   sql.query(
-    `SELECT o.ord_id, o.usr_id, o.ast_id, o.price, o.quantity as quantity, o.fees, 
+    `SELECT o.ord_id, o.usr_id, o.ast_id, o.price, o.quantity, o.fees, o.gtg_ast_id,
       DATE_FORMAT(o.execution_date, '%m/%d/%Y') as execution_date, 
       a.name as ast_name, a.code as ast_code, a.ast_type as ast_type, a.duplicate_nbr as ast_duplicate_nbr,
       c.color as cat_color, c.name as cat_name,
@@ -50,7 +51,7 @@ Order.search = function (params, result) {
 
 Order.getDetail = function (params, result) {
   sql.query(
-    `SELECT o.ord_id, o.usr_id, o.ast_id, o.price, o.quantity as quantity, o.fees, 
+    `SELECT o.ord_id, o.usr_id, o.ast_id, o.price, o.quantity as quantity, o.fees, o.gtg_ast_id,
       DATE_FORMAT(o.execution_date, '%Y-%m-%d') as execution_date,
       a.name as ast_name, a.code as ast_coin, a.ast_type as ast_type,
       c.color as cat_color, c.name as cat_name, c.cat_id as cat_id,
@@ -75,7 +76,7 @@ Order.getDetail = function (params, result) {
 Order.update = function (params, result) {
   sql.query(
     `UPDATE orders 
-      SET execution_date = ?, ast_id = ?, quantity = ?, price = ?, fees = ?, plt_id = ?
+      SET execution_date = ?, ast_id = ?, quantity = ?, price = ?, fees = ?, plt_id = ?, gtg_ast_id = ?
       WHERE ord_id = ? AND usr_id = ?`, [
         params.execution_date,
         params.ast_id,
@@ -83,6 +84,7 @@ Order.update = function (params, result) {
         params.price,
         params.fees,
         params.plt_id,
+        params.gtg_ast_id,
         params.ord_id,
         params.usr_id
     ], (err, res) => {
@@ -131,15 +133,17 @@ Order.getOrdersOfAsset = function (params, result) {
       o.ord_id, 
       DATE_FORMAT(o.execution_date, '%Y-%m-%d') as execution_date,
       o.price, 
-      o.quantity as quantity, 
-      o.fees, 
+      o.quantity, 
+      o.fees,
+      o.gtg_ast_id,
       p.name as plt_name, p.color as plt_color
       FROM orders o
       INNER JOIN assets a ON a.ast_id = o.ast_id 
       INNER JOIN platforms p ON p.plt_id = o.plt_id
-      WHERE a.usr_id = ? AND a.ast_id = ?
+      WHERE a.usr_id = ? AND (a.ast_id = ? OR o.gtg_ast_id = ?)
       ORDER BY o.execution_date DESC`, [
         params.usr_id,
+        params.ast_id,
         params.ast_id
     ], (err, res) => {
       if (err) {
@@ -158,7 +162,7 @@ Order.getBuyingQuantityOfAssetByDay = function (params, result) {
       SUM(quantity) as quantity,
       AVG(quantity * price) / SUM(quantity) as price
       FROM orders
-      WHERE usr_id = ? AND ast_id = ?
+      WHERE usr_id = ? AND ast_id = ? AND gtg_ast_id IS NULL
       GROUP BY execution_date
       ORDER BY execution_date ASC`, [
         params.usr_id,

@@ -114,8 +114,8 @@ Asset.getAssetsOwned = function (usr_id, result) {
       a.duplicate_nbr,
       owned_assets.quantity, 
       owned_assets.price,
-      (current_ast_values.ast_vl - owned_assets.price)  * owned_assets.quantity as perf,
-      (current_ast_values.ast_vl - owned_assets.price) * 100 / owned_assets.price as perf100,
+      ((current_ast_values.ast_vl - owned_assets.price) * owned_assets.quantity) + COALESCE(generated_assets.generated_money, 0) as perf,
+      ((current_ast_values.ast_vl - owned_assets.price) + (COALESCE(generated_assets.generated_money, 0) / owned_assets.quantity)) * 100 / owned_assets.price as perf100,
       c.name as cat_name,
       c.color as cat_color
     FROM (
@@ -145,14 +145,21 @@ Asset.getAssetsOwned = function (usr_id, result) {
         SELECT ast_id, SUM(quantity) as quantity FROM orders WHERE usr_id = ? GROUP BY ast_id
       ) as owned_quantity 
       ON o.ast_id = owned_quantity.ast_id
-      WHERE usr_id = ? AND o.quantity > 0 GROUP BY ast_id
+      WHERE o.quantity > 0 
+      GROUP BY ast_id
     ) owned_assets
     ON current_ast_values.ast_id = owned_assets.ast_id
+    LEFT JOIN (
+      SELECT o.gtg_ast_id, SUM(o.quantity * o.price + o.fees) as generated_money
+      FROM orders o
+      WHERE gtg_ast_id IS NOT NULL
+      GROUP BY gtg_ast_id
+    ) generated_assets
+    ON owned_assets.ast_id = generated_assets.gtg_ast_id
     INNER JOIN assets a ON a.ast_id = owned_assets.ast_id
     INNER JOIN categories c ON a.cat_id = c.cat_id 
     WHERE owned_assets.quantity > 0
     ORDER BY a.name`, [
-      usr_id,
       usr_id,
       usr_id
     ], (err, res) => {

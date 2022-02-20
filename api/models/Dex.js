@@ -8,7 +8,7 @@ var Dex = function (dex) {
 
 Dex.search = function (result) {
   sql.query(
-    `SELECT * FROM dexs`, [], (err, res) => {
+    `SELECT * FROM dexs ORDER BY name`, [], (err, res) => {
       if (err) {
         result(null, err)
       } else {

@@ -146,7 +146,7 @@ exports.checkCoin = function(res, coin, cmc_id, duplicate_nbr, cmc_official_id) 
     if(checkInt(res, "Coin", duplicate_nbr)) {return true;}
     if(checkPositiveInt(res, "Coin", cmc_official_id)) {return true;}
     const params = {
-        coin: coin.slice(0, -duplicate_nbr.toString().length),
+        coin: coin,
         cmc_id: cmc_id,
         duplicate_nbr: duplicate_nbr,
         cmc_official_id: cmc_official_id

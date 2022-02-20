@@ -8,6 +8,7 @@ import DeleteAsset from "views/assets/Delete.js";
 import IndexOrders from "views/orders/Index.js";
 import CreateOrder from "views/orders/Create.js";
 import DetailOrder from "views/orders/Detail.js";
+import GenerateOrder from "views/orders/Generate.js";
 
 import IndexCategories from "views/categories/Index.js";
 import CreateCategory from "views/categories/Create.js";
@@ -35,6 +36,7 @@ var routes = {
   },
   "/app/orders": {
     "/create": CreateOrder,
+    "/generate": GenerateOrder,
     "/:ord_id": DetailOrder,
     "/": IndexOrders
   },

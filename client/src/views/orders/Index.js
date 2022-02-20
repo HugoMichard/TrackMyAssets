@@ -39,11 +39,14 @@ class IndexOrders extends Component {
     }
     renderTableData() {
         return this.state.orders.map((ord, index) => {
-            const { ord_id, ast_name, cat_name, cat_color, ast_code, ast_type, quantity, fees, price, execution_date, plt_color, plt_name, ast_duplicate_nbr } = ord
+            const { ord_id, ast_name, cat_name, cat_color, ast_code, gtg_ast_id, ast_type, quantity, fees, price, execution_date, plt_color, plt_name, ast_duplicate_nbr } = ord
+            const ord_type = !gtg_ast_id ? quantity < 0 ? "Sell" : "Buy" : "Generate"
             return (
                 <tr key={index} onClick={() => window.location = "/app/orders/" + ord_id}>
                     <td>{execution_date}</td>
-                    <td className={quantity < 0 ? "redtext" : "greentext"}>{quantity < 0 ? "Sell" : "Buy"}</td>
+                    <td className={ord_type === "Sell" ? "redtext" : ord_type === "Buy" ? "greentext" : ""}>
+                        {ord_type}
+                    </td>
                     <td>{ast_name}</td>
                     <td>{ast_type === "stock" ? ast_code : ast_type === "crypto" ? ast_code.slice(0, -ast_duplicate_nbr.toString().length) : ""}</td>
                     <td>{this.state.typeValueToLabel[ast_type]}</td>
@@ -89,7 +92,14 @@ class IndexOrders extends Component {
                         <Button
                             className="btn-round justify-content-end no-margin-top"
                             color="primary">
-                                Create
+                                Buy / Sell
+                        </Button>
+                    </Link>
+                    <Link to="/app/orders/generate">
+                        <Button
+                            className="btn-round justify-content-end no-margin-top"
+                            color="secondary">
+                                Generate
                         </Button>
                     </Link>
                     <DebounceSearch searchFunction={this.searchForOrders.bind(this)}/>

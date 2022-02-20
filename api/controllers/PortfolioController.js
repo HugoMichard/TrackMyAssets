@@ -24,8 +24,10 @@ function getPortfolioStartDate(usr_id) {
 exports.getPortfolioStartDate = getPortfolioStartDate;
 
 exports.refresh = async function(req, res) {
+  console.log("Refreshing tokens");
   const updateCoinList = await scraperHelper.updateCoinList();
-  
+  console.log("Updated coin list");
+
   const assets = await new Promise(function(resolve, reject) {
     History.getLastHistoryOfUserCexAssets({usr_id: req.usr_id}, function (err, assets) {
       if (err) { reject(err) }
@@ -35,6 +37,7 @@ exports.refresh = async function(req, res) {
   assets.forEach(a => {
     history.updateAssetHistory(a);
   });
+  console.log("Updated assets");
   
   const dexAssets = await new Promise(function(resolve, reject) {
     Dex.getUserDexAssetsToUpdate({usr_id: req.usr_id}, function (err, dexAssets) {
@@ -43,6 +46,7 @@ exports.refresh = async function(req, res) {
     })
   });
   history.updateDexAssetsHistory(dexAssets, req.usr_id);
+  console.log("Update dex assets")
   res.status(200).send({state: "Success"});
   User.updateRefresh(req.usr_id);
 }

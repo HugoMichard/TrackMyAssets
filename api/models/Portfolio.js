@@ -24,7 +24,7 @@ Portfolio.getPorfolioValueHistory = function (params, result) {
   sql.query(
     `WITH cumul_orders AS (
       SELECT SUM(o.quantity) OVER(PARTITION BY a.code ORDER BY o.execution_date ASC) as quantity_sum, 
-      SUM(o.quantity * o.price + o.fees) OVER(PARTITION BY a.code ORDER BY o.execution_date ASC) as price_sum, 
+      SUM(CASE WHEN o.gtg_ast_id IS NULL THEN o.quantity * o.price + o.fees ELSE 0 END) OVER(PARTITION BY a.code ORDER BY o.execution_date ASC) as price_sum, 
       o.execution_date, 
       a.code,
       a.ast_id
@@ -92,7 +92,8 @@ Portfolio.getInvestments = function (params, result) {
         FROM dates d, categories c2 
         WHERE usr_id = ? AND d.random_date BETWEEN ? AND CURDATE() - INTERVAL 1 DAY
         ) date_cat_combis 
-      ON o.execution_date = date_cat_combis.random_date AND c.cat_id = date_cat_combis.cat_id     
+      ON o.execution_date = date_cat_combis.random_date AND c.cat_id = date_cat_combis.cat_id
+      WHERE o.gtg_ast_id IS NULL
       GROUP by c.cat_id, DATE_FORMAT(date_cat_combis.random_date, ?)
       ORDER BY DATE_FORMAT(date_cat_combis.random_date, ?)`,
     [
@@ -120,7 +121,7 @@ Portfolio.getCumulativeInvestments = function (params, result) {
           COALESCE(SUM(day_sum) OVER(ORDER BY random_date ASC), 0) as cum_sum
           FROM (
             SELECT SUM(price * quantity + fees) as day_sum, execution_date
-            FROM orders WHERE usr_id = ? AND execution_date <= CURDATE() - INTERVAL 1 DAY
+            FROM orders WHERE usr_id = ? AND execution_date <= CURDATE() - INTERVAL 1 DAY AND gtg_ast_id IS NULL
             GROUP BY execution_date
           ) o
         RIGHT JOIN dates d ON o.execution_date = d.random_date) cum_investments
@@ -142,7 +143,7 @@ Portfolio.getCumulativeInvestments = function (params, result) {
 
 Portfolio.getTotalInvestments = function (params, result) {
   sql.query(
-    `SELECT SUM(quantity * price + fees) as investment FROM orders WHERE usr_id = ? GROUP BY quantity > 0 ORDER BY investment DESC`,
+    `SELECT SUM(quantity * price + fees) as investment FROM orders WHERE usr_id = ? AND gtg_ast_id is NULL GROUP BY quantity > 0 ORDER BY investment DESC`,
     [
       params.usr_id
     ], 
@@ -197,8 +198,8 @@ Portfolio.getProfitsRealised = function (usr_id, result) {
       transactions.quantity,
       transactions.buy_price,
       transactions.sell_price,
-      (transactions.sell_price - transactions.buy_price) * transactions.quantity as perf,
-      (transactions.sell_price - transactions.buy_price) * 100 / transactions.buy_price as perf100
+      ((transactions.sell_price - transactions.buy_price) * transactions.quantity) + COALESCE(generated_assets.generated_money, 0) as perf,
+      ((transactions.sell_price - transactions.buy_price) + (COALESCE(generated_assets.generated_money, 0) / transactions.quantity)) * 100 / transactions.buy_price as perf100
     FROM (
       SELECT
         o.ast_id,
@@ -210,9 +211,16 @@ Portfolio.getProfitsRealised = function (usr_id, result) {
       ) last_sold
       INNER JOIN orders o ON o.ast_id = last_sold.ast_id
       WHERE o.execution_date <= last_sold.last_selling
-      GROUP BY o.ast_id 
+      GROUP BY o.ast_id
     ) as transactions
     INNER JOIN assets a ON a.ast_id = transactions.ast_id
+    LEFT JOIN (
+      SELECT o.gtg_ast_id, SUM(o.quantity * o.price + o.fees) as generated_money
+      FROM orders o
+      WHERE gtg_ast_id IS NOT NULL
+      GROUP BY gtg_ast_id
+    ) generated_assets
+    ON a.ast_id = generated_assets.gtg_ast_id
     INNER JOIN categories c ON c.cat_id = a.cat_id`,
     [
       usr_id
