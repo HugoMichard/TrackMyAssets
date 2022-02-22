@@ -30,11 +30,14 @@ class OrdersOfAssetTable extends Component {
     }
     renderTableData() {
         return this.state.orders.map((ord, index) => {
-            const { ord_id, execution_date, price, quantity, fees, plt_name, plt_color } = ord
+            const { ord_id, execution_date, price, quantity, fees, plt_name, plt_color, gtg_ast_id } = ord
+            const ord_type = !gtg_ast_id ? quantity < 0 ? "Sell" : "Buy" : Number(gtg_ast_id) === Number(this.props.ast_id) ? "Generates" : "Generated";
             return (
                 <tr key={index} onClick={() => window.location = "/app/orders/" + ord_id}>
                     <td>{execution_date}</td>
-                    <td className={quantity < 0 ? "redtext" : "greentext"}>{quantity < 0 ? "Sell" : "Buy"}</td>
+                    <td className={ord_type === "Sell" ? "redtext" : ord_type === "Buy" ? "greentext" : ""}>
+                        {ord_type}
+                    </td>
                     <td style={{ color: plt_color }}>
                         {plt_name}
                     </td>
