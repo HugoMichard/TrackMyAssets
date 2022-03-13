@@ -1,7 +1,6 @@
 var User = require('../models/User')
 var nodemailer = require('nodemailer');
 var notifHelper = require('../helpers/NotifHelper');
-const config = require("../config/mail.config");
 
 exports.getLastRefresh = function (req, res) {
   User.getLastRefresh(req.usr_id, function (err, refresh_date) {
@@ -19,13 +18,13 @@ exports.sendContactMail = function (req, res) {
   const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
     host: "smtp.gmail.com",
-    auth: config.mail_config,
+    auth: {user: process.env.MAIL_USER, pass:process.env.MAIL_PASSWORD},
     secure: true,
   });
 
   const mailData = {
-    from: config.mail_config.user,  // sender address
-    to: config.receiver_mail,   // receiver address
+    from: process.env.MAIL_USER,  // sender address
+    to: process.env.MAIL_TARGET,   // receiver address
     subject: `TrackMyAssets - Mail From ${req.body.name} at ${req.body.email}`,
     text: req.body.message,
     html: req.body.message

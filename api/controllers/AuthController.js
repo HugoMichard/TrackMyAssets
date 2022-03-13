@@ -1,7 +1,6 @@
 var User = require('../models/User')
 var jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const config = require("../config/auth.config");
 var notifHelper = require('../helpers/NotifHelper');
 
 exports.register = async function (req, res) {
@@ -26,7 +25,7 @@ exports.login = async function (req, res) {
         const user = users[0];
         const validPassword = await bcrypt.compare(req.body.password, user.password);
         if(validPassword) {
-          var token = jwt.sign({ id: user.usr_id }, config.secret, { expiresIn: 86400 });
+          var token = jwt.sign({ id: user.usr_id }, process.env.HASH_SECRET, { expiresIn: 86400 });
           res.status(200).send({accessToken: token, notif: notifHelper.getNotif("successLogin")});
         } else {
           res.status(500).send({ message: "No user found with this email / password", notif: notifHelper.getNotif("failLogin")});
