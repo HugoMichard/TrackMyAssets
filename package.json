@@ -1,0 +1,21 @@
+{
+  "name": "trackmyassets",
+  "version": "1.0.0",
+  "description": "This project allows users to track their assets accross different platforms and evaluate their investments and returns. Assets tracked can be of different type : stock market, cryptocurrencies, fixed value assets and staked cryptocurrencies in decentralized exchange pools / farms.",
+  "main": "index.js",
+  "scripts": {
+    "client": "cd client && npm start",
+    "api": "cd api && npm start:prod",
+    "heroku-postbuild": "cd client && npm install && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HugoMichard/TrackMyAssets.git"
+  },
+  "author": "HugoMichard",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HugoMichard/TrackMyAssets/issues"
+  },
+  "homepage": "https://github.com/HugoMichard/TrackMyAssets#readme"
+}
