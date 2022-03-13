@@ -16,39 +16,22 @@ cd TrackMyAssets/client
 npm install
 cd ../api
 npm install
-mkdir ./config
+touch .env
 ```
 
-In the config directory that has been created, create three files :
+In the `api/.env` file that has been created, add your local environment configurations. It should look like this :
+```bash
+PORT=5000
+HASH_SECRET='secret-key'
 
-- one js file named auth.config.js and insert your secret key configurations. Here is an example of the format:
-```yaml
-module.exports = {
-    secret: "secret-key"
-};
-```
+DB_HOST='localhost'
+DB_USER='root'
+DB_PASSWORD='root'
+DB_DATABASE='TrackMyAssets'
 
-- one js file named database.config.js and insert your database configurations. Here is an example of the format:
-```yaml
-module.exports = {
-    db_config: {
-        host: 'localhost',
-        user: 'root',
-        password: 'root',
-        database: 'TrackMyAssets'
-    }
-};
-```
-
-- one optional js file named mail.config.js and insert your gmail configurations (it will be the sending account). Also add the mail you wish to receive the messages on. Here is an example of the format:
-```yaml
-module.exports = {
-    mail_config: {
-        user: "adevmailsender@gmail.com",
-        pass: "@DevMa1lSender"
-    },
-    receiver_mail: "hugomichard@yahoo.com"
-};
+MAIL_USER='sender@mail.com'
+MAIL_PASSWORD='sender_password'
+MAIL_TARGET='target@mail.com'
 ```
 
 Initialize the mysql database by running the sql scripts in the api/bin/alter folder.
