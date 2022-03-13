@@ -2,7 +2,7 @@
   "name": "track-my-assets",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://demos.creative-tim.com/login",
+  "homepage": "https://github.com/HugoMichard/TrackMyAssets#readme",
   "proxy": "http://localhost:5000",
   "dependencies": {
     "@babel/core": "7.14.2",
