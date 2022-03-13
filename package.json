@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/HugoMichard/TrackMyAssets/issues"
   },
-  "homepage": "https://github.com/HugoMichard/TrackMyAssets#readme"
+  "homepage": "https://github.com/HugoMichard/TrackMyAssets#readme",
+  "dependencies": {
+    "if-env": "^1.0.4"
+  }
 }
