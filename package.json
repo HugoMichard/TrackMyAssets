@@ -7,7 +7,7 @@
     "node": "10.19.0"
   },
   "scripts": {
-    "start": "npm run api",
+    "start": "npm run client && npm run api",
     "client": "cd client && npm start",
     "api": "cd api && npm run start",
     "heroku-postbuild": "cd client && npm install && npm run build"

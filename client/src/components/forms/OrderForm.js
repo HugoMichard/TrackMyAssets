@@ -33,43 +33,47 @@ class OrderForm extends Component {
             cat_color: "",
             code: ""
         }
-        this.state = { redirect:false, form: form, selectedAst: null, selectedAstData: selectedAstData, selectedPlt: null }
+        this.state = { redirect:false, form: form, selectedAst: null, selectedAstData: selectedAstData, selectedPlt: null, receivedProps: null }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handlePlatformChange = this.handlePlatformChange.bind(this);
         this.handleChangeSwitch = this.handleChangeSwitch.bind(this);
     }
-    componentWillReceiveProps(nextProps) {
-        const assets = this.state.assets;
-        const platforms = this.state.platforms;
-        const form = {
-            ord_id: nextProps.ord_id,
-            cat_id: nextProps.cat_id,
-            price: nextProps.price,
-            fees: nextProps.fees,
-            quantity: Math.abs(nextProps.quantity),
-            ast_id: nextProps.ast_id,
-            plt_id: nextProps.plt_id,
-            execution_date: nextProps.execution_date,
-            isBuy: nextProps.isBuy
-        }
+    static getDerivedStateFromProps(nextProps, state) {
+        if(nextProps !== state.receivedProps && nextProps.ord_id) {
+            const assets = state.assets;
+            const platforms = state.platforms;
+            const form = {
+                ord_id: nextProps.ord_id,
+                cat_id: nextProps.cat_id,
+                price: nextProps.price,
+                fees: nextProps.fees,
+                quantity: Math.abs(nextProps.quantity),
+                ast_id: nextProps.ast_id,
+                plt_id: nextProps.plt_id,
+                execution_date: nextProps.execution_date,
+                isBuy: nextProps.isBuy
+            }
 
-        var selectedAst = {}
-        var selectedAstData = {}
-        for(var i in assets){
-            if(assets[i].value === form.ast_id){
-                selectedAst = assets[i];
-                selectedAstData = assets[i];
-                break;
+            var selectedAst = {}
+            var selectedAstData = {}
+            for(var i in assets){
+                if(assets[i].value === form.ast_id){
+                    selectedAst = assets[i];
+                    selectedAstData = assets[i];
+                    break;
+                }
             }
-        }
-        var selectedPlt = {}
-        for(var j in platforms){
-            if(platforms[j].value === form.plt_id){
-                selectedPlt = platforms[j];
-                break;
+            var selectedPlt = {}
+            for(var j in platforms){
+                if(platforms[j].value === form.plt_id){
+                    selectedPlt = platforms[j];
+                    break;
+                }
             }
+            return {notify: nextProps.notify, displayNotification: nextProps.displayNotification, form: form, selectedAst: selectedAst, selectedAstData: selectedAstData,  selectedPlt: selectedPlt, receivedProps: nextProps}    
         }
-        this.setState({form: form, selectedAst: selectedAst, selectedAstData: selectedAstData,  selectedPlt: selectedPlt}, () => this.handlePlatformChange(form.plt_id));
+        return null;
     }
     componentDidMount() {
         APIService.searchAssets({}).then(res => { 
@@ -86,7 +90,18 @@ class OrderForm extends Component {
                 a.code = a.ast_type === "crypto" ? a.code.slice(0, -a.duplicate_nbr.toString().length) : a.code;
                 return a
             })
-            this.setState({ assets: assets, availableAssets: assets });
+            var selectedAst = {}
+            var selectedAstData = {}
+            if(this.state.form.ast_id) {
+                for(var i in assets){
+                    if(assets[i].value === this.state.form.ast_id){
+                        selectedAst = assets[i];
+                        selectedAstData = assets[i];
+                        break;
+                    }
+                }
+            }
+            this.setState({ assets: assets, availableAssets: assets, selectedAst: selectedAst, selectedAstData: selectedAstData });
         });
 
         APIService.searchPlatforms({}).then(res => { 
@@ -99,8 +114,22 @@ class OrderForm extends Component {
                 label,
                 ...rest
               }));
-            this.setState({ platforms: platforms });
+            var selectedPlt = {}
+            if(this.state.form.plt_id) {
+                for(var j in platforms){
+                    if(platforms[j].value === this.state.form.plt_id){
+                        selectedPlt = platforms[j];
+                        break;
+                    }
+                }
+            }
+            this.setState({ platforms: platforms, selectedPlt: selectedPlt });
         });
+    }
+    componentDidUpdate(prevProps){
+        if(this.state.assets && this.state.platforms && !this.state.availableAssets) {
+            this.handlePlatformChange(prevProps.plt_id, this.state)
+        }
     }
     handleChange(property, event) {
         var { form, selectedAst, selectedAstData, selectedPlt } = this.state;
@@ -115,7 +144,10 @@ class OrderForm extends Component {
         this.setState({form: form, selectedAst: selectedAst, selectedAstData: selectedAstData, selectedPlt: selectedPlt}, () => this.handlePlatformChange(event.value));
     }
     handlePlatformChange(plt_id) {
-        const { platforms, form, assets } = this.state;
+        this.selectAvailableAssetsOnPlatformChange(plt_id, this.state)
+    }
+    selectAvailableAssetsOnPlatformChange(plt_id, state) {
+        const { platforms, form, assets } = state;
         const selectedPlatform = platforms.find(p => p.value === plt_id);
         if(selectedPlatform && selectedPlatform.dex_name) {
             form.quantity = 0.86;
@@ -130,15 +162,14 @@ class OrderForm extends Component {
         form.isBuy = value
         this.setState({form: form});
     }
-    
     handleSubmit(e){
         e.preventDefault();
         const updateOrCreateOrder = this.state.form.ord_id !== undefined ? APIService.updateOrder.bind(APIService) : APIService.createOrder.bind(APIService)
 
         updateOrCreateOrder(this.state.form).then(res => {
-            this.props.displayNotification(this.props.notify, res.data.notif.text, res.data.notif.color);
+            this.state.displayNotification(this.state.notify, res.data.notif.text, res.data.notif.color);
             this.setState({redirect: res.status === 200});
-        }).catch(err => this.props.displayNotification(this.props.notify, err.response.data.notif.text, err.response.data.notif.color));
+        }).catch(err => this.state.displayNotification(this.state.notify, err.response.data.notif.text, err.response.data.notif.color));
     }
     render() {
         let { redirect, form, selectedAst, availableAssets, selectedAstData, selectedPlt, platforms } = this.state
