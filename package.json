@@ -4,7 +4,7 @@
   "description": "This project allows users to track their assets accross different platforms and evaluate their investments and returns. Assets tracked can be of different type : stock market, cryptocurrencies, fixed value assets and staked cryptocurrencies in decentralized exchange pools / farms.",
   "main": "index.js",
   "engines": {
-    "node": "10.19.0"
+    "node": "16.14.2"
   },
   "scripts": {
     "start": "npm run api & npm run client",
