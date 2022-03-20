@@ -8,10 +8,6 @@ const db_config = {
 }
 
 // local mysql db connection
-var connection = mysql.createConnection(db_config)
-
-connection.connect(function (err) {
-  if (err) throw err
-})
+var connection = mysql.createPool(db_config)
 
 module.exports = connection
