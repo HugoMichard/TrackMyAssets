@@ -25,10 +25,13 @@ CREATE TABLE platforms
 (
   plt_id          INT unsigned NOT NULL AUTO_INCREMENT,
   usr_id          INT unsigned NOT NULL,
+  dex_id          INT unsigned,
   name            VARCHAR(150) NOT NULL,
   color           VARCHAR(10) NOT NULL,
+  wallet_address  VARCHAR(150),
   PRIMARY KEY     (plt_id),
-  FOREIGN KEY     (usr_id) REFERENCES users(usr_id)
+  FOREIGN KEY     (usr_id) REFERENCES users(usr_id),
+  FOREIGN KEY     (dex_id) REFERENCES dexs(dex_id)
 );
 
 CREATE TABLE cmc_coins
@@ -125,11 +128,6 @@ CREATE TABLE dexs
   reference_name  VARCHAR(50) NOT NULL,
   PRIMARY KEY     (dex_id)                                   
 );
-
-ALTER TABLE platforms
-	ADD COLUMN dex_id INT unsigned,
-  ADD COLUMN wallet_address VARCHAR(150),
- 	ADD	CONSTRAINT dex_id FOREIGN KEY (dex_id) REFERENCES dexs(dex_id);
 
 INSERT INTO dexs (name, reference_name)
 VALUES  ('PancakeSwapBSC', 'pancakeswapBsc'),
