@@ -7,7 +7,9 @@
     "node": "16.14.2"
   },
   "scripts": {
-    "start": "npm run api",
+    "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
+    "start:dev": "npm run api & npm run client",
+    "start:prod": "npm run api",
     "client": "cd client && npm start",
     "api": "cd api && npm run start",
     "heroku-postbuild": "cd client && npm install && npm run build"
