@@ -1,9 +1,7 @@
 import axios from 'axios'
 import AuthService from 'services/auth'
 
-const port = process.env.PORT || '5000';
-
-const API_URL = `http://localhost:${port}/api`
+const API_URL = `/api`
 
 class APIService {
   
