@@ -7,7 +7,6 @@ const { userPropertyValidator, platformValidator } = require("../validators")
 router.use(authJwt.verifyToken)
 
 router.get("/getPortfolioValueForeachPlt", platform.getPortfolioValueForeachPlt);
-router.get("/getUserAssetsInEachPlt", platform.getUserAssetsInEachPlt);
 router.get("/:plt_id", userPropertyValidator.validateUserPlatform, platform.getDetail);
 router.get('/', platform.search);
 

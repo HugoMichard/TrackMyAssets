@@ -39,8 +39,8 @@ class PortfolioPriceHistory extends Component {
         APIService.getPortfolioValueHistory({ portfolio_chart_start_date: range }).then(res => {
           const data = res.data.values.map(v => {
             return {
-                "x": new Date(v.random_date).toLocaleDateString(),
-                "y": v.value
+                "x": new Date(v.date).toLocaleDateString(),
+                "y": v.price
             }
           });
           this.setState({portfolioChartData: [{data: data, id: 'portfolio_price'}] });

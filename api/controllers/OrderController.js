@@ -122,3 +122,14 @@ exports.getBuyingQuantityOfAssetByDay = function (req, res) {
       }
   })
 }
+
+exports.getUserOrderDataWithHistory = function(usr_id) {
+  return new Promise(function(resolve, reject) {
+    Order.getUserOrderDataWithHistory(usr_id, function (err, values) {
+      if (err) {
+        reject(err)
+      }
+      resolve(values)
+    });
+  });
+}

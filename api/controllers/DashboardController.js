@@ -1,5 +1,5 @@
-var Dashboard = require('../models/Dashboard')
 var Portfolio = require('../models/Portfolio')
+var portfolio = require('./PortfolioController')
 var dateHelper = require('../helpers/DateHelper')
 
 const getValueKDaysAgo = function(usr_id, days_ago) {
@@ -8,7 +8,7 @@ const getValueKDaysAgo = function(usr_id, days_ago) {
       usr_id: usr_id, 
       days_ago: days_ago
     }
-    Dashboard.valuesKDaysAgo(params, function (err, value) {
+    Portfolio.valuesKDaysAgo(params, function (err, value) {
       if (err) {
         reject(err)
       }
@@ -35,11 +35,13 @@ exports.summary = async function (req, res) {
 
 exports.getPortfolioValueHistory = async function(req, res) {
   const start_date = await dateHelper.translateStartDateQueryToStringDate(req.usr_id, req.query.portfolio_chart_start_date);
-
-  Portfolio.getPorfolioValueHistory({ usr_id: req.usr_id, start_date: start_date }, function (err, values) {
-      if (err) {
-          res.status(500).send({message: err.message});
-      }
-      res.status(200).send({state: "Success", values: values});
-  });
+  var sum_portfolio_value = function(date, portfolio) {
+    return {
+      "date": date,
+      "price": Object.values(portfolio).map(e => ((e.quantity * e.vl) + e.rewards)).reduce((a, b) => a + b)
+    }
+  }
+  portfolio.rerunPortfolioHistory(req.usr_id, start_date, sum_portfolio_value).then(values => {
+    res.status(200).send({state: "Success", values: values});
+  })
 }

@@ -1,4 +1,6 @@
-var Platform = require('../models/Platform')
+var Platform = require('../models/Platform');
+var asset = require('./AssetController');
+var portfolio = require('./PortfolioController')
 var notifHelper = require('../helpers/NotifHelper');
 
 exports.create = function (req, res) {
@@ -52,30 +54,34 @@ exports.update = function (req, res) {
 }
 
 exports.getPortfolioValueForeachPlt = function (req, res) {
-    Platform.getPortfolioValueForeachPlt(req.usr_id, function (err, values) {
-        if (err) {
-            res.status(500).send({ message: err.message});
-        } else {
-            res.status(200).send({values: values})
-        }
+    Promise.all([
+      asset.getCurrentPriceOfAssets(req.usr_id),
+      portfolio.getPortfolioComposition(req.usr_id, "plt")
+    ])
+    .catch(err => {
+      res.status(500).send({message: err.message});
     })
-}
-
-exports.getUserAssetsInEachPlt = function (req, res) {
-    Platform.getUserAssetsWithPlatformDetails(req.usr_id, function (err, values) {
-        if (err) {
-            res.status(500).send({ message: err.message});
+    .then(values => {
+      var assets = asset.crossAssetPricesWithVlTable(values[1], values[0]);
+      var emptyGroup = [];
+      Object.keys(assets).forEach(g => {
+        var assetsInGroup = Object.values(assets[g]["assets"]).filter(a => a.quantity > 0);
+        if(assetsInGroup.length > 0) {
+          assetsInGroup.map(a => a["average_paid"] = a.total_paid / a.quantity);
+          assetsInGroup.map(a => a["perf"] = (a.vl * a.quantity) - a.total_paid);
+          assetsInGroup.map(a => a["perf100"] = (a.perf / a.total_paid) * 100);
+          assets[g]["value"] = assetsInGroup.map(a => a.quantity * a.vl).reduce((a, b) => a + b);
+          assets[g]["perf"] = assetsInGroup.map(a => a.perf).reduce((a, b) => a + b);
+          assets[g]["perf100"] = assetsInGroup.map(a => (a.perf / a.total_paid) * 100).reduce((a, b) => a + b);
+          assets[g]["plt_id"] = g;
+          assets[g]["assets"] = assetsInGroup;
         } else {
-            const platforms = values.map(item => item.plt_id).filter((value, index, self) => self.indexOf(value) === index);
-            var assetsByPlt = {}
-            platforms.forEach(p => {
-                assetsByPlt[p] = []
-            })
-            values.forEach(v => {
-                assetsByPlt[v.plt_id].push(v)
-            });
-
-            res.status(200).send({assetsByPlt: assetsByPlt, platformIds: platforms})
+          emptyGroup.push(g)
         }
-    })
+      })
+
+      emptyGroup.forEach(g => delete assets[g]);
+      
+      res.status(200).send({state: "Success", values: Object.values(assets)});
+    });
 }

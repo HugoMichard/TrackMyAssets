@@ -168,3 +168,14 @@ function updateDexAsset(assetToUpdate) {
         })
     })
 }
+
+exports.getHistoriesForUser = function (usr_id) {
+    return new Promise(function(resolve, reject) {
+      History.getUserHistories({ usr_id: usr_id }, function (err, values) {
+        if (err) {
+          reject(err)
+        }
+        resolve(values)
+      })
+    });
+}

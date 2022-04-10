@@ -24,27 +24,25 @@ class PortfolioCategoryDistribution extends Component {
         }
         this.getPieColor = this.getPieColor.bind(this);
     }
-    componentDidMount() {
-      APIService.getPortfolioValueForeachCat().then(res => {
-        if(res.data && res.data.values && res.data.values.length > 0) {
-          const totalValue = res.data.values.map(v => v.value).reduce((a, b) => a + b);
-  
-          var colors = {}
-          var keys = []
-          var data = []
-          res.data.values.forEach(v => {
-            colors[v.cat_id] = v.color;
-            keys.push(v.cat_id);
-            data.push({
-              id: v.cat_id,
-              label: v.name,
-              value: v.value / totalValue,
-              tooltipValue: v.value
-            });
+    componentWillReceiveProps(nextProps) {
+      const assetsInCat = nextProps.assetsInCategories;
+      if(assetsInCat && assetsInCat.length > 0) {
+        const totalValue = assetsInCat.map(v => v.value).reduce((a, b) => a + b);
+        var colors = {}
+        var keys = []
+        var data = []
+        assetsInCat.forEach(v => {
+          colors[v.cat_id] = v.color;
+          keys.push(v.cat_id);
+          data.push({
+            id: v.cat_id,
+            label: v.name,
+            value: v.value / totalValue,
+            tooltipValue: v.value
           });
-          this.setState({ portfolioChartData: data, portfolioChartKeys: keys, portfolioChartColors: colors });
-        }
-      });
+        });
+        this.setState({ portfolioChartData: data, portfolioChartKeys: keys, portfolioChartColors: colors });
+      }
     }
     getPieColor(pie) {
       return this.state.portfolioChartColors[pie.id];

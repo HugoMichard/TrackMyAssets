@@ -35,7 +35,7 @@ class OverviewPortfolio extends Component {
     componentDidMount() {
         APIService.getAssetsOwned().then(res => {
           const assets = res.data.assets;
-          const total = Math.round(assets.map(c => (c.ast_value * c.quantity)).reduce((p,n) => p + n) * 10) / 10;
+          const total = Math.round(assets.map(c => (c.vl * c.quantity)).reduce((p,n) => p + n) * 10) / 10;
           const perf = Math.round(assets.map(c => c.perf).reduce((p,n) => p + n) * 10) / 10;
           const perf100 = Math.round((perf / total) * 100 * 10 / 10);
           this.setState({assetsOwned: assets, totalAssets: total, perfAssets: perf, perf100Assets: perf100});
@@ -44,16 +44,16 @@ class OverviewPortfolio extends Component {
     renderTableData() {
       if(this.state.assetsOwned) {
         return this.state.assetsOwned.map((ast, index) => {
-          const { ast_id, name, ast_type, ast_value, quantity, price, perf, perf100, cat_color, cat_name, code, duplicate_nbr } = ast
+          const { ast_id, ast_name, ast_type, vl, quantity, average_paid, perf, perf100, cat_color, cat_name, code, duplicate_nbr } = ast
           return (
             <tr key={index} onClick={() => window.location = "/app/assets/" + ast_id}>
-              <td>{name}</td>
+              <td>{ast_name}</td>
               <td>{ast_type === "stock" ? code : ast_type === "crypto" ? code.slice(0, -duplicate_nbr.toString().length) : ""}</td>
               <td>{this.state.typeValueToLabel[ast_type]}</td>
               <td style={{ color: cat_color }}>{cat_name}</td>
               <td>{Math.round(quantity * 1000) / 1000}</td>
-              <td>{Math.round(price * 10) / 10}</td>
-              <td>{Math.round(ast_value * 10) / 10}</td>
+              <td>{Math.round(average_paid * 10) / 10}</td>
+              <td>{Math.round(vl * 10) / 10}</td>
               <td className={`${perf >= 0 ? "greentext" : "redtext"}`}>
                 {perf > 0 ? "+ " : perf < 0 ? "- " : ""}
                 {Math.round(Math.abs(perf))}

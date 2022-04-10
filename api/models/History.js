@@ -174,7 +174,6 @@ History.updateDexAssetsHistoryOfUser = function (usr_id, result) {
     }
   )
 }
-;
 
 History.deleteHistoriesWithNoAsset = function (result) {
   sql.query(

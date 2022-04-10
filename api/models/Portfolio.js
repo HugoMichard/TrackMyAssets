@@ -20,52 +20,26 @@ Portfolio.getPortfolioStartDate = function (params, result) {
     )
 }
 
-Portfolio.getPorfolioValueHistory = function (params, result) {
+Portfolio.valuesKDaysAgo = function (params, result) {
   sql.query(
-    `WITH cumul_orders AS (
-      SELECT SUM(o.quantity) OVER(PARTITION BY a.code ORDER BY o.execution_date ASC) as quantity_sum, 
-      SUM(CASE WHEN o.gtg_ast_id IS NULL THEN o.quantity * o.price + o.fees ELSE 0 END) OVER(PARTITION BY a.code ORDER BY o.execution_date ASC) as price_sum, 
-      o.execution_date, 
-      a.code,
-      a.ast_id
-      FROM orders o
-      INNER JOIN assets a ON o.ast_id = a.ast_id
-      WHERE o.usr_id = ?
-    ),
-    ast_values AS (
-      SELECT random_date, code,  first_value(vl) over (partition by code, value_partition order by random_date) as ast_vl
+    `SELECT SUM(o.cum_quantity * h.vl) as value
       FROM (
-        SELECT
-          COALESCE(date_code_combis.fix_vl, h.vl) as vl, 
-          date_code_combis.code, 
-          random_date,
-          sum(case when vl is null then 0 else 1 end) over (partition by date_code_combis.code order by random_date) as value_partition
-        FROM histories h
-        RIGHT JOIN 
-          (SELECT DISTINCT a.code as code, d.random_date, a.fix_vl FROM dates d, assets a WHERE usr_id = ?) date_code_combis 
-        ON h.hst_date = date_code_combis.random_date AND h.code = date_code_combis.code
-        WHERE random_date BETWEEN ? - INTERVAL 8 DAY AND CURDATE() - INTERVAL 1 DAY
-      ) as vl_with_nulls
-    )
-    SELECT 
-      DATE_FORMAT(daily_orders.random_date, '%Y-%m-%d') as random_date, 
-      SUM(quantity_sum * ast_vl - price_sum) as plus_value,
-      SUM(quantity_sum * ast_vl) as value
-    FROM (
-      SELECT MAX(execution_date) as last_date, code, random_date
-      FROM cumul_orders
-      INNER JOIN dates d ON execution_date <= random_date
-      GROUP BY random_date, code
-    ) as daily_orders
-    INNER JOIN cumul_orders ON last_date = execution_date AND daily_orders.code = cumul_orders.code
-    INNER JOIN ast_values vals ON vals.random_date = daily_orders.random_date AND daily_orders.code = vals.code
-    WHERE daily_orders.random_date BETWEEN ? - INTERVAL 1 DAY AND CURDATE() - INTERVAL 1 DAY
-    GROUP BY daily_orders.random_date;`,
+      SELECT SUM(o.quantity) as cum_quantity, a.code
+            FROM orders o
+            INNER JOIN assets a ON a.ast_id = o.ast_id
+            WHERE o.usr_id = ? AND o.execution_date <= CURDATE() - INTERVAL ? DAY
+            GROUP BY a.code) o
+      INNER JOIN (
+        SELECT last_h_vl.code, last_h_vl.hst_date, last_h_vl.vl
+          FROM histories last_h_vl 
+          INNER JOIN (
+            SELECT code, max(hst_date) as last_hst_date FROM histories WHERE hst_date <= CURDATE() - INTERVAL ? DAY GROUP BY code) last_hst
+          ON last_hst.code = last_h_vl.code AND last_hst.last_hst_date = last_h_vl.hst_date) h
+      ON h.code = o.code`,
     [
       params.usr_id,
-      params.usr_id,
-      params.start_date,
-      params.start_date
+      params.days_ago,
+      params.days_ago
     ], 
     function (err, res) {
       if (err) {
@@ -234,5 +208,44 @@ Portfolio.getProfitsRealised = function (usr_id, result) {
     }
   )
 }
+
+Portfolio.getPortfolioOrderDetails = function (usr_id, result) {
+  sql.query(
+    `SELECT 
+      a.ast_id,
+      a.name as ast_name,
+      a.ast_type,
+      a.code,
+      a.duplicate_nbr,
+      o.quantity,
+      a.rewards,
+      o.price as paid,
+      o.fees,
+      o.ord_id,
+      o.gtg_ast_id IS NOT NULL as is_generated,
+      p.color as plt_color,
+      p.name as plt_name,
+      p.plt_id,
+      c.cat_id,
+      c.color as cat_color,
+      c.name as cat_name
+      FROM orders o
+      INNER JOIN assets a ON o.ast_id = a.ast_id
+      INNER JOIN categories c ON c.cat_id = a.cat_id
+      INNER JOIN platforms p ON p.plt_id = o.plt_id
+      WHERE o.usr_id = ?
+    `, [
+        usr_id,
+        usr_id
+    ], (err, res) => {
+      if (err) {
+        result(null, res)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
+
 
 module.exports = Portfolio
