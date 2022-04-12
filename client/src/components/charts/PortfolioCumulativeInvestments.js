@@ -32,15 +32,15 @@ class PortfolioPriceHistory extends Component {
     }
     updatePortfolioChartDataWithRange(range) {
         APIService.getCumulativeInvestmentsWithValue({ portfolio_start_date: range }).then(res => {
-          const investmentHistory = res.data.investments.map(v => {
+          const investmentHistory = res.data.values.map(v => {
             return {
-                "x": new Date(v.random_date).toLocaleDateString(),
+                "x": new Date(v.date).toLocaleDateString(),
                 "y": v.cum_sum
             }
           });
-          const plusValueHistory = res.data.value_history.map(v => {
+          const plusValueHistory = res.data.values.map(v => {
             return {
-                "x": new Date(v.random_date).toLocaleDateString(),
+                "x": new Date(v.date).toLocaleDateString(),
                 "y": v.plus_value
             }
           });

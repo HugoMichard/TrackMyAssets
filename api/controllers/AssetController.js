@@ -1,7 +1,8 @@
 var Asset = require('../models/Asset')
 var Order = require('../models/Order')
 var History = require('../models/History')
-var history = require('../controllers/HistoryController')
+var history = require('./HistoryController')
+var portfolio = require('./PortfolioController')
 var notifHelper = require('../helpers/NotifHelper');
 var miscHelper = require('../helpers/MiscHelper');
 
@@ -76,14 +77,53 @@ exports.update = function (req, res) {
   })
 }
 
-exports.getAssetsOwned = function (req, res) {
-  Asset.getAssetsOwned(req.usr_id, function (err, assets) {
-      if (err) {
-          res.status(500).send({ message: err.message});
-      } else {
-          res.status(200).send({assets: assets});
-      }
+function crossAssetPricesWithVlTable(assets, vl_table) {
+  Object.keys(assets).forEach(g => {
+    Object.keys(assets[g]["assets"]).forEach(a => {
+      assets[g]["assets"][a]["vl"] = vl_table.find(e => e.code === a).vl;
+    })
   })
+  return assets
+}
+exports.crossAssetPricesWithVlTable = crossAssetPricesWithVlTable
+
+function getAssetOwnedDetails(usr_id) {
+  return new Promise(function(resolve, reject) {
+    Promise.all([
+      getCurrentPriceOfAssets(usr_id),
+      portfolio.getPortfolioComposition(usr_id, "ast")
+    ])
+    .catch(err => {
+      reject(err)
+    })
+    .then(values => {
+      const assets = crossAssetPricesWithVlTable(values[1], values[0])
+  
+      // there is an extra layer of asset id we remove
+      const assetsInPortfolioArray = Object.values(assets).map(v => v.assets)
+      const assetsInPortfolioDict = Object.assign({}, ...assetsInPortfolioArray.map((x) => {
+        const k = Object.keys(x)[0]
+        return ({[k]: x[k]})
+      }));
+  
+      const assetsOwned = Object.values(assetsInPortfolioDict).filter(a => a.quantity > 0)
+      resolve(assetsOwned)
+    })
+  });
+}
+exports.getAssetOwnedDetails = getAssetOwnedDetails
+
+exports.getAssetsOwned = function (req, res) {
+  getAssetOwnedDetails(req.usr_id)
+  .catch(err => {
+    res.status(500).send({message: err.message});
+  })
+  .then(assetsOwned => {
+    assetsOwned.map(a => a["average_paid"] = a.total_paid / a.quantity)
+    assetsOwned.map(a => a["perf"] = (a.vl * a.quantity) - a.total_paid)
+    assetsOwned.map(a => a["perf100"] = (a.perf / a.total_paid) * 100)
+    res.status(200).send({assets: assetsOwned});
+  });
 }
 
 exports.delete = function (req, res) {
@@ -115,3 +155,15 @@ exports.getCoins = function(req, res) {
     res.status(200).send({coins: coins});
   });
 }
+
+function getCurrentPriceOfAssets(usr_id) {
+  return new Promise(function(resolve, reject) {
+    Asset.getCurrentPriceOfUserAssets(usr_id, function (err, prices) {
+      if (err) {
+        reject(err)
+      }
+      resolve(prices)
+    })
+  });
+}
+exports.getCurrentPriceOfAssets = getCurrentPriceOfAssets

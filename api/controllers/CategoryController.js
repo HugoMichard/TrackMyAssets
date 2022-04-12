@@ -1,5 +1,7 @@
 var Category = require('../models/Category')
 var notifHelper = require('../helpers/NotifHelper');
+var portfolio = require('./PortfolioController')
+var asset = require('./AssetController')
 
 exports.create = function (req, res) {
   var newCat = new Category(req.body)
@@ -52,40 +54,56 @@ exports.update = function (req, res) {
 }
 
 exports.getPortfolioValueForeachCat = function (req, res) {
-    Category.getPortfolioValueForeachCat(req.usr_id, function (err, values) {
-        if (err) {
-            res.status(500).send({ message: err.message});
-        } else {
-            res.status(200).send({state: "Success", values: values})
-        }
+    Promise.all([
+      asset.getCurrentPriceOfAssets(req.usr_id),
+      portfolio.getPortfolioComposition(req.usr_id, "cat")
+    ])
+    .catch(err => {
+      res.status(500).send({message: err.message});
     })
+    .then(values => {
+      var assets = asset.crossAssetPricesWithVlTable(values[1], values[0])
+      var emptyGroup = [];
+      Object.keys(assets).forEach(g => {
+        var assetsInGroup = Object.values(assets[g]["assets"]).filter(a => a.quantity > 0);
+        if(assetsInGroup.length > 0) {
+          assetsInGroup.map(a => a["average_paid"] = a.total_paid / a.quantity);
+          assetsInGroup.map(a => a["perf"] = (a.vl * a.quantity) - a.total_paid);
+          assetsInGroup.map(a => a["perf100"] = (a.perf / a.total_paid) * 100);
+          assets[g]["value"] = assetsInGroup.map(a => a.quantity * a.vl).reduce((a, b) => a + b);
+          assets[g]["perf"] = assetsInGroup.map(a => a.perf).reduce((a, b) => a + b);
+          assets[g]["perf100"] = assetsInGroup.map(a => (a.perf / a.total_paid) * 100).reduce((a, b) => a + b);
+          assets[g]["cat_id"] = g;
+          assets[g]["assets"] = assetsInGroup;
+        } else {
+            emptyGroup.push(g)
+        }
+      })
+      
+      emptyGroup.forEach(g => delete assets[g]);
+
+      res.status(200).send({state: "Success", values: Object.values(assets)});
+    });
 }
 
 exports.getPortfolioValueForeachType = function (req, res) {
-    Category.getPortfolioValueForeachType(req.usr_id, function (err, values) {
-        if (err) {
-            res.status(500).send({ message: err.message});
-        } else {
-            res.status(200).send({state: "Success", values: values})
-        }
+    asset.getAssetOwnedDetails(req.usr_id)
+    .catch(err => {
+        res.status(500).send({message: err.message});
     })
-}
-
-exports.getUserAssetsInEachCat = function (req, res) {
-    Category.getUserAssetsWithCategoryDetails(req.usr_id, function (err, values) {
-        if (err) {
-            res.status(500).send({ message: err.message});
-        } else {
-            const categories = values.map(item => item.cat_id).filter((value, index, self) => self.indexOf(value) === index);
-            var assetsByCat = {}
-            categories.forEach(c => {
-                assetsByCat[c] = []
+    .then(assetsOwned => {
+        var assetsByType = {}
+        assetsOwned.map(a => {
+            assetsByType[a.ast_type] = assetsByType[a.ast_type] || [];
+            assetsByType[a.ast_type].push(a);
+        });
+        var assetTypeDetails = []
+        Object.keys(assetsByType).forEach(t => {
+            assetTypeDetails.push({
+                "ast_type": t,
+                "value": assetsByType[t].map(a => a.quantity * a.vl).reduce((a, b) => a + b)
             })
-            values.forEach(v => {
-                assetsByCat[v.cat_id].push(v)
-            });
-
-            res.status(200).send({assetsByCat: assetsByCat, categoryIds: categories})
-        }
-    })
+        })
+        res.status(200).send({state: "Success", values: assetTypeDetails});
+    });
 }

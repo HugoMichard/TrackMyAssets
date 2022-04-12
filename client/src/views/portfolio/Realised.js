@@ -33,7 +33,7 @@ class RealisedPortfolio extends Component {
     componentDidMount() {
         APIService.getProfitsRealised().then(res => { 
           const profits = res.data.profits;
-          const total = Math.round(profits.map(c => (c.sell_price * c.quantity)).reduce((p,n) => p + n) * 10) / 10;
+          const total = Math.round(profits.map(c => (c.selling_price * c.quantity)).reduce((p,n) => p + n) * 10) / 10;
           const perf = Math.round(profits.map(c => c.perf).reduce((p,n) => p + n) * 10) / 10;
           const perf100 = Math.round((perf / total) * 100 * 10 / 10);
           this.setState({profitsRealised: profits, totalAssets: total, perfAssets: perf, perf100Assets: perf100}); 
@@ -42,7 +42,7 @@ class RealisedPortfolio extends Component {
     renderTableData() {
       if(this.state.profitsRealised) {
         return this.state.profitsRealised.map((ast, index) => {
-          const { ast_id, name, ast_type, sell_price, quantity, buy_price, perf, perf100, cat_color, cat_name, code, duplicate_nbr } = ast
+          const { ast_id, name, ast_type, selling_price, quantity, average_paid, perf, perf100, cat_color, cat_name, code, duplicate_nbr } = ast
           return (
             <tr key={index} onClick={() => window.location = "/app/assets/" + ast_id}>
               <td>{name}</td>
@@ -50,8 +50,8 @@ class RealisedPortfolio extends Component {
               <td>{this.state.typeValueToLabel[ast_type]}</td>
               <td style={{ color: cat_color }}>{cat_name}</td>
               <td>{Math.round(quantity * 1000) / 1000}</td>
-              <td>{Math.round(buy_price * 10) / 10}</td>
-              <td>{Math.round(sell_price * 10) / 10}</td>
+              <td>{Math.round(average_paid * 10) / 10}</td>
+              <td>{Math.round(selling_price * 10) / 10}</td>
               <td className={`${perf >= 0 ? "greentext" : "redtext"}`}>
                 {perf > 0 ? "+ " : perf < 0 ? "- " : ""}
                 {Math.round(Math.abs(perf))}

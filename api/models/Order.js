@@ -177,4 +177,42 @@ Order.getBuyingQuantityOfAssetByDay = function (params, result) {
   )
 }
 
+Order.getUserOrderDataWithHistory = function (usr_id, result) {
+  sql.query(
+    `SELECT 
+      a.code,
+      a.name,
+      a.ast_type,
+      a.duplicate_nbr,
+      o.quantity,
+      DATE_FORMAT(o.execution_date, '%Y-%m-%d') as execution_date,
+      h.vl,
+      a.rewards,
+      o.price as paid,
+      o.fees,
+      o.ord_id,
+      o.gtg_ast_id IS NOT NULL as is_generated,
+      DATE_FORMAT(h.hst_date, '%Y-%m-%d') as date,
+      c.cat_id,
+      c.name as cat_name,
+      c.color as cat_color
+      FROM orders o
+      INNER JOIN assets a ON o.ast_id = a.ast_id
+      INNER JOIN histories h ON h.code = a.code AND h.hst_date >= o.execution_date
+      INNER JOIN categories c ON c.cat_id = a.cat_id
+      WHERE o.usr_id = ? and o.execution_date >= (SELECT MIN(execution_date) FROM orders WHERE usr_id = ?)
+      ORDER BY h.hst_date ASC
+    `, [
+        usr_id,
+        usr_id
+    ], (err, res) => {
+      if (err) {
+        result(null, res)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
+
 module.exports = Order

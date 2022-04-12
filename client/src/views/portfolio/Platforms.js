@@ -18,32 +18,26 @@ class PlatformsPortfolio extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      platforms : [],
-      assetsInPlatforms: {},
-      userPltIds: []
+      assetsInPlatforms: []
     }
   }
   componentDidMount() {
-    APIService.searchPlatforms({}).then(res => {
-      this.setState({platforms: res.data.platforms});
-    })
-
-    APIService.getUserAssetsInEachPlt().then(res => {
-      this.setState({assetsInPlatforms: res.data.assetsByPlt, userPltIds: res.data.platformIds}); 
+    APIService.getPortfolioValueForeachPlt().then(res => {
+      this.setState({assetsInPlatforms: res.data.values}); 
     })
   }
   renderTableData(astData) {
     if(astData) {
       return astData.map((ast, index) => {
-        const { ast_id, ast_value, ast_type, duplicate_nbr, name, cat_color, cat_name, code, perf, perf100, price, quantity } = ast
+        const { ast_id, vl, ast_type, duplicate_nbr, ast_name, cat_color, cat_name, code, perf, perf100, average_paid, quantity } = ast
         return (
             <tr key={index} onClick={() => window.location = "/app/assets/" + ast_id}>
-                <td>{name}</td>
+                <td>{ast_name}</td>
                 <td>{ast_type === "stock" ? code : ast_type === "crypto" ? code.slice(0, -duplicate_nbr.toString().length) : ""}</td>
                 <td style={{ color: cat_color }}>{cat_name}</td>
                 <td>{Math.round(quantity * 1000) / 1000}</td>
-                <td>{Math.round(price * 100) / 100}</td>
-                <td>{Math.round(ast_value * 100) / 100}</td>
+                <td>{Math.round(average_paid * 100) / 100}</td>
+                <td>{Math.round(vl * 100) / 100}</td>
                 <td className={`${perf >= 0 ? "greentext" : "redtext"}`}>
                   {perf > 0 ? "+ " : perf < 0 ? "- " : ""}
                   {Math.round(Math.abs(perf))}
@@ -61,13 +55,12 @@ class PlatformsPortfolio extends Component {
 
   }
   renderPlatformCards() {
-    if(this.state.userPltIds && this.state.platforms) {
-      return this.state.userPltIds.map((plt_id, index) => {
-        const pltDetails = this.state.platforms[this.state.platforms.findIndex(plt => plt.plt_id === plt_id)];
-        const assetsInPlt = this.state.assetsInPlatforms[plt_id]
-        const total = Math.round(assetsInPlt.map(c => (c.ast_value * c.quantity)).reduce((p,n) => p + n) * 10) / 10;
-        const perf = Math.round(assetsInPlt.map(c => c.perf).reduce((p,n) => p + n) * 10) / 10;
-        const perf100 = Math.round((perf / total) * 100 * 10 / 10);
+    if(this.state.assetsInPlatforms) {
+      return this.state.assetsInPlatforms.map((pltDetails, index) => {
+        const assetsInPlt = pltDetails.assets;
+        const total = Math.round(pltDetails.value * 10) / 10;
+        const perf = Math.round(pltDetails.perf * 10) / 10;
+        const perf100 = Math.round(pltDetails.perf100 * 10 / 10);
         if(pltDetails) {
           return (
             <Row key={index}>
@@ -120,7 +113,7 @@ class PlatformsPortfolio extends Component {
         <div>
           <Row>
             <Col md="12">
-              <PortfolioPlatformDistribution></PortfolioPlatformDistribution>
+              <PortfolioPlatformDistribution assetsInPlatforms={this.state.assetsInPlatforms}></PortfolioPlatformDistribution>
             </Col>
           </Row>
           {this.renderPlatformCards()}

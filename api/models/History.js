@@ -105,32 +105,6 @@ History.getLastHistoryOfUserCexAssets = function (params, result) {
   )
 }
 
-History.getRandomDatesUntilToday = function (result) {
-  sql.query(
-    `SELECT DATE_FORMAT(random_date, '%Y-%m-%d') as random_date FROM dates WHERE random_date <= CURDATE()`, [], function (err, res) {
-      if (err) {
-        result(null, err)
-      } else {
-        result(null, res)
-      }
-    }
-  )
-}
-
-History.getRandomDatesFromDateUntilToday = function (from_date, result) {
-  sql.query(
-    `SELECT DATE_FORMAT(random_date, '%Y-%m-%d') as random_date FROM dates WHERE random_date BETWEEN ? AND CURDATE()`, 
-    [from_date], 
-    function (err, res) {
-      if (err) {
-        result(null, err)
-      } else {
-        result(null, res)
-      }
-    }
-  )
-}
-
 History.modifyFixAssetVlHistory = function (asset, result) {
   sql.query(
     `UPDATE histories SET vl = ? WHERE code = ?`, 
@@ -148,22 +122,14 @@ History.modifyFixAssetVlHistory = function (asset, result) {
 History.updateDexAssetsHistoryOfUser = function (usr_id, result) {
   sql.query(
     `INSERT INTO histories (code, vl, hst_date)
-      SELECT code, fix_vl as vl, random_date as hst_date
-      FROM (
-          SELECT a.code, last_hst.hst_date, a.fix_vl
-          FROM (
-            SELECT a.code, COALESCE(MAX(hst_date), CURDATE() - INTERVAL 1 DAY)  as hst_date
-            FROM histories h
-            RIGHT JOIN assets a ON a.code = h.code
-            INNER JOIN orders o ON o.ast_id = a.ast_id
-            INNER JOIN platforms p ON p.plt_id = o.plt_id
-            INNER JOIN dexs d ON p.dex_id = d.dex_id
-            WHERE o.usr_id = ? 
-            GROUP BY a.code
-          ) last_hst
-          INNER JOIN assets a ON a.code = last_hst.code
-        ) ast_to_update, dates
-      WHERE random_date BETWEEN hst_date + INTERVAL 1 DAY AND CURDATE()`, 
+      SELECT a.code, a.fix_vl as vl, CURDATE() as hst_date
+      FROM assets a
+      INNER JOIN (SELECT DISTINCT plt_id, ast_id FROM orders) as o ON o.ast_id = a.ast_id
+      INNER JOIN platforms p ON p.plt_id = o.plt_id
+      INNER JOIN dexs d ON p.dex_id = d.dex_id
+      INNER JOIN (SELECT code, max(h.hst_date) as last_date FROM histories h GROUP BY h.code) as last_history on a.code = last_history.code
+      WHERE a.usr_id = ? AND last_history.last_date < CURDATE()
+    ) last_hst`, 
     [usr_id], 
     function (err, res) {
       if (err) {
@@ -174,7 +140,6 @@ History.updateDexAssetsHistoryOfUser = function (usr_id, result) {
     }
   )
 }
-;
 
 History.deleteHistoriesWithNoAsset = function (result) {
   sql.query(

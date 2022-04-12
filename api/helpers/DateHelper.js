@@ -31,3 +31,15 @@ async function translateStartDateQueryToStringDate(usr_id, start_date_query) {
     });
   }
 exports.translateStartDateQueryToStringDate = translateStartDateQueryToStringDate;
+
+function getDatesFromDateToNow(start_date) {
+    // function gets dates between two dates
+    var getDaysArray = function(s,e) {for(var a=[],d=new Date(s);d<=e;d.setDate(d.getDate()+1)){ a.push(new Date(d));}return a;};
+
+    var daylist = getDaysArray(new Date(start_date),new Date());
+    
+    // remove today
+    daylist.pop();
+    return daylist.map((v)=>v.toISOString().slice(0,10))
+}
+exports.getDatesFromDateToNow = getDatesFromDateToNow

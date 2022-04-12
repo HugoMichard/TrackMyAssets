@@ -103,75 +103,6 @@ Asset.delete = function (params, result) {
   )
 }
 
-Asset.getAssetsOwned = function (usr_id, result) {
-  sql.query(
-    `SELECT 
-      current_ast_values.ast_vl as ast_value, 
-      owned_assets.ast_id, 
-      a.name, 
-      a.code,
-      a.ast_type,
-      a.duplicate_nbr,
-      owned_assets.quantity, 
-      owned_assets.price,
-      ((current_ast_values.ast_vl - owned_assets.price) * owned_assets.quantity) + COALESCE(generated_assets.generated_money, 0) as perf,
-      ((current_ast_values.ast_vl - owned_assets.price) + (COALESCE(generated_assets.generated_money, 0) / owned_assets.quantity)) * 100 / owned_assets.price as perf100,
-      c.name as cat_name,
-      c.color as cat_color
-    FROM (
-      SELECT * FROM (
-        SELECT random_date, ast_id, first_value(vl) over (partition by code, value_partition order by random_date) as ast_vl
-        FROM (
-          SELECT 
-            COALESCE(date_code_combis.fix_vl, h.vl) as vl, 
-            date_code_combis.code, 
-            ast_id,
-            random_date,
-            sum(case when vl is null then 0 else 1 end) over (partition by date_code_combis.code order by random_date) as value_partition
-          FROM histories h
-          RIGHT JOIN (
-            SELECT DISTINCT a.code as code, d.random_date, a.ast_id, a.fix_vl FROM dates d, assets a WHERE usr_id = ?
-          ) date_code_combis 
-          ON h.hst_date = date_code_combis.random_date AND h.code = date_code_combis.code
-          WHERE random_date BETWEEN CURDATE() - INTERVAL 8 DAY AND CURDATE() - INTERVAL 1 DAY
-        ) as vl_with_no_nulls
-      ) ast_values 
-      WHERE random_date = CURDATE() - INTERVAL 1 DAY
-    )	current_ast_values
-    INNER JOIN (
-      SELECT o.ast_id, SUM(o.quantity * o.price + o.fees) / SUM(o.quantity) as price, owned_quantity.quantity
-      FROM orders o
-      INNER JOIN (
-        SELECT ast_id, SUM(quantity) as quantity FROM orders WHERE usr_id = ? GROUP BY ast_id
-      ) as owned_quantity 
-      ON o.ast_id = owned_quantity.ast_id
-      WHERE o.quantity > 0 
-      GROUP BY ast_id
-    ) owned_assets
-    ON current_ast_values.ast_id = owned_assets.ast_id
-    LEFT JOIN (
-      SELECT o.gtg_ast_id, SUM(o.quantity * o.price + o.fees) as generated_money
-      FROM orders o
-      WHERE gtg_ast_id IS NOT NULL
-      GROUP BY gtg_ast_id
-    ) generated_assets
-    ON owned_assets.ast_id = generated_assets.gtg_ast_id
-    INNER JOIN assets a ON a.ast_id = owned_assets.ast_id
-    INNER JOIN categories c ON a.cat_id = c.cat_id 
-    WHERE owned_assets.quantity > 0
-    ORDER BY a.name`, [
-      usr_id,
-      usr_id
-    ], (err, res) => {
-      if (err) {
-        result(null, res)
-      } else {
-        result(null, res)
-      }
-    }
-  )
-}
-
 Asset.getCMCCoinList = function(result) {
   sql.query(
     'SELECT * FROM cmc_coins', [], (err, res) => {
@@ -215,6 +146,22 @@ Asset.checkCoin = function (params, result) {
         params.cmc_official_id,
         params.coin,
         params.duplicate_nbr
+      ], function(err, res) {
+      result(null, res);
+    }
+  )
+}
+
+Asset.getCurrentPriceOfUserAssets = function (usr_id, result) {
+  sql.query(
+    `SELECT h.vl, h.code
+      FROM (SELECT DISTINCT hst_date, vl, code FROM histories) as h
+      INNER JOIN 
+      (SELECT MAX(hst_date) as hst_date, code FROM histories GROUP BY code) as max_h 
+      ON h.code = max_h.code AND h.hst_date = max_h.hst_date
+      INNER JOIN assets a ON a.code = h.code 
+      WHERE usr_id = ?`, [
+        usr_id
       ], function(err, res) {
       result(null, res);
     }

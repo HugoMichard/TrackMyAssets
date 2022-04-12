@@ -19,32 +19,26 @@ import PortfolioTypeDistribution from "components/charts/PortfolioTypeDistributi
 class CategoriesPortfolio extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
-      categories : [],
-      assetsInCategories: {},
-      userCatIds: []
+    this.state = {
+      assetsInCategories: []
     }
   }
   componentDidMount() {
-    APIService.searchCategories({}).then(res => {
-      this.setState({categories: res.data.categories});
-    })
-
-    APIService.getUserAssetsInEachCat().then(res => {
-      this.setState({assetsInCategories: res.data.assetsByCat, userCatIds: res.data.categoryIds}); 
+    APIService.getPortfolioValueForeachCat().then(res => {
+      this.setState({assetsInCategories: res.data.values}); 
     })
   }
   renderTableData(astData) {
     if(astData) {
       return astData.map((ast, index) => {
-        const { ast_id, ast_value, ast_type, name, code, perf, perf100, price, quantity, duplicate_nbr } = ast
+        const { ast_id, vl, ast_type, ast_name, code, perf, perf100, average_paid, quantity, duplicate_nbr } = ast
         return (
             <tr key={index} onClick={() => window.location = "/app/assets/" + ast_id}>
-                <td>{name}</td>
+                <td>{ast_name}</td>
                 <td>{ast_type === "stock" ? code : ast_type === "crypto" ? code.slice(0, -duplicate_nbr.toString().length) : ""}</td>
                 <td>{Math.round(quantity * 1000) / 1000}</td>
-                <td>{Math.round(price * 100) / 100}</td>
-                <td>{Math.round(ast_value * 100) / 100}</td>
+                <td>{Math.round(average_paid * 100) / 100}</td>
+                <td>{Math.round(vl * 100) / 100}</td>
                 <td className={`${perf >= 0 ? "greentext" : "redtext"}`}>
                   {perf > 0 ? "+ " : perf < 0 ? "- " : ""}
                   {Math.round(Math.abs(perf))}
@@ -62,55 +56,50 @@ class CategoriesPortfolio extends Component {
 
   }
   renderCategoryCards() {
-    if(this.state.userCatIds && this.state.categories) {
-      return this.state.userCatIds.map((cat_id, index) => {
-        const catDetails = this.state.categories[this.state.categories.findIndex(cat => cat.cat_id === cat_id)];
-        if(catDetails) {
-          const assetsInCat = this.state.assetsInCategories[cat_id]
-          const total = Math.round(assetsInCat.map(c => (c.ast_value * c.quantity)).reduce((p,n) => p + n) * 10) / 10;
-          const perf = Math.round(assetsInCat.map(c => c.perf).reduce((p,n) => p + n) * 10) / 10;
-          const perf100 = Math.round((perf / total) * 100 * 10 / 10);
-          return (
-            <Row key={index}>
-              <Col md="12">
-                <Card>
-                  <CardHeader>
-                    <CardTitle tag="h4" className="no-margin-bottom" style={{color: catDetails.color}}>{catDetails.name}</CardTitle>
-                    <span className="no-margin-bottom">
-                      Total : <strong>{total}</strong>
-                    </span><br/>
-                    <span className="card-title">
-                      RoI : 
-                      <strong className={`${perf >= 0 ? "greentext" : "redtext"}`}> {perf < 0 ? "- " : "+ "} {Math.abs(perf)} </strong>
-                       / 
-                      <strong className={`${perf >= 0 ? "greentext" : "redtext"}`}> {perf < 0 ? "- " : "+ "} {Math.abs(perf100)} %</strong>
-                    </span>
-                  </CardHeader>
-                  <CardBody>
-                    <Table responsive>
-                      <thead className="text-primary">
-                        <tr>
-                          <th>Name</th>
-                          <th>Ticker / Coin</th>
-                          <th>Quantity</th>
-                          <th>Buying Price</th>
-                          <th>Value</th>
-                          <th>Performance</th>
-                          <th>RoI</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {this.renderTableData(assetsInCat)}
-                      </tbody>
-                    </Table>
-                  </CardBody>
-                </Card>
-              </Col>
-            </Row>
-          )
-        } else {
-          return(<Row></Row>)
-        }
+    if(this.state.assetsInCategories) {
+      return this.state.assetsInCategories.map((categoryDetails, index) => {
+        const perf = Math.round(categoryDetails.perf * 10) / 10;
+        const perf100 = Math.round(categoryDetails.perf100 * 10) / 10;
+        const total = Math.round(categoryDetails.value * 10) / 10;
+        const assetsInCat = categoryDetails.assets;
+        return (
+          <Row key={index}>
+            <Col md="12">
+              <Card>
+                <CardHeader>
+                  <CardTitle tag="h4" className="no-margin-bottom" style={{color: categoryDetails.color}}>{categoryDetails.name}</CardTitle>
+                  <span className="no-margin-bottom">
+                    Total : <strong>{total}</strong>
+                  </span><br/>
+                  <span className="card-title">
+                    RoI : 
+                    <strong className={`${perf >= 0 ? "greentext" : "redtext"}`}> {perf < 0 ? "- " : "+ "} {Math.abs(perf)} </strong>
+                      / 
+                    <strong className={`${perf >= 0 ? "greentext" : "redtext"}`}> {perf < 0 ? "- " : "+ "} {Math.abs(perf100)} %</strong>
+                  </span>
+                </CardHeader>
+                <CardBody>
+                  <Table responsive>
+                    <thead className="text-primary">
+                      <tr>
+                        <th>Name</th>
+                        <th>Ticker / Coin</th>
+                        <th>Quantity</th>
+                        <th>Buying Price</th>
+                        <th>Value</th>
+                        <th>Performance</th>
+                        <th>RoI</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {this.renderTableData(assetsInCat)}
+                    </tbody>
+                  </Table>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+        )
       })
     } else {
       return(<Row></Row>)
@@ -122,7 +111,7 @@ class CategoriesPortfolio extends Component {
         <div>
           <Row>
             <Col md="6">
-              <PortfolioCategoryDistribution></PortfolioCategoryDistribution>
+              <PortfolioCategoryDistribution assetsInCategories={this.state.assetsInCategories}></PortfolioCategoryDistribution>
             </Col>
             <Col md="6">
               <PortfolioTypeDistribution></PortfolioTypeDistribution>

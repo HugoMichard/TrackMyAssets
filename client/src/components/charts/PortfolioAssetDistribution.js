@@ -22,22 +22,22 @@ class PortfolioAssetDistribution extends Component {
         }
     }
     componentWillReceiveProps(nextProps) {
-        if(nextProps.assetsOwned && nextProps.assetsOwned.length > 0) {
-            const totalValue = nextProps.assetsOwned.map(v => v.quantity * v.ast_value).reduce((a, b) => a + b);
- 
-            var keys = []
-            var data = []
-            nextProps.assetsOwned.forEach(v => {
-              keys.push(v.ast_id);
-              data.push({
-                id: v.ast_id,
-                label: v.name,
-                value: v.quantity * v.ast_value / totalValue,
-                tooltipValue: v.quantity * v.ast_value
-              });
-            this.setState({ portfolioChartData: data, portfolioChartKeys: keys });
-          });
-        }
+      if(nextProps.assetsOwned && nextProps.assetsOwned.length > 0) {
+          const totalValue = nextProps.assetsOwned.map(v => v.quantity * v.vl).reduce((a, b) => a + b);
+
+          var keys = []
+          var data = []
+          nextProps.assetsOwned.forEach(v => {
+            keys.push(v.ast_id);
+            data.push({
+              id: v.ast_id,
+              label: v.ast_name,
+              value: v.quantity * v.vl / totalValue,
+              tooltipValue: v.quantity * v.vl
+            });
+          this.setState({ portfolioChartData: data, portfolioChartKeys: keys });
+        });
+      }
     }
     render() {
         return (

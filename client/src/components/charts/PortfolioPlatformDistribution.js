@@ -24,27 +24,25 @@ class PortfolioCategoryDistribution extends Component {
         }
         this.getPieColor = this.getPieColor.bind(this);
     }
-    componentDidMount() {
-      APIService.getPortfolioValueForeachPlt().then(res => {
-        if(res.data && res.data.values && res.data.values.length > 0) {
-          const totalValue = res.data.values.map(v => v.value).reduce((a, b) => a + b);
-  
-          var colors = {}
-          var keys = []
-          var data = []
-          res.data.values.forEach(v => {
-            colors[v.plt_id] = v.color;
-            keys.push(v.plt_id);
-            data.push({
-              id: v.plt_id,
-              label: v.name,
-              value: v.value / totalValue,
-              tooltipValue: v.value
-            });
+    componentWillReceiveProps(nextProps) {
+      const assetsInPlt = nextProps.assetsInPlatforms;
+      if(assetsInPlt && assetsInPlt.length > 0) {
+        const totalValue = assetsInPlt.map(v => v.value).reduce((a, b) => a + b);
+        var colors = {}
+        var keys = []
+        var data = []
+        assetsInPlt.forEach(v => {
+          colors[v.plt_id] = v.color;
+          keys.push(v.plt_id);
+          data.push({
+            id: v.plt_id,
+            label: v.name,
+            value: v.value / totalValue,
+            tooltipValue: v.value
           });
-          this.setState({ portfolioChartData: data, portfolioChartKeys: keys, portfolioChartColors: colors });
-        }
-      });
+        });
+        this.setState({ portfolioChartData: data, portfolioChartKeys: keys, portfolioChartColors: colors });
+      }
     }
     getPieColor(pie) {
       return this.state.portfolioChartColors[pie.id];
