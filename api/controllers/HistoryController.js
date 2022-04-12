@@ -97,22 +97,21 @@ function checkHistoryWithCodeExists(code) {
 
 
 function initializeFixAssetHistory(asset) {
-    History.getRandomDatesUntilToday(function(err, random_dates) {
-        sql_histories = random_dates.map(item => (`('${asset.code}', '${item.random_date}', ${asset.fix_vl})`))
-        History.addHistories(sql_histories, function (err, histories) {
-            console.log("added "+ histories.affectedRows + " histories");
-        });
-    })
+    const oneYearAgo = new Date().setDate(new Date().getDate() - 365);
+    const dateGrid = dateHelper.getDatesFromDateToNow(oneYearAgo)
+    sql_histories = dateGrid.map(d => (`('${asset.code}', '${d}', ${asset.fix_vl})`))
+    History.addHistories(sql_histories, function (err, histories) {
+        console.log("added "+ histories.affectedRows + " histories");
+    });
 }
 
 
 function updateFixAssetHistory(asset) {
-    History.getRandomDatesFromDateUntilToday(asset.last_date, function(err, random_dates) {
-        sql_histories = random_dates.map(item => (`('${asset.code}', '${item.random_date}', ${asset.fix_vl})`))
-        History.addHistories(sql_histories, function (err, histories) {
-            console.log("added "+ histories.affectedRows + " histories");
-        });
-    })
+    const dateGrid = dateHelper.getDatesFromDateToNow(asset.last_date)
+    sql_histories = dateGrid.map(d => (`('${asset.code}', '${d}', ${asset.fix_vl})`))
+    History.addHistories(sql_histories, function (err, histories) {
+        console.log("added "+ histories.affectedRows + " histories");
+    });
 }
 
 

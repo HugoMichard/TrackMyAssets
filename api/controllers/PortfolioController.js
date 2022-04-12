@@ -100,14 +100,13 @@ exports.getPlusValueHistory = async function(req, res) {
   })
 }
 
-exports.getInvestments = async function(req, res) {
+exports.getInvestments = function(req, res) {
   const group_date = 
     req.query.group_date === "yearly" ? "%Y" 
     : req.query.group_date === "monthly" ? "%Y-%m"
     : "%Y-%m-%d";
-  const start_date = await getPortfolioStartDate(req.usr_id)
-  
-  Portfolio.getInvestments({ usr_id: req.usr_id, group_date: group_date, start_date: start_date }, function (err, values) {
+
+  Portfolio.getInvestments({ usr_id: req.usr_id, group_date: group_date }, function (err, values) {
       if (err) {
           res.status(500).send({message: err.message});
       }
