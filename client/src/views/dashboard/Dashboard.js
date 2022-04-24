@@ -14,6 +14,8 @@ import {
 } from "reactstrap";
 
 import PortfolioPriceHistory from "components/charts/PortfolioPriceHistory";
+import EmptyWelcome from "components/cards/EmptyWelcome";
+
 
 class Dashboard extends Component {
   constructor(props) {
@@ -26,7 +28,8 @@ class Dashboard extends Component {
       diffMonth: 0,
       pDiffMonth: 0,
       diffYear: 0,
-      pDiffYear: 0
+      pDiffYear: 0,
+      isPortfolioEmpty: undefined
     }
   }
   getDiffTodayWithDateColumn(dayValues, dateColumn) {
@@ -54,7 +57,8 @@ class Dashboard extends Component {
         diffMonth: this.getDiffTodayWithDateColumn(dayValues, 3),
         pDiffMonth: this.getPourcentageDiffTodayWithDateColumn(dayValues, 3),
         diffYear: this.getDiffTodayWithDateColumn(dayValues, 4),
-        pDiffYear: this.getPourcentageDiffTodayWithDateColumn(dayValues, 4)
+        pDiffYear: this.getPourcentageDiffTodayWithDateColumn(dayValues, 4),
+        isPortfolioEmpty: dayValues.every(e => e === null)
       })
     });
   }
@@ -97,6 +101,14 @@ class Dashboard extends Component {
     )
   }
   render() {
+    if(this.state.isPortfolioEmpty === undefined) {
+      return (
+        <div className="content"></div>
+      )
+    }
+    if(this.state.isPortfolioEmpty) {
+      return <EmptyWelcome title="Welcome to TrackMyAssets !"></EmptyWelcome>
+    }
     return (
       <>
         <div className="content">

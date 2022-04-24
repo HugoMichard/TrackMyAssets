@@ -108,22 +108,15 @@ class IndexDexs extends Component {
         if(!this.state.displayDexs || this.state.displayDexs.length === 0) {
             return (
                 <div className="content">
-                    <Row>
-                        <Col lg="3" md="6" sm="6">
-                            <Card className="card-stats">
-                                <CardBody>
-                                    <Row>
-                                        <Col md="12" xs="12">
-                                            <CardTitle>
-                                                You do not have any dex wallets yet
-                                            </CardTitle>
-                                        </Col>
-                                    </Row>
-                                </CardBody>
-                            </Card>
-
-                        </Col>
-                    </Row>
+                    <Card> 
+                        <CardHeader tag="h4">Welcome to your DEX Wallet page !</CardHeader>
+                        <CardBody>
+                            <p>
+                                You currently do not own any cryptocurrency assets on a decentralized platform. To get started, <a href="/app/platforms/create">add some of the decentralized platforms you use</a>. To do so, link the platform you create to one of the available DEX and input your non-custodial wallet address. <br/>
+                                Then, <a href="/app/orders/create">input the orders you make on this platform</a> and your assets on this DEX will be tracked automatically !
+                            </p>
+                        </CardBody>
+                    </Card>
                 </div>
             )
         }

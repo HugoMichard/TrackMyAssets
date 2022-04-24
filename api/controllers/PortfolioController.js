@@ -54,7 +54,10 @@ exports.refresh = async function(req, res) {
 
 async function rerunPortfolioHistory(usr_id, start_date, date_aggregation_fn) {
   const orderWithHistoryData = await order.getUserOrderDataWithHistory(usr_id)
-
+  // If brand new account with no orders, nothing to rerun
+  if(orderWithHistoryData.length == 0) {
+    return []
+  }
   var portfolio = {};
   var aggregatedResultsByDate = [];
   var checkingDate = orderWithHistoryData[0].date;
