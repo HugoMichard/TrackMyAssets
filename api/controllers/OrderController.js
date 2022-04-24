@@ -72,7 +72,6 @@ exports.update = async function (req, res) {
       updatedOrder.price = h[0].vl
     }
   }
-  console.log(updatedOrder)
   Order.update(updatedOrder, function (err, order) {
       if (err) {
           res.status(500).send({ message: err.message});
@@ -158,13 +157,14 @@ exports.uploadCsv = function (req, res) {
     }
   })
   .on('end', () => {
-    Asset.search({usr_id: req.usr_id, name: '%'}, function (err, assets) {
+    Asset.searchWithImportNames({usr_id: req.usr_id, name: '%'}, function (err, assets) {
       // Get the orders uploaded with the matching asset into a dict
       rows.forEach(r => {
         const price = r[columnNames[columnLetterToIndex(req.body.price)]].replaceAll(" ", "");
         const fees = req.body.fees ? r[columnNames[columnLetterToIndex(req.body.fees)]] : 0;
         const quantity = r[columnNames[columnLetterToIndex(req.body.quantity)]];
-        var matchingAssets = assets.filter(a => a.name.toLowerCase() === r[columnNames[columnLetterToIndex(req.body.name)]].toLowerCase());
+        const name = r[columnNames[columnLetterToIndex(req.body.name)]].toLowerCase();
+        var matchingAssets = assets.filter(a => a.name.toLowerCase() === name || (a.ain_name && a.ain_name.toLowerCase() === name) || a.code.toLowerCase() === name);
         const unit_price = req.body.is_unit === true ? parseFloat(price) : parseFloat(price) / parseFloat(quantity);
         const is_valid = isFloat(price) && isFloat(unit_price) && isFloat(fees) && isFloat(quantity) && matchingAssets.length > 0;
         if(matchingAssets.length == 0) {
@@ -208,14 +208,10 @@ exports.validateUploadCsv = function (req, res) {
     res.status(500).send({notif: notifHelper.getNotif("createOrderBatchNoOrders")});
   } else {
     sql_orders = validOrders.map(o => {
-      console.log(o.execution_date)
       const execution_date =  dateHelper.changeDateStringFormat(o.execution_date, "mm/dd/yyyy", "yyyy-mm-dd");
-      console.log(execution_date);
       return (`(${req.usr_id}, ${o.ast_id}, ${o.plt_id}, '${execution_date}', ${o.price}, ${o.quantity}, ${o.fees})`)
     });
     Order.createBatch(sql_orders, function (err, ordersAdded) {
-      console.log(err)
-      console.log(ordersAdded)
       if(err) {
         res.status(500).send({notif: notifHelper.getNotif("createOrderBatchFail")});
       } else {

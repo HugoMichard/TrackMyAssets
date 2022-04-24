@@ -23,14 +23,21 @@ exports.create = function (req, res) {
   Asset.create(newAsset, function (err, asset) {
     if (err) {
       res.status(500).send(err)
+    } else {
+      res.status(200).send({ast_id: asset.insertId, notif: notifHelper.getNotif("createAssetSuccess", [newAsset.name])});
+      // add asset history
+      newAsset.ast_id = asset.insertId
+      newAsset.cmc_official_id = req.body.cmc_official_id
+      if(newAsset.ast_type !== "dex") {
+        history.initializeAssetHistory(newAsset);
+      }
+      // add import names of the asset
+      if(req.body.import_names.length > 0) {
+        sql_import_names = req.body.import_names.map(n => (`(${newAsset.ast_id}, '${n}')`));
+        Asset.addImportNames(sql_import_names);
+      }
     }
-    res.status(200).send({ast_id: asset.insertId, notif: notifHelper.getNotif("createAssetSuccess", [newAsset.name])});
-    newAsset.ast_id = asset.insertId
-    newAsset.cmc_official_id = req.body.cmc_official_id
-    if(newAsset.ast_type !== "dex") {
-      history.initializeAssetHistory(newAsset);
-    }
-  })
+  });
 }
 
 exports.search = function (req, res) {
@@ -54,7 +61,19 @@ exports.getDetail = function (req, res) {
       if (err) {
           res.status(500).send({ message: err.message});
       } else {
-          res.status(200).send({asset: assets[0]});
+        var asset = assets[0];
+        if(asset.ast_type === "stock") {
+          Asset.getImportNames(asset.ast_id, function (err, import_names) {
+            if (err) {
+              res.status(500).send({ message: err.message});
+            } else {
+              asset["import_names"] = import_names.length > 0 ? import_names.map(ain => ain.name) : [];
+              res.status(200).send({asset: asset});
+            }
+          });
+        } else {
+          res.status(200).send({asset: asset});
+        }
       }
   })
 }
@@ -72,6 +91,22 @@ exports.update = function (req, res) {
           if(updateAsset.ast_type !== "dex") {
             updateAsset.cmc_official_id = req.body.cmc_official_id;
             history.updateAssetHistory(updateAsset);
+          }
+          if(updateAsset.ast_type === "stock") {
+            Asset.getImportNames(updateAsset.ast_id, function (err, existing_import_names) {
+              // Delete the import names that have been removed
+              const deleted_names = existing_import_names.filter(ain => !req.body.import_names.includes(ain.name))
+              if(deleted_names.length > 0) {
+                sql_to_delete = "('" + deleted_names.map(n => n.ain_id).join("', '") + "')";
+                Asset.deleteImportNames(sql_to_delete);
+              }
+              // Add the import names that have been added
+              const new_names = req.body.import_names.filter(ain => !existing_import_names.map(ein => ein.name).includes(ain))
+              if(new_names.length > 0) {
+                sql_import_names = new_names.map(n => (`(${updateAsset.ast_id}, '${n}')`));
+                Asset.addImportNames(sql_import_names);
+              }
+            })
           }
       }
   })

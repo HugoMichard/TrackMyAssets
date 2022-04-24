@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import APIService from "routers/apiservice";
 import Select from 'react-select'
+import ReactTagInput from "@pathofdev/react-tag-input";
 import { Redirect } from "react-router";
 
 // reactstrap components
@@ -23,7 +24,8 @@ class AssetForm extends Component {
             ast_type: "stock",
             ticker: "",
             coin: "",
-            cat_id: ""
+            cat_id: "",
+            import_names: []
         }
         const typeOptions = [
             { value: 'stock', label: 'Stock Asset' },
@@ -43,9 +45,10 @@ class AssetForm extends Component {
             coins: {}, 
             selectedCoin: {} 
         }
+
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.searchCoins = this.searchCoins.bind(this)
+        this.searchCoins = this.searchCoins.bind(this);
     }
     componentWillReceiveProps(nextProps) {
         const { categories, platforms, typeOptions, coins } = this.state;
@@ -60,7 +63,8 @@ class AssetForm extends Component {
             fix_vl: nextProps.fix_vl,
             cmc_id: nextProps.cmc_id,
             duplicate_nbr: nextProps.duplicate_nbr,
-            cmc_official_id: nextProps.cmc_official_id
+            cmc_official_id: nextProps.cmc_official_id,
+            import_names: nextProps.import_names
         }
         const selectedType = form.ast_type === "stock" ? typeOptions[0] 
             : form.ast_type === "crypto" ? typeOptions[1] 
@@ -221,8 +225,8 @@ class AssetForm extends Component {
                 </Row>
                 {form.ast_type === "stock" ? 
                     <Row>
-                        {this.nameField(6)}
-                        <Col md="6">
+                        {this.nameField(4)}
+                        <Col md="2">
                             <FormGroup>
                                 <label>Ticker Code</label>
                                 <Input
@@ -231,6 +235,20 @@ class AssetForm extends Component {
                                     onChange={(evt) => this.handleChange("ticker", evt)}
                                     value={form.ticker}
                                 />
+                            </FormGroup>
+                        </Col>
+                        <Col md="6">
+                            <FormGroup>
+                                <label>Import names in CSV (optional)</label>
+                                <ReactTagInput
+                                    placeholder=" "
+                                    tags={form.import_names}
+                                    onChange={(newTags) => {
+                                        form["import_names"] = newTags;
+                                        this.setState({ form: form })
+                                    }}
+                                />
+                                <small className="form-text text-muted">Separate names with an enter key</small>
                             </FormGroup>
                         </Col>
                     </Row>

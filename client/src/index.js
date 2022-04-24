@@ -11,6 +11,7 @@ import "assets/css/cards.css";
 import "assets/css/tiles.css";
 import "assets/css/contact.css";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
+import "@pathofdev/react-tag-input/build/index.css";
 
 import AdminLayout from "layouts/Admin.js";
 import ConnectionLayout from "layouts/Connection.js";

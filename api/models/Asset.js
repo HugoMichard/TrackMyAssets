@@ -45,14 +45,51 @@ Asset.search = function (params, result) {
   )
 }
 
+Asset.searchWithImportNames = function (params, result) {
+  sql.query(
+    `SELECT a.*, c.color as cat_color, c.name as cat_name, ain.name as ain_name
+      FROM assets a
+      INNER JOIN categories c ON c.cat_id = a.cat_id
+      LEFT JOIN ast_import_names ain ON ain.ast_id = a.ast_id
+      WHERE (a.name LIKE ? OR (a.code LIKE ? AND a.plt_id IS NULL) OR ain.name LIKE ?) AND a.usr_id = ?
+      ORDER BY a.name`, [
+      params.name,
+      params.name,
+      params.name,
+      params.usr_id
+    ], (err, res) => {
+      if (err) {
+        result(null, err)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
+
 Asset.getDetail = function (params, result) {
   sql.query(
-    `SELECT a.*, cmc.cmc_official_id, c.color as cat_color, c.name as cat_name FROM assets a
+    `SELECT a.*, cmc.cmc_official_id, c.color as cat_color, c.name as cat_name
+      FROM assets a
       INNER JOIN categories c on a.cat_id = c.cat_id
       LEFT JOIN cmc_coins cmc on a.cmc_id = cmc.cmc_id
       WHERE a.ast_id = ? AND a.usr_id = ?`, [
         params.ast_id,
         params.usr_id
+    ], (err, res) => {
+      if (err) {
+        result(null, res)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
+
+Asset.getImportNames = function (ast_id, result) {
+  sql.query(
+    `SELECT * FROM ast_import_names WHERE ast_id = ?`, [
+        ast_id
     ], (err, res) => {
       if (err) {
         result(null, res)
@@ -166,6 +203,14 @@ Asset.getCurrentPriceOfUserAssets = function (usr_id, result) {
       result(null, res);
     }
   )
+}
+
+Asset.addImportNames = function (newImportNames) {
+  sql.query(`INSERT INTO ast_import_names (ast_id, name) values ${newImportNames}`, function (err, res) {})
+}
+
+Asset.deleteImportNames = function (deleteImportNames) {
+  sql.query(`DELETE FROM ast_import_names WHERE ain_id IN ${deleteImportNames}`, function (err, res) {})
 }
 
 module.exports = Asset

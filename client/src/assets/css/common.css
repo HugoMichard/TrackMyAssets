@@ -18,6 +18,10 @@
     margin-bottom: 0
 }
 
+.update.ml-auto.mr-auto {
+    text-align: center
+}
+
 .basic-tooltip {
     background: white;
     color: inherit;
@@ -138,4 +142,13 @@ a:hover {
 
 .flex-break {
     flex: 1
+}
+
+.table > :not(:first-child) {
+    border-top: none
+}
+
+.alert button.close {
+    background: none;
+    border: none;
 }

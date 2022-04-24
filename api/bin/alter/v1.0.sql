@@ -67,6 +67,15 @@ CREATE TABLE assets
   FOREIGN KEY     (plt_id) REFERENCES platforms(plt_id)
 );
 
+CREATE TABLE ast_import_names
+(
+  ain_id          INT unsigned NOT NULL AUTO_INCREMENT,
+  ast_id          INT unsigned NOT NULL,
+  name            VARCHAR(150) NOT NULL,
+  PRIMARY KEY     (ain_id),
+  FOREIGN KEY     (ast_id) REFERENCES assets(ast_id)
+);
+
 CREATE TABLE orders
 (
   ord_id          INT unsigned NOT NULL AUTO_INCREMENT,
