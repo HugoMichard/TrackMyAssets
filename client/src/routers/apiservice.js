@@ -1,7 +1,7 @@
 import axios from 'axios'
 import AuthService from 'services/auth'
 
-const API_URL = `/api`
+const API_URL = `http://localhost:5000/api`
 
 class APIService {
   
@@ -122,6 +122,17 @@ class APIService {
     return axios.delete(url, this.getUserHeader(), ordId)
   }
 
+  uploadOrderCsv(data) {
+    const url = `${API_URL}/orders/upload`
+    const user = AuthService.getCurrentUser();
+    return axios.post(url, data, { headers: {'Content-Type': 'multipart/form-data', "x-access-token": user} })
+  }
+
+  validateUploadOrderCsv(data) {
+    const url = `${API_URL}/orders/upload/validate`
+    return axios.post(url, data, this.getUserHeader())
+  }
+
   // category methods
   createCategory (data) {
     const url = `${API_URL}/categories`
@@ -151,11 +162,6 @@ class APIService {
 
   getPortfolioValueForeachType () {
     const url = `${API_URL}/categories/getPortfolioValueForeachType`
-    return axios.get(url, this.getUserHeader())
-  }
-
-  getUserAssetsInEachCat () {
-    const url = `${API_URL}/categories/getUserAssetsInEachCat`
     return axios.get(url, this.getUserHeader())
   }
 
@@ -229,11 +235,6 @@ class APIService {
 
   getPortfolioValueForeachPlt () {
     const url = `${API_URL}/platforms/getPortfolioValueForeachPlt`
-    return axios.get(url, this.getUserHeader())
-  }
-
-  getUserAssetsInEachPlt () {
-    const url = `${API_URL}/platforms/getUserAssetsInEachPlt`
     return axios.get(url, this.getUserHeader())
   }
 

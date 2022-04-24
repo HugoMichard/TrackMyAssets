@@ -23,13 +23,25 @@ Order.create = function (newOrder, result) {
   )
 }
 
+Order.createBatch = function (newOrders, result) {
+  sql.query(
+    `INSERT INTO orders (usr_id, ast_id, plt_id, execution_date, price, quantity, fees) values ${newOrders}`, function (err, res) {
+      if (err) {
+        result(err, res)
+      } else {
+        result(null, res)
+      }
+    }
+  )
+}
+
 Order.search = function (params, result) {
   sql.query(
     `SELECT o.ord_id, o.usr_id, o.ast_id, o.price, o.quantity, o.fees, o.gtg_ast_id,
       DATE_FORMAT(o.execution_date, '%m/%d/%Y') as execution_date, 
       a.name as ast_name, a.code as ast_code, a.ast_type as ast_type, a.duplicate_nbr as ast_duplicate_nbr,
-      c.color as cat_color, c.name as cat_name,
-      p.color as plt_color, p.name as plt_name
+      c.color as cat_color, c.name as cat_name, c.cat_id,
+      p.color as plt_color, p.name as plt_name, p.plt_id
       FROM orders o
       INNER JOIN assets a ON a.ast_id = o.ast_id
       INNER JOIN categories c ON c.cat_id = a.cat_id

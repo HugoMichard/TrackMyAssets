@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import APIService from "routers/apiservice";
 
 // reactstrap components
 import {

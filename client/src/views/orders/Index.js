@@ -102,6 +102,13 @@ class IndexOrders extends Component {
                                 Generate
                         </Button>
                     </Link>
+                    <Link to="/app/orders/import">
+                        <Button
+                            className="btn-round justify-content-end no-margin-top"
+                            color="secondary">
+                                Import CSV
+                        </Button>
+                    </Link>
                     <DebounceSearch searchFunction={this.searchForOrders.bind(this)}/>
                     <Table responsive>
                         <thead className="text-primary">

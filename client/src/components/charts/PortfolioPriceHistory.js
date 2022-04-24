@@ -57,30 +57,29 @@ class PortfolioPriceHistory extends Component {
         );
       }
     render() {
-        return (
-        <>
-            <Card>
-                <CardHeader>
-                  <CardTitle tag="h5">Portfolio Value Evolution</CardTitle>
-                  {this.renderPortfolioRangeButton("Year", "year", "danger")}
-                  {this.renderPortfolioRangeButton("Month", "month", "warning")}
-                  {this.renderPortfolioRangeButton("Week", "week", "info")}
-                  {this.renderPortfolioRangeButton("All", "all", "success")}
-                </CardHeader>
-                {this.state.portfolioChartData ? 
-                  <CardBody style={ { height: 500 } }>
-                    {PortfolioPriceHistoryChart(this.state.portfolioChartData)}
-                  </CardBody> : ""
-                }
-                <CardFooter>
-                  <hr />
-                  <div className="stats">
-                    <i className="fa fa-history" /> Updated {this.state.last_refresh}
-                  </div>
-                </CardFooter>
-            </Card>
-        </>
-        );
+      return (
+      <>
+          <Card>
+              <CardHeader>
+                <CardTitle tag="h5">Portfolio Value Evolution</CardTitle>
+                {this.renderPortfolioRangeButton("Year", "year", "danger")}
+                {this.renderPortfolioRangeButton("Month", "month", "warning")}
+                {this.renderPortfolioRangeButton("Week", "week", "info")}
+                {this.renderPortfolioRangeButton("All", "all", "success")}
+              </CardHeader>
+              {this.state.portfolioChartData ? 
+                <CardBody style={ { height: 500 } }>
+                  {PortfolioPriceHistoryChart(this.state.portfolioChartData)}
+                </CardBody> : ""}
+              <CardFooter>
+                <hr />
+                <div className="stats">
+                  <i className="fa fa-history" /> Updated {this.state.last_refresh}
+                </div>
+              </CardFooter>
+          </Card>
+      </>
+      );
     }
 }
 
